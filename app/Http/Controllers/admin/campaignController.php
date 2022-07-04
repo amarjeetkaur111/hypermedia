@@ -19,7 +19,7 @@ class campaignController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Campaigns::with('client')->select('*');
+            $data = Campaigns::with('client','buckets','buckets.locations')->select('*');
             if ($request->has('start_date') && $request->start_date) {
                 $s_date = Carbon::createFromFormat('d/m/Y', $request->start_date);
                 $data = $data->whereDate('start_date', '>=', $s_date);
@@ -29,7 +29,6 @@ class campaignController extends Controller
                 $data = $data->whereDate('end_date', '<=', $e_date);
             }
             return DataTables::eloquent($data)
-                ->addIndexColumn()
                 ->editColumn('client_name', function ($row) {
                     return $row->client ? $row->client->name : $row->client_name;
                 })
@@ -43,7 +42,29 @@ class campaignController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('start_date',function($row){
+                    $start = Carbon::parse($row->start_date)->format('d/m/Y');
+                    $end = Carbon::parse($row->end_date)->format('d/m/Y');
+                    return $start.' to '.$end;
+                })
+                ->addColumn('permits',function($row){
+                    return 'abc';
+                })
+                ->addColumn('locations',function($row){
+                    $location = '<ol>';
+                    foreach($row->buckets  as $b){
+                        if($b->locations){
+                            $location .= '<li>'.$b->locations->name.'</li>';
+                        }
+                    }
+                    $location .= '</ol>';
+                    $html = '<button data-list-loc="'.$location.'" class="btn btn-primary btn-sm location-btn" >Locations</button>';
+                    return $html;
+                })
+                ->addColumn('photos',function($row){
+                    return 'abc';
+                })
+                ->rawColumns(['action','locations'])
                 ->make(true);
         }
         return view('pages.campaign.index');
@@ -237,7 +258,7 @@ class campaignController extends Controller
     public function changeStatus(Request $request, $id)
     {
         $campaign = Campaigns::with('buckets')->findOrFail($id);
-        if ($request->campaign_status == 'Completed') {
+        if (in_array($request->campaign_status,['Completed','Cancelled'])) {
             AssetStatus::where('campaign_id', $id)->delete();
             foreach ($campaign->buckets as $bucket) {
                 $state = new AssetStatus;

@@ -69,28 +69,40 @@
                                            role="grid" aria-describedby="zero_config_info">
                                         <thead>
                                         <tr role="row">
-                                            <th class="sorting_asc" tabindex="0" width="5%">
-                                                Id
-                                            </th>
-                                            <th class="sorting" tabindex="0" width="15%">
+                                            <th class="sorting" tabindex="0" width="10%">
                                                 Name
                                             </th>
-                                            <th class="sorting" tabindex="0" width="10%">
+                                            <th class="sorting" tabindex="0" width="5%">
                                                 Type
                                             </th>
-                                            <th class="sorting" tabindex="0" width="10%">
-                                                Agency
-                                            </th>
-                                            <th class="sorting" tabindex="0" width="10%">
+                                            <th class="sorting" tabindex="0" width="5%">
                                                 Client
                                             </th>
-                                            <th class="sorting" tabindex="0" width="10%">
-                                                Brand
+                                            <th class="sorting" tabindex="0" width="5%">
+                                                Market
                                             </th>
                                             <th class="sorting" tabindex="0" width="10%">
+                                                Dates
+                                            </th>
+                                            <th class="sorting" tabindex="0" width="10%">
+                                                Booking Order
+                                            </th>
+                                            <th class="sorting" tabindex="0" width="5%">
+                                                Payment Status
+                                            </th>
+                                            <th class="sorting" tabindex="0" width="5%">
+                                                Permits
+                                            </th>
+                                            <th class="sorting" tabindex="0" width="5%">
+                                                Locations
+                                            </th>
+                                            <th class="sorting" tabindex="0" width="5%">
+                                                Photos
+                                            </th>
+                                            <th class="sorting" tabindex="0" width="5%">
                                                 Status
                                             </th>
-                                            <th class="sorting" tabindex="0" width="40%">
+                                            <th class="sorting" tabindex="0" width="30%">
                                                 Action
                                             </th>
                                         </tr>
@@ -113,8 +125,9 @@
     <script>
         $start = $('#start_date').val()
         $end = $('#end_date').val()
-
+        $body = $('body');
         $(function () {
+
 
             $('#date_reset').on('click',function(){
                 $('#start_date').val('').change()
@@ -142,6 +155,20 @@
                 table.draw();
             });
 
+            $body.on('click','.location-btn',function(){
+                $data = $(this).attr('data-list-loc')
+                $.confirm({
+                    title: 'Locations',
+                    content: $data,
+                    columnClass: 'small',
+                    buttons: {
+                        cancel: function () {
+                            //close
+                        },
+                    },
+                });
+            })
+
             var table = $('#zero_config').DataTable({
                 processing: true,
                 serverSide: true,
@@ -152,19 +179,27 @@
                         d.end_date =  $end;
                     }
                 },
+                // "drawCallback":function(settings){
+                //     // $('[data-toggle="tooltip"]').tooltip()
+                //     // $('[data-toggle="tooltip"]').tooltip()
+                // },
                 columns: [
-                    {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
                     {data: 'campaign_type', name: 'campaign_type'},
-                    {data: 'agency', name: 'agency'},
                     {data: 'client.name', name: 'client_name'},
-                    {data: 'brand', name: 'brand'},
+                    {data: 'market', name: 'market'},
+                    {data: 'start_date', name: 'start_date'},
+                    {data: 'booking_order', name: 'booking_order'},
+                    {data: 'payment_status', name: 'payment_status'},
+                    {data: 'permits', name: 'permits', orderable: false, searchable: false},
+                    {data: 'locations', name: 'locations', orderable: false, searchable: false},
+                    {data: 'photos', name: 'photos' , orderable: false, searchable: false},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
 
-            $body = $('body');
+
 
             $body.on('click', '.assign-button', function () {
                 $href = $(this).attr('data-href')
@@ -234,6 +269,8 @@
                     },
                 });
             })
+
+            $('[data-sidebartype="mini-sidebar"]').click()
         });
     </script>
 @endpush
