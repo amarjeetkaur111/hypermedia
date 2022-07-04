@@ -1,0 +1,291 @@
+<?php
+
+namespace App\Http\Controllers\admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\AssetNetwork;
+use App\Models\Assets;
+use App\Models\AssetStatus;
+use App\Models\CampaignBucket;
+use App\Models\Campaigns;
+use App\Models\CampaignStatus;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use DataTables;
+
+class campaignController extends Controller
+{
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Campaigns::with('client')->select('*');
+            if ($request->has('start_date') && $request->start_date) {
+                $s_date = Carbon::createFromFormat('d/m/Y', $request->start_date);
+                $data = $data->whereDate('start_date', '>=', $s_date);
+            }
+            if ($request->has('end_date') && $request->end_date) {
+                $e_date = Carbon::createFromFormat('d/m/Y', $request->end_date);
+                $data = $data->whereDate('end_date', '<=', $e_date);
+            }
+            return DataTables::eloquent($data)
+                ->addIndexColumn()
+                ->editColumn('client_name', function ($row) {
+                    return $row->client ? $row->client->name : $row->client_name;
+                })
+                ->addColumn('action', function ($row) {
+
+                    $btn = '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                    if ($row->status == 'Active') {
+                        $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn btn-primary btn-sm status-button">Status</a>';
+                        $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn btn-primary btn-sm assign-button">Assign</a>';
+                    }
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        return view('pages.campaign.index');
+    }
+
+    public function add($id = null)
+    {
+        $data = null;
+        $action = route('admin-campaign-add');
+        $add = 'Add';
+        if ($id) {
+            $data = Campaigns::with('client', 'buckets')->find($id);
+            $action = route('admin-campaign-add', ['id' => $id]);
+            $add = 'Edit';
+        }
+        return view('pages.campaign.add', compact('data', 'action', 'add'));
+    }
+
+    public function addPost(Request $request, $id = null)
+    {
+        $add = 'Add';
+        $user = new Campaigns;
+        if ($id) {
+            $add = 'Edit';
+            $user = Campaigns::find($id);
+        }
+
+        $this->validate($request, [
+            'name' => 'required',
+            'agency' => 'required',
+            'brand' => 'required',
+            'client_name' => 'required',
+            'contract_name' => 'required',
+            'contract_number' => 'required',
+        ]);
+        $user->name = $request->input('name');
+        $user->agency = $request->input('agency');
+        $user->brand = $request->input('brand');
+        $user->client_name = $request->input('client_name');
+        $user->contract_name = $request->input('contract_name');
+        $user->contract_number = $request->input('contract_number');
+        $user->description = $request->input('description');
+        $user->campaign_type = $request->input('campaign_type');
+        $user->payment_status = $request->input('payment_status');
+        $user->booking_order = $request->input('booking_order');
+        $user->start_date = Carbon::createFromFormat('d/m/Y', $request->input('start_date'))->toDateString();
+        $user->start_time = Carbon::createFromFormat('H:i', $request->input('start_time'))->toTimeString();
+        $user->end_date = Carbon::createFromFormat('d/m/Y', $request->input('end_date'))->toDateString();
+        $user->end_time = Carbon::createFromFormat('H:i', $request->input('end_time'))->toTimeString();
+        $user->status = $request->input('status');
+        $user->market = $request->input('market');
+        if ($request->hasFile('booking_order_file')) {
+            $file = request()->file('booking_order_file');
+            $name = $file->store('booking_order_file', ['disk' => 'my_files']);
+            $user->booking_order_file = $name;
+        }
+        $ids = [];
+        $done = [];
+        $not = [];
+        if ($user->save()) {
+
+            CampaignStatus::where('campaign_id', $user->id)->delete();
+            $state = new CampaignStatus;
+            $state->campaign_id = $user->id;
+            $state->status = $user->status;
+            $state->save();
+
+            AssetStatus::where('campaign_id', $user->id)->delete();
+            foreach ($request->bucket_location ?? [] as $key => $looper) {
+                $asset = explode(':', $request->bucket_asset[$key]);
+                if ($asset[0] == 'network') {
+                    $a = AssetNetwork::with('assets')->find($asset[1]);
+                    $type = null;
+                    foreach ($a->assets as $asset_each) {
+                        if (!in_array($asset_each->id, $done)) {
+                            $asset_each->load('assetStatus');
+                            if ($asset_each->type != 'digital' && $asset_each->assetStatus && in_array($asset_each->assetStatus->status, ['Booked', 'Maintenance']) && $asset_each->assetStatus->campaign_id != $user->id) {
+                                $ids[] = $asset_each->id;
+                                $done[] = $asset_each->id;
+                                $not[$asset_each->id] = $asset_each->name;
+                                continue;
+                            }
+                            if (isset($request->bucket_id[$key]) && $request->bucket_id[$key]) {
+                                $obj = CampaignBucket::find($request->bucket_id[$key]);
+                            } else {
+                                $obj = new CampaignBucket;
+                            }
+                            if ($asset[0] == 'network') {
+                                $network = AssetNetwork::with('assets')->find($asset[1]);
+                            }
+                            $obj->campaign_id = $user->id;
+                            $obj->location = $request->bucket_location[$key];
+                            $obj->start_date = Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->toDateString();
+                            $obj->end_date = Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->toDateString();
+                            $obj->asset_network = $asset[0] == 'network' ? $asset[1] : null;
+                            $obj->asset = $asset_each->id;
+                            $obj->asset_type = $asset_each->type;
+                            $obj->quantity = isset($network) && $network ? $network->assets->count() : null;
+                            $obj->availability = null; //:todo check availability and add here (functionality pending)
+                            $obj->installation_time = $asset_each->installation_time;
+                            $obj->save();
+                            $ids[] = $obj->id;
+                            $done[] = $obj->id;
+                            if (Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->toDate() < Carbon::createFromFormat('d/m/Y', $request->input('start_date'))->toDate()) {
+                                $user->start_date = Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->toDateString();
+                                $user->save();
+                            }
+                            if (Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->toDate() > Carbon::createFromFormat('d/m/Y', $request->input('end_date'))->toDate()) {
+                                $user->end_date = Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->toDateString();
+                                $user->save();
+                            }
+                        }
+                    }
+                } else if ($asset[0] == 'asset') {
+
+                    if (!in_array($asset[1], $done)) {
+                        $a = Assets::with('assetStatus')->find($asset[1]);
+                        if ($a->type != 'digital' && $a->assetStatus && in_array($a->assetStatus->status, ['Booked', 'Maintenance']) && $a->assetStatus->campaign_id != $user->id) {
+                            $ids[] = $a->id;
+                            $done[] = $a->id;
+                            $not[$a->id] = $a->name;
+                            continue;
+                        }
+                        $type = $a->type;
+                        if (isset($request->bucket_id[$key]) && $request->bucket_id[$key]) {
+                            $obj = CampaignBucket::find($request->bucket_id[$key]);
+                        } else {
+                            $obj = new CampaignBucket;
+                        }
+                        $obj->campaign_id = $user->id;
+                        $obj->location = $request->bucket_location[$key];
+                        $obj->start_date = Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->toDateString();
+                        $obj->end_date = Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->toDateString();
+                        $obj->asset_network = $asset[0] == 'network' ? $asset[1] : null;
+                        $obj->asset = $asset[0] == 'asset' ? $asset[1] : 1;
+                        $obj->asset_type = $type;
+                        $obj->quantity = isset($network) && $network ? $network->assets->count() : null;
+                        $obj->availability = null; //:todo check availability and add here (functionality pending)
+                        $obj->installation_time = $a->installation_time;
+                        $obj->save();
+                        $ids[] = $obj->id;
+                        $done[] = $obj->id;
+                        if (Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->toDate() < Carbon::createFromFormat('d/m/Y', $request->input('start_date'))->toDate()) {
+                            $user->start_date = Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->toDateString();
+                            $user->save();
+                        }
+                        if (Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->toDate() > Carbon::createFromFormat('d/m/Y', $request->input('end_date'))->toDate()) {
+                            $user->end_date = Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->toDateString();
+                            $user->save();
+                        }
+                    }
+                } else {
+                    return redirect()->route('admin-campaign-index')->with(['status' => 'Error', 'class' => 'danger', 'msg' => "Bucket could not be added!"]);
+                }
+                if ($asset[0] == 'network') {
+                    foreach ($a->assets as $asset) {
+                        AssetStatus::where('asset_id', $asset->id)->delete();
+                        $state = new AssetStatus;
+                        $state->asset_id = $asset->id;
+                        $state->campaign_id = $user->id;
+                        $state->from_date = Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->endOfDay()->toDateTimeString();
+                        $state->to_date = Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->startOfDay()->toDateString();
+                        $state->comment = $id ? 'Update' : 'New';
+                        $state->status = 'Booked';
+                        $state->save();
+                    }
+                } else if ($asset[0] == 'asset') {
+                    AssetStatus::where('asset_id', $a->id)->delete();
+                    $state = new AssetStatus;
+                    $state->asset_id = $a->id;
+                    $state->campaign_id = $user->id;
+                    $state->from_date = Carbon::createFromFormat('d/m/Y', $request->bucket_start_date[$key])->endOfDay()->toDateTimeString();
+                    $state->to_date = Carbon::createFromFormat('d/m/Y', $request->bucket_end_date[$key])->startOfDay()->toDateString();
+                    $state->comment = $id ? 'Update' : 'New';
+                    $state->status = 'Booked';
+                    $state->save();
+                }
+            }
+            if (count($ids)) {
+                CampaignBucket::where('campaign_id', $user->id)->whereNotIn('id', $ids)->delete();
+            } else {
+                CampaignBucket::where('campaign_id', $user->id)->delete();
+            }
+        }
+        if (count($not)) {
+            return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "{$add}ed Successfully without " . implode(', ', $not) . ' Check availability']);
+        }
+        return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "{$add}ed Successfully!"]);
+    }
+
+    public function changeStatus(Request $request, $id)
+    {
+        $campaign = Campaigns::with('buckets')->findOrFail($id);
+        if ($request->campaign_status == 'Completed') {
+            AssetStatus::where('campaign_id', $id)->delete();
+            foreach ($campaign->buckets as $bucket) {
+                $state = new AssetStatus;
+                $state->asset_id = $bucket->asset;
+                $state->campaign_id = null;
+                $state->from_date = now();
+                $state->to_date = null;
+                $state->comment = 'New';
+                $state->status = 'Available';
+                $state->save();
+            }
+        }
+
+        CampaignStatus::where('campaign_id', $id)->delete();
+        $state = new CampaignStatus;
+        $state->campaign_id = $id;
+        $state->status = $request->campaign_status;
+        $state->save();
+
+        $campaign->status = $request->campaign_status;
+        $campaign->save();
+        return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Updated Successfully!"]);
+    }
+
+    public function assignCampaign($id)
+    {
+        $campaign = Campaigns::with('assignee')->find($id);
+        $users = User::all();
+        $action = route('admin-campaign-assign-post', ['id' => $id]);
+        return view('pages.campaign.inner.users', compact('users', 'action', 'campaign'))->render();
+    }
+
+    public function assignCampaignPost(Request $request, $id)
+    {
+        $campaign = Campaigns::find($id);
+        $campaign->assignee()->sync($request->user);
+        return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
+    }
+
+//    public function changeCampaignStatus(Request $request, $id)
+//    {
+//        CampaignStatus::where('campaign_id', $id)->delete();
+//        $state = new CampaignStatus;
+//        $state->campaign_id = $id;
+//        $state->status = $request->status;
+//        $state->save();
+//        return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Updated Successfully!"]);
+//    }
+
+
+}
