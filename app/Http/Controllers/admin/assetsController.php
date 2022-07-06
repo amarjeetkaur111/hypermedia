@@ -9,6 +9,7 @@ use App\Models\Assets;
 use App\Models\AssetStatus;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class assetsController extends Controller
 {
@@ -23,8 +24,8 @@ class assetsController extends Controller
                     return $btn;
                 })
                 ->addColumn('asset_photo',function($row){
-                    return '<a class="img_click" href="' . asset('uploads/' . $row->asset_photo) . '">
-                                <img src="' . asset('uploads/' . $row->asset_photo) . '"  href="' . asset('uploads/' . $row->asset_photo) . '" alt="" height=35 />
+                    return '<a class="img_click" href="' . $row->asset_photo . '">
+                                <img src="' . $row->asset_photo . '"  href="' . $row->asset_photo . '" alt="" height=35 />
                             </a>';
                 })
                 ->addColumn('installation_time',function($row){
@@ -77,9 +78,12 @@ class assetsController extends Controller
         $user->type = $request->input('type');
         $user->status = $request->input('status');
         if ($request->hasFile('asset_photo')) {
-            $file = request()->file('asset_photo');
-            $name = $file->storeAs('asset_photo', $request->input('ref_no').'-'.$request->input('name').now()->format('d-m-Y-H-i-s') ,['disk' => 'my_files']);
-            $user->asset_photo = $name;
+            $filename = $request->file('asset_photo')->getClientOriginalName();
+            $path = Storage::disk('s3')->putFileAs('asset_photo',$request->asset_photo,$filename ,'public');
+            $user->asset_photo = config('filesystems.disks.s3.url').'/'.$path;
+//            $file = request()->file('asset_photo');
+//            $name = $file->storeAs('asset_photo', $request->input('ref_no').'-'.$request->input('name').now()->format('d-m-Y-H-i-s') ,['disk' => 'my_files']);
+//            $user->asset_photo = $name;
         }
         $diff = explode(' ',$request->installation_time);
         $time = explode(':',$diff[1]);

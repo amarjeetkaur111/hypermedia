@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DigitalPhotos;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class DigitalPhotosController extends Controller
 {
@@ -19,8 +20,8 @@ class DigitalPhotosController extends Controller
                     return $row->campaign ? $row->campaign->name : $row->campaign_id;
                 })
                 ->addColumn('photo_preview', function ($row) {
-                    return '<a class="img_click" href="' . asset('uploads/' . $row->photo_path) . '">
-                                <img src="' . asset('uploads/' . $row->photo_path) . '"  href="' . asset('uploads/' . $row->photo_path) . '" alt="" height=35 />
+                    return '<a class="img_click" href="' . $row->photo_path . '">
+                                <img src="' . $row->photo_path . '"  href="' . $row->photo_path . '" alt="" height=35 />
                             </a>';
                 })
                 ->addColumn('action', function ($row) {
@@ -67,9 +68,14 @@ class DigitalPhotosController extends Controller
             ]);
         }
         if ($request->hasFile('photo')) {
-            $file = request()->file('photo');
-            $name = $file->store('campaign_monitoring', ['disk' => 'my_files']);
-            $obj->photo_path = $name;
+
+            $filename = $request->file('photo')->getClientOriginalName();
+            $path = Storage::disk('s3')->putFileAs('campaign_monitoring',$request->photo,$filename ,'public');
+            $obj->photo_path = config('filesystems.disks.s3.url').'/'.$path;
+
+//            $file = request()->file('photo');
+//            $name = $file->store('campaign_monitoring', ['disk' => 'my_files']);
+//            $obj->photo_path = $name;
         }
         $obj->campaign_id = $request->input('campaign_id');
         $obj->description = $request->input('description');
