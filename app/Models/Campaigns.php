@@ -27,4 +27,12 @@ class Campaigns extends Model
     {
         return $this->belongsToMany(User::class,(new CampaignAssign)->getTable(),'campaign_id','user_id','id','id');
     }
+
+    public function photos(){
+        return $this->hasMany(DigitalPhotos::class,'campaign_id','id');
+    }
+
+    public function permits(){
+        return $this->hasMany(CampaignPermits::class,'campaign_id','id');
+    }
 }

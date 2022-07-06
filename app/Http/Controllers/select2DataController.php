@@ -9,9 +9,16 @@ use App\Models\Departments;
 use App\Models\Locations;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class select2DataController extends Controller
 {
+    public function downloadFile($table,$field,$id){
+        $table = Crypt::decrypt($table);
+        $file = DB::table($table)->find($id);
+        return response()->download(public_path('uploads/'.$file->{$field}));
+    }
     public function getClients(Request $request)
     {
         if ($request->has('search')) {

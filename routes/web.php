@@ -37,3 +37,5 @@ Route::group(['as' => 'select-2-','prefix' => 'select-2'],function(){
    Route::get('campaigns',[\App\Http\Controllers\select2DataController::class,'getCampaign'])->name('get-campaigns');
    Route::get('users',[\App\Http\Controllers\select2DataController::class,'getUser'])->name('get-users');
 });
+
+Route::get('download-file/{table}/{field}/{id}',[\App\Http\Controllers\select2DataController::class,'downloadFile'])->name('download-file');

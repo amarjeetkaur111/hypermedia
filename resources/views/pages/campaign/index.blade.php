@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 @section('content')
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}" />
+    <link rel="stylesheet" type="text/css"
+          href="{{ asset('assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}"/>
     <div class="page-wrapper">
         <div class="page-breadcrumb">
             <div class="row">
@@ -30,7 +31,8 @@
                                         <div class="col-md-4">
                                             <label class="mt-3">Start Date</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control datepicker-autoclose" id="start_date"
+                                                <input type="text" class="form-control datepicker-autoclose"
+                                                       id="start_date"
                                                        placeholder="dd/mm/yyyy" autocomplete="off"/>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text h-100"><i
@@ -41,7 +43,8 @@
                                         <div class="col-md-4">
                                             <label class="mt-3">End Date</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control  datepicker-autoclose" id="end_date"
+                                                <input type="text" class="form-control  datepicker-autoclose"
+                                                       id="end_date"
                                                        placeholder="dd/mm/yyyy" autocomplete="off"/>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text h-100"><i
@@ -52,7 +55,7 @@
                                         <div class="col-md-4">
                                             <div class="btn-group"></div>
                                             <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i
-                                                    class="fas fa-redo-alt" > Reset</i></button>
+                                                    class="fas fa-redo-alt"> Reset</i></button>
                                         </div>
                                         <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">
                                             <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i
@@ -129,7 +132,7 @@
         $(function () {
 
 
-            $('#date_reset').on('click',function(){
+            $('#date_reset').on('click', function () {
                 $('#start_date').val('').change()
                 $('#end_date').val('').change()
             })
@@ -139,7 +142,7 @@
                 changeYear: true,
                 autoclose: true,
                 todayHighlight: true,
-            }).on('change',function(){
+            }).on('change', function () {
                 $start = $('#start_date').val()
                 table.draw();
             });
@@ -150,12 +153,87 @@
                 changeYear: true,
                 autoclose: true,
                 todayHighlight: true,
-            }).on('change',function(){
+            }).on('change', function () {
                 $end = $('#end_date').val()
                 table.draw();
             });
 
-            $body.on('click','.location-btn',function(){
+            $body.on('click', '.photos_btn', function (e) {
+                e.preventDefault();
+                $href = $(this).attr('dt-data-id');
+                jc_avail_photo = $.confirm({
+                    animateFromElement: true,
+                    title: 'Photos',
+                    content: 'url:' + $href,
+                    columnClass: 'large',
+                    buttons: {
+                        Close: function () {
+                            return;
+                        },
+                    },
+                });
+            })
+
+            $body.on('click', '.permits_btn', function (e) {
+                e.preventDefault();
+                $href = $(this).attr('dt-data-id');
+                $href_inner = $(this).attr('dt-add-href');
+                jc_avail_permit = $.confirm({
+                    animateFromElement: true,
+                    title: 'Permits',
+                    content: 'url:' + $href,
+                    columnClass: 'large',
+                    buttons: {
+                        Add: {
+                            text: "Add Permit",
+                            btnClass: 'btn-blue',
+                            action: function () {
+
+                                $.confirm({
+                                    title: 'Add Permit!',
+                                    content: '' +
+                                        '<form action="' + $href_inner + '" class="formName" method="post" enctype="multipart/form-data" >' +
+                                        '{{ csrf_field() }}' +
+                                        '<div class="form-group">' +
+                                        '<label>Description</label>' +
+                                        '<textarea name="description" class="form-control name"></textarea>' +
+                                        '</div>' +
+                                        '<div class="form-group">' +
+                                        '<label>File</label>' +
+                                        '<input type="file" name="permit_file" class="form-control">' +
+                                        '</div>' +
+                                        '</form>',
+                                    buttons: {
+                                        formSubmit: {
+                                            text: 'Submit',
+                                            btnClass: 'btn-blue',
+                                            action: function () {
+                                                var name = this.$content.find('.name').val();
+                                                if (!name) {
+                                                    $.alert('Give some description');
+                                                    return false;
+                                                } else {
+                                                    $('.formName').submit()
+                                                }
+                                            }
+                                        },
+                                        cancel: function () {
+                                            //close
+                                        },
+                                    },
+                                });
+                                jc_avail_permit.close();
+                            },
+                        },
+                        Close: function () {
+                            return;
+                        },
+                    },
+                });
+            })
+
+            $body.on('click', '.location-btn', function (e) {
+                e.preventDefault();
                 $data = $(this).attr('data-list-loc')
                 $.confirm({
                     title: 'Locations',
@@ -174,9 +252,9 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ url()->current() }}",
-                    data:function(d) {
+                    data: function (d) {
                         d.start_date = $start;
-                        d.end_date =  $end;
+                        d.end_date = $end;
                     }
                 },
                 // "drawCallback":function(settings){
@@ -193,12 +271,11 @@
                     {data: 'payment_status', name: 'payment_status'},
                     {data: 'permits', name: 'permits', orderable: false, searchable: false},
                     {data: 'locations', name: 'locations', orderable: false, searchable: false},
-                    {data: 'photos', name: 'photos' , orderable: false, searchable: false},
+                    {data: 'photos', name: 'photos', orderable: false, searchable: false},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
-
 
 
             $body.on('click', '.assign-button', function () {
@@ -269,8 +346,6 @@
                     },
                 });
             })
-
-            $('[data-sidebartype="mini-sidebar"]').click()
         });
     </script>
 @endpush

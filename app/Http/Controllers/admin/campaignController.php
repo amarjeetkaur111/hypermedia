@@ -7,6 +7,7 @@ use App\Models\AssetNetwork;
 use App\Models\Assets;
 use App\Models\AssetStatus;
 use App\Models\CampaignBucket;
+use App\Models\CampaignPermits;
 use App\Models\Campaigns;
 use App\Models\CampaignStatus;
 use App\Models\User;
@@ -19,14 +20,14 @@ class campaignController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Campaigns::with('client','buckets','buckets.locations')->select('*');
+            $data = Campaigns::with('client', 'buckets', 'buckets.locations')->select('*');
             if ($request->has('start_date') && $request->start_date) {
                 $s_date = Carbon::createFromFormat('d/m/Y', $request->start_date);
-                $data = $data->whereDate('start_date', '>=', $s_date);
+                $data = $data->whereDate('start_date', '>=', $s_date)->orWhereDate('end_date', '>=', $s_date);
             }
             if ($request->has('end_date') && $request->end_date) {
                 $e_date = Carbon::createFromFormat('d/m/Y', $request->end_date);
-                $data = $data->whereDate('end_date', '<=', $e_date);
+                $data = $data->whereDate('end_date', '<=', $e_date)->orWhereDate('start_date', '<=', $e_date);
             }
             return DataTables::eloquent($data)
                 ->editColumn('client_name', function ($row) {
@@ -36,35 +37,38 @@ class campaignController extends Controller
 
                     $btn = '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm">Edit</a>';
                     if ($row->status == 'Active') {
-                        $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn btn-primary btn-sm status-button">Status</a>';
-                        $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn btn-primary btn-sm assign-button">Assign</a>';
+                        $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn btn-primary btn-sm status-button" style="margin-top: 5px;">Status</a>';
+                        $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn btn-primary btn-sm assign-button" style="margin-top: 5px;">Assign</a>';
                     }
 
                     return $btn;
                 })
-                ->addColumn('start_date',function($row){
+                ->addColumn('start_date', function ($row) {
                     $start = Carbon::parse($row->start_date)->format('d/m/Y');
                     $end = Carbon::parse($row->end_date)->format('d/m/Y');
-                    return $start.' to '.$end;
+                    return $start . ' to ' . $end;
                 })
-                ->addColumn('permits',function($row){
-                    return 'abc';
-                })
-                ->addColumn('locations',function($row){
+//                ->addColumn('permits', function ($row) {
+//                    return 'abc';
+//                })
+                ->addColumn('locations', function ($row) {
                     $location = '<ol>';
-                    foreach($row->buckets  as $b){
-                        if($b->locations){
-                            $location .= '<li>'.$b->locations->name.'</li>';
+                    foreach ($row->buckets as $b) {
+                        if ($b->locations) {
+                            $location .= '<li>' . $b->locations->name . '</li>';
                         }
                     }
                     $location .= '</ol>';
-                    $html = '<button data-list-loc="'.$location.'" class="btn btn-primary btn-sm location-btn" >Locations</button>';
+                    $html = '<button data-list-loc="' . $location . '" class="btn btn-primary btn-sm location-btn" >Locations</button>';
                     return $html;
                 })
-                ->addColumn('photos',function($row){
-                    return 'abc';
+                ->addColumn('photos', function ($row) {
+                    return '<button class="btn btn-sm btn-primary photos_btn" dt-data-id="'. route('admin-campaign-campaign-photos',['id' => $row->id]).'">Photos</button>';
                 })
-                ->rawColumns(['action','locations'])
+                ->addColumn('permits', function ($row) {
+                    return '<button class="btn btn-sm btn-primary permits_btn" dt-add-href="'.route('admin-campaign-campaign-permits-add',['id' => $row->id]).'" dt-data-id="'. route('admin-campaign-campaign-permits',['id' => $row->id]).'">Permits</button>';
+                })
+                ->rawColumns(['action', 'locations', 'photos', 'permits'])
                 ->make(true);
         }
         return view('pages.campaign.index');
@@ -258,7 +262,7 @@ class campaignController extends Controller
     public function changeStatus(Request $request, $id)
     {
         $campaign = Campaigns::with('buckets')->findOrFail($id);
-        if (in_array($request->campaign_status,['Completed','Cancelled'])) {
+        if (in_array($request->campaign_status, ['Completed', 'Cancelled'])) {
             AssetStatus::where('campaign_id', $id)->delete();
             foreach ($campaign->buckets as $bucket) {
                 $state = new AssetStatus;
@@ -309,4 +313,28 @@ class campaignController extends Controller
 //    }
 
 
+    public function getCampaignPhotos($id)
+    {
+        $data = Campaigns::with('photos')->find($id);
+        return view('pages.campaign.inner.photos',compact('data'))->render();
+    }
+
+    public function getCampaignPermits($id)
+    {
+        $data = Campaigns::with('permits')->find($id);
+        return view('pages.campaign.inner.permits',compact('data'))->render();
+    }
+
+    public function getCampaignPermitsAdd(Request $request,$id){
+        $obj = new CampaignPermits;
+        $obj->campaign_id = $id;
+        $obj->description = $request->description;
+        if ($request->hasFile('permit_file')) {
+            $file = request()->file('permit_file');
+            $name = $file->store('permit_file', ['disk' => 'my_files']);
+            $obj->permit_file = $name;
+        }
+        $obj->save();
+        return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Permit added successfully!"]);
+    }
 }
