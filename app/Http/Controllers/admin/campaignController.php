@@ -35,7 +35,8 @@ class campaignController extends Controller
                 })
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm">Edit</a>';
+                    $btn = '<a href="' . route('admin-campaign-overview', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm">Overview</a>';
+                    $btn .= '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm" style="margin-top: 5px;">Edit</a>';
                     if ($row->status == 'Active') {
                         $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn btn-primary btn-sm status-button" style="margin-top: 5px;">Status</a>';
                         $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn btn-primary btn-sm assign-button" style="margin-top: 5px;">Assign</a>';
@@ -336,5 +337,10 @@ class campaignController extends Controller
         }
         $obj->save();
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Permit added successfully!"]);
+    }
+
+    public function overview($id){
+        $data = Campaigns::find($id);
+        return view('pages.campaign.overview',compact('data'));
     }
 }

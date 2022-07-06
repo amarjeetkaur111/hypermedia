@@ -90,6 +90,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
     Route::group(['as' => 'campaign-', 'prefix' => 'campaign'], function () {
         Route::get('/', [\App\Http\Controllers\admin\campaignController::class, 'index'])->name('index');
         Route::get('/add/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'add'])->name('add');
+        Route::get('/overview/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'overview'])->name('overview');
         Route::post('/add/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'addPost'])->name('add');
         Route::post('/change-status/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'changeStatus'])->name('change-status');
         Route::get('/campaign-photos/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'getCampaignPhotos'])->name('campaign-photos');
