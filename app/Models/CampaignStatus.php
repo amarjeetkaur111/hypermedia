@@ -17,3 +17,4 @@ class CampaignStatus extends Model
         return $this->hasOne(Campaigns::class,'id','campaign_id');
     }
 }
+

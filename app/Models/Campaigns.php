@@ -35,4 +35,9 @@ class Campaigns extends Model
     public function permits(){
         return $this->hasMany(CampaignPermits::class,'campaign_id','id');
     }
+    
+    public function campaignStatus(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CampaignStatus::class,'campaign_id','id')->withTrashed();
+    }
 }
