@@ -12,7 +12,7 @@
         <tr>
             <td>{{ $d->id }}</td>
             <td>{{ $d->description }}</td>
-            <td><img src="{{ asset('uploads').'/'. $d->photo_path  }}" alt="..." class="img-thumbnail" style="max-width: 100px"></td>
+            <td><img src="{{ $d->photo_path  }}" alt="..." class="img-thumbnail" style="max-width: 100px"></td>
             <td><a href="{{ route('download-file',['table' => \Illuminate\Support\Facades\Crypt::encrypt('campaign_monitoring'),'field' => 'photo_path','id' => $d->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a></td>
         </tr>
     @empty

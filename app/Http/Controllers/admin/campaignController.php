@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class campaignController extends Controller
 {
@@ -123,9 +124,15 @@ class campaignController extends Controller
         $user->status = $request->input('status');
         $user->market = $request->input('market');
         if ($request->hasFile('booking_order_file')) {
-            $file = request()->file('booking_order_file');
-            $name = $file->store('booking_order_file', ['disk' => 'my_files']);
-            $user->booking_order_file = $name;
+
+            $filename = $request->file('booking_order_file')->getClientOriginalName();
+            $path = Storage::disk('s3')->putFileAs('booking_order_file',$request->booking_order_file,$filename ,'public');
+            $user->booking_order_file = config('filesystems.disks.s3.url').'/'.$path;
+
+//
+//            $file = request()->file('booking_order_file');
+//            $name = $file->store('booking_order_file', ['disk' => 'my_files']);
+//            $user->booking_order_file = $name;
         }
         $ids = [];
         $done = [];
@@ -337,9 +344,15 @@ class campaignController extends Controller
         $obj->campaign_id = $id;
         $obj->description = $request->description;
         if ($request->hasFile('permit_file')) {
-            $file = request()->file('permit_file');
-            $name = $file->store('permit_file', ['disk' => 'my_files']);
-            $obj->permit_file = $name;
+
+            $filename = $request->file('permit_file')->getClientOriginalName();
+            $path = Storage::disk('s3')->putFileAs('permit_file',$request->permit_file,$filename ,'public');
+            $obj->permit_file = config('filesystems.disks.s3.url').'/'.$path;
+
+
+//            $file = request()->file('permit_file');
+//            $name = $file->store('permit_file', ['disk' => 'my_files']);
+//            $obj->permit_file = $name;
         }
         $obj->save();
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Permit added successfully!"]);

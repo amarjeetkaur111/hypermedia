@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DefectTracking;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class DefectTrackingController extends Controller
 {
@@ -22,8 +23,8 @@ class DefectTrackingController extends Controller
                     return $row->asset ? $row->asset->ref_no.' - '.$row->asset->name : $row->asset_id ?? 'N/A';
                 })
                 ->addColumn('photo_preview', function ($row) {
-                    return '<a class="img_click" href="' . asset('uploads/' . $row->photo_path) . '">
-                                <img src="' . asset('uploads/' . $row->photo_path) . '"  href="' . asset('uploads/' . $row->photo_path) . '" alt="" height=35 />
+                    return '<a class="img_click" href="' . $row->photo_path . '">
+                                <img src="' . $row->photo_path . '"  href="' . $row->photo_path . '" alt="" height=35 />
                             </a>';
                 })
                 ->addColumn('action', function ($row) {
@@ -68,9 +69,14 @@ class DefectTrackingController extends Controller
             ]);
         }
         if ($request->hasFile('photo')) {
-            $file = request()->file('photo');
-            $name = $file->store('defect_tracking', ['disk' => 'my_files']);
-            $obj->photo_path = $name;
+
+            $filename = $request->file('photo')->getClientOriginalName();
+            $path = Storage::disk('s3')->putFileAs('defect_tracking',$request->photo,$filename ,'public');
+            $obj->photo_path = config('filesystems.disks.s3.url').'/'.$path;
+
+//            $file = request()->file('photo');
+//            $name = $file->store('defect_tracking', ['disk' => 'my_files']);
+//            $obj->photo_path = $name;
         }
         $obj->description = $request->input('description');
         $obj->status = $request->input('status');
