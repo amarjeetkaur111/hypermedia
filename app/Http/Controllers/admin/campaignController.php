@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AssetNetwork;
 use App\Models\Assets;
 use App\Models\AssetStatus;
+use App\Models\CampaignAssign;
 use App\Models\CampaignBucket;
 use App\Models\CampaignPermits;
 use App\Models\Campaigns;
@@ -298,8 +299,13 @@ class campaignController extends Controller
 
     public function assignCampaignPost(Request $request, $id)
     {
-        $campaign = Campaigns::find($id);
-        $campaign->assignee()->sync($request->user);
+//        $campaign = Campaigns::find($id);
+//        $campaign->assignee()->sync($request->user);
+        CampaignAssign::where('campaign_id', $id)->delete();
+        $state = new CampaignAssign;
+        $state->campaign_id = $id;
+        $state->user_id = $request->user;
+        $state->save();
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
     }
 
