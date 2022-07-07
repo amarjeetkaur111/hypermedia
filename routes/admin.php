@@ -95,7 +95,8 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
         Route::post('/change-status/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'changeStatus'])->name('change-status');
         Route::get('/campaign-photos/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'getCampaignPhotos'])->name('campaign-photos');
         Route::get('/campaign-permits/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'getCampaignPermits'])->name('campaign-permits');
-        Route::post('/campaign-permits-add/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'getCampaignPermitsAdd'])->name('campaign-permits-add');
+        Route::get('/campaign-permits-add/{id?}/{permit_id?}', [\App\Http\Controllers\admin\campaignController::class, 'getCampaignPermitsAdd'])->name('campaign-permits-add');
+        Route::post('/campaign-permits-add/{id?}/{permit_id?}', [\App\Http\Controllers\admin\campaignController::class, 'getCampaignPermitsAddPost'])->name('campaign-permits-add');
 //        Route::post('/change-campaign-status/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'changeCampaignStatus'])->name('change-campaign-status');
         Route::get('/assign/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'assignCampaign'])->name('assign');
         Route::post('/assign-post/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'assignCampaignPost'])->name('assign-post');

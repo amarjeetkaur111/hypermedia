@@ -27,7 +27,6 @@ class select2DataController extends Controller
             'Content-Disposition' => 'attachment; filename="'.$str_arr[2].'"',
         ];
         return \Response::make(Storage::disk('s3')->get($str), 200, $headers);
-//        https://hyper-taskmanager.s3.ap-south-1.amazonaws.com/image/qOTnVjT4xcnNR5FB9txfoqUz6CewgFttdWnhOTVH.png
 //        return response()->download(public_path('uploads/' . $file->{$field}));
     }
 
