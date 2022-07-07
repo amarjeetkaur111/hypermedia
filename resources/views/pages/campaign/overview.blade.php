@@ -181,8 +181,75 @@
                 
                     
                     <tr>
-                        <th scope="row">{{$bucket->locations->id}}</th>
+                        <td scope="row">{{$bucket->locations->id}}</td>
                         <td>{{$bucket->locations->name}}</td>
+                        <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
+                        <td>{{$data->client->name}}</td> -->
+                    </tr>
+                    
+                    @endforeach
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="page-title">Photos</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" style="font-weight: bold;">#</th>
+                        <th scope="col" style="font-weight: bold;">Description</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">View</th>
+                        <!-- <th scope="col">Campaign Assign By</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($data->photos as $photo)
+                
+                    
+                    <tr>
+                        <td scope="row">{{$photo->id}}</td>
+                        <td scope="row">{{$photo->description}}</td>
+                        <td scope="row"><img src="{{$photo->photo_path}}" alt="" width="100" height="50"></td>
+                        <td><i class="fa fa-eye photos_btn" data-img="{{$photo->photo_path}}"></i></td>
+                        <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
+                        <td>{{$data->client->name}}</td> -->
+                    </tr>
+                    
+                    @endforeach
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="page-title">Permits</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" style="font-weight: bold;">#</th>
+                        <th scope="col" style="font-weight: bold;">Description</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">View</th>
+                        <!-- <th scope="col">Campaign Assign By</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($data->permits as $permit)
+                
+                    
+                    <tr>
+                        <td scope="row">{{$permit->id}}</td>
+                        <td scope="row">{{$permit->description}}</td>
+                        <td scope="row"><img src="{{$permit->permit_file}}" alt="" width="100" height="50"></td>
+                        <td><i class="fa fa-eye photos_btn" data-img="{{$permit->permit_file}}"></i></td>
                         <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td> -->
                     </tr>
@@ -197,3 +264,24 @@
 </div>
 
 @endsection
+
+@push('custom-scripts')
+<script>
+      $body = $('body');
+      $body.on('click', '.photos_btn', function (e) {
+                e.preventDefault();
+                $href = $(this).attr('data-img');
+                jc_avail_photo = $.confirm({
+                    animateFromElement: true,
+                    title: 'Photo',
+                    content: '<img src="'+$href+'" >',
+                    columnClass: 'large',
+                    buttons: {
+                        Close: function () {
+                            return;
+                        },
+                    },
+                });
+            })
+</script>
+@endpush

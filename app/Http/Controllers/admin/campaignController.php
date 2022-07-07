@@ -330,6 +330,7 @@ class campaignController extends Controller
     public function getCampaignPhotos($id)
     {
         $data = Campaigns::with('photos')->find($id);
+        // dd($data);
         return view('pages.campaign.inner.photos',compact('data'))->render();
     }
 
@@ -359,7 +360,7 @@ class campaignController extends Controller
     }
 
     public function overview($id){
-        $data = Campaigns::with('client')->with('buckets')->with('buckets.locations')->with('campaignStatus')->with('assignee')->find($id);
+        $data = Campaigns::with('client')->with('buckets')->with('buckets.locations')->with('campaignStatus')->with('assignee')->with('photos')->with('permits')->find($id);
         // dd($data->toArray());
         return view('pages.campaign.overview',compact('data'));
     }
