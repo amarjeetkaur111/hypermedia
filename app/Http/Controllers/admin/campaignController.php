@@ -66,10 +66,10 @@ class campaignController extends Controller
                     return $html;
                 })
                 ->addColumn('photos', function ($row) {
-                    return '<button class="btn btn-sm btn-primary photos_btn" dt-data-id="'. route('admin-campaign-campaign-photos',['id' => $row->id]).'">Photos</button>';
+                    return '<button class="btn btn-sm btn-primary photos_btn" dt-data-id="' . route('admin-campaign-campaign-photos', ['id' => $row->id]) . '">Photos</button>';
                 })
                 ->addColumn('permits', function ($row) {
-                    return '<button class="btn btn-sm btn-primary permits_btn" dt-add-href="'.route('admin-campaign-campaign-permits-add',['id' => $row->id]).'" dt-data-id="'. route('admin-campaign-campaign-permits',['id' => $row->id]).'">Permits</button>';
+                    return '<button class="btn btn-sm btn-primary permits_btn" dt-add-href="' . route('admin-campaign-campaign-permits-add', ['id' => $row->id]) . '" dt-data-id="' . route('admin-campaign-campaign-permits', ['id' => $row->id]) . '">Permits</button>';
                 })
                 ->rawColumns(['action', 'locations', 'photos', 'permits'])
                 ->make(true);
@@ -126,8 +126,8 @@ class campaignController extends Controller
         if ($request->hasFile('booking_order_file')) {
 
             $filename = $request->file('booking_order_file')->getClientOriginalName();
-            $path = Storage::disk('s3')->putFileAs('booking_order_file',$request->booking_order_file,$filename ,'public');
-            $user->booking_order_file = config('filesystems.disks.s3.url').'/'.$path;
+            $path = Storage::disk('s3')->putFileAs('booking_order_file', $request->booking_order_file, $filename, 'public');
+            $user->booking_order_file = config('filesystems.disks.s3.url') . '/' . $path;
 
 //
 //            $file = request()->file('booking_order_file');
@@ -331,36 +331,39 @@ class campaignController extends Controller
     {
         $data = Campaigns::with('photos')->find($id);
         // dd($data);
-        return view('pages.campaign.inner.photos',compact('data'))->render();
+        return view('pages.campaign.inner.photos', compact('data'))->render();
     }
 
     public function getCampaignPermits($id)
     {
         $data = Campaigns::with('permits')->find($id);
-        return view('pages.campaign.inner.permits',compact('data'))->render();
+        return view('pages.campaign.inner.permits', compact('data'))->render();
     }
 
-    public function getCampaignPermitsAdd($id, $permit_id = null){
+    public function getCampaignPermitsAdd($id, $permit_id = null)
+    {
         $data = new CampaignPermits;
-        $url = route('admin-campaign-campaign-permits-add',['id' => $id]);
-        if($permit_id){
-            $url = route('admin-campaign-campaign-permits-add',['id' => $id, 'permit_id' => $permit_id]);
+        $url = route('admin-campaign-campaign-permits-add', ['id' => $id]);
+        if ($permit_id) {
+            $url = route('admin-campaign-campaign-permits-add', ['id' => $id, 'permit_id' => $permit_id]);
             $data = CampaignPermits::find($permit_id);
         }
-        return view('pages.campaign.inner.addPermit',compact('data','url'));
+        return view('pages.campaign.inner.addPermit', compact('data', 'url'));
     }
-    public function getCampaignPermitsAddPost(Request $request,$id,$permit_id = null){
-        if($permit_id){
+
+    public function getCampaignPermitsAddPost(Request $request, $id, $permit_id = null)
+    {
+        if ($permit_id) {
             $obj = CampaignPermits::find($permit_id);
-        }else{
+        } else {
             $obj = new CampaignPermits;
             $obj->campaign_id = $id;
         }
         $obj->description = $request->description;
         if ($request->hasFile('permit_file')) {
             $filename = $request->file('permit_file')->getClientOriginalName();
-            $path = Storage::disk('s3')->putFileAs('permit_file',$request->permit_file,$filename ,'public');
-            $obj->permit_file = config('filesystems.disks.s3.url').'/'.$path;
+            $path = Storage::disk('s3')->putFileAs('permit_file', $request->permit_file, $filename, 'public');
+            $obj->permit_file = config('filesystems.disks.s3.url') . '/' . $path;
 
 //            $file = request()->file('permit_file');
 //            $name = $file->store('permit_file', ['disk' => 'my_files']);
@@ -370,9 +373,11 @@ class campaignController extends Controller
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Permit added successfully!"]);
     }
 
-    public function overview($id){
-        $data = Campaigns::with('client')->with('buckets')->with('buckets.locations')->with('buckets.assets')->with('campaignStatus')->with('assignee')->with('photos')->with('permits')->find($id);
-        // dd($data->toArray());
-        return view('pages.campaign.overview',compact('data'));
+    public function overview($id)
+    {
+        $data = Campaigns::with(['client', 'buckets', 'buckets.locations', 'buckets.assets', 'assignee', 'photos', 'permits', 'campaignStatus' => function ($q) {
+            $q->withTrashed();
+        }])->find($id);
+        return view('pages.campaign.overview', compact('data'));
     }
 }

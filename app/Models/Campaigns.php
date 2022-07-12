@@ -28,16 +28,18 @@ class Campaigns extends Model
         return $this->belongsToMany(User::class,(new CampaignAssign)->getTable(),'campaign_id','user_id','id','id');
     }
 
-    public function photos(){
+    public function photos(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(DigitalPhotos::class,'campaign_id','id');
     }
 
-    public function permits(){
+    public function permits(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(CampaignPermits::class,'campaign_id','id');
     }
-    
+
     public function campaignStatus(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(CampaignStatus::class,'campaign_id','id')->withTrashed();
+        return $this->hasMany(CampaignStatus::class,'campaign_id','id');
     }
 }
