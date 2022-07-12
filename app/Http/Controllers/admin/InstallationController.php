@@ -11,25 +11,11 @@ use DataTables;
 
 class InstallationController extends Controller
 {
-    public function checkStartDate($date){
-        if(now()->startOfDay()->gt($date)){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-
-    public function checkEndDate($date){
-        if(now()->endOfDay()->lt($date)){
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-    public function checkDate($start,$end){
-        if(now()->startOfDay()->gt($start)){
+    public function checkDate($start, $end)
+    {
+        if (now()->startOfDay()->gt($start)) {
             return '<label class="label label-primary">Pending</label>';
-        }else if(now()->endOfDay()->gt($end)){
+        } else if (now()->endOfDay()->gt($end)) {
             return '<label class="label label-danger">Done</label>';
         }
         return '<label class="label label-success">Current</label>';
@@ -38,12 +24,12 @@ class InstallationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Campaigns::with(  'buckets.locations')->select('*');
+            $data = Campaigns::with('buckets.locations')->select('*');
             return DataTables::eloquent($data)
                 ->editColumn('timer', function ($row) {
                     $start_date = Carbon::parse($row->start_date);
                     $end_date = Carbon::parse($row->end_date);
-                    return $this->checkDate($start_date,$end_date);
+                    return $this->checkDate($start_date, $end_date);
                 })
                 ->editColumn('type', function ($row) {
                     return $row->status;
@@ -76,14 +62,15 @@ class InstallationController extends Controller
                 ->addColumn('action', function ($row) {
                     return '';
                 })
-                    ->rawColumns(['action', 'locations', 'photos', 'permits', 'timer', 'assets'])
+                ->rawColumns(['action', 'locations', 'photos', 'permits', 'timer', 'assets'])
                 ->make(true);
         }
         return view('pages.campaign.installation.index');
     }
 
-    public function getCampaignAssets($id){
-        $data = CampaignBucket::with('assets')->where('campaign_id',$id)->get();
-        return view('pages.campaign.installation.inner.assets',compact('data'))->render();
+    public function getCampaignAssets($id)
+    {
+        $data = CampaignBucket::with('assets')->where('campaign_id', $id)->get();
+        return view('pages.campaign.installation.inner.assets', compact('data'))->render();
     }
 }
