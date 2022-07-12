@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="tab">
-        <button class="tablinks" data-id="campaign_listing">Campaign Listing</button>
+        <button class="tablinks campaign_listing" data-id="campaign_listing">Campaign Listing</button>
         <button class="tablinks" data-id="campaign_calander">Calander</button>
     </div>
     <div class="container-fluid">
@@ -436,6 +436,7 @@
     });
     $(document).ready(function(){ 
     $('#campaign_listing').click();
+    $('.campaign_listing').addClass('active');
     });
 </script>
 @endpush
