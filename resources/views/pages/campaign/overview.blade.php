@@ -8,13 +8,16 @@
         background-color: #58595B;
         color: white;
     }
+    .page-title{
+        text-transform: capitalize;
+    }
 </style>
 
 <div class="page-wrapper">
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-12 d-flex no-block align-items-center">
-                <h4 class="page-title">{{$data->name}}</h4>
+                <div class="page-title"><b>Campaign Name :</b> <i>{{$data->name}}</i></div>
                 <div class="ms-auto text-end">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
