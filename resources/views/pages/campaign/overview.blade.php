@@ -4,12 +4,12 @@
 
 <div class="page-wrapper">
 
-    <div class="tab">
+    <!-- <div class="tab">
         <button class="tablinks" data-id="campaign_listing">Campaign Listing</button>
         <button class="tablinks" data-id="campaign_calander">Calander</button>
-    </div><br />
+    </div><br /> -->
 
-    <div id="campaign_listing" class="tabcontent">
+    
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-12 d-flex no-block align-items-center">
@@ -289,14 +289,8 @@
 
             </div>
         </div>
-    </div>
-    <div id="campaign_calander" class="tabcontent">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="page-title">Calander</h4>
-            </div>
-        </div>
-    </div>
+   
+    
 </div>
 
 @endsection
