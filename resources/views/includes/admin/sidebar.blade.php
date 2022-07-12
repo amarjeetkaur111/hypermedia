@@ -104,7 +104,7 @@
                     >
                     <ul aria-expanded="false" class="collapse first-level">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('admin-campaign-monitoring-index') }}" ><i class="mdi mdi-brightness-7"></i><span class="hide-menu">Campaign Installation</span></a>
+                            <a class="sidebar-link" href="{{ route('admin-campaign-installation-index') }}" ><i class="mdi mdi-brightness-7"></i><span class="hide-menu">Campaign Installation</span></a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-campaign-monitoring-index') }}" ><i class="mdi mdi-camera-party-mode"></i><span class="hide-menu">Campaign Monitoring</span></a>

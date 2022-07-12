@@ -106,6 +106,11 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
             Route::post('/add/{campaign_id}/{id?}', [\App\Http\Controllers\admin\campaignBucketController::class, 'addPost'])->name('add');
             Route::post('/get-asset-data',[\App\Http\Controllers\admin\campaignBucketController::class,'getAssetData'])->name('get-asset-data');
         });
+        Route::group(['as' => 'installation-', 'prefix' => 'installation'], function () {
+            Route::get('/', [\App\Http\Controllers\admin\InstallationController::class, 'index'])->name('index');
+            Route::get('/assets/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'getCampaignAssets'])->name('assets');
+//            Route::get('/add/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'add'])->name('add');
+        });
     });
 
 
