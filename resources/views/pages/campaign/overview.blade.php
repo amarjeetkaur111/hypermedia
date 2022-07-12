@@ -14,13 +14,13 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-12 d-flex no-block align-items-center">
-                <h4 class="page-title">Campaign</h4>
+                <h4 class="page-title">{{$data->name}}</h4>
                 <div class="ms-auto text-end">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item">Contract Number</li>
+                            <li class="breadcrumb-item">Campaign</li>
                             <li class="breadcrumb-item" aria-current="page">
-                                {{$data->contract_number}}
+                                Overview
                             </li>
                         </ol>
                     </nav>
@@ -37,9 +37,9 @@
                 </div>
             @endif
             <div class="row mt-2">
-                <div class="col-md-3"><b>Name</b> </div>
+                <div class="col-md-3"><b>Contract Number</b> </div>
                 <div class="col-md-3">
-                    <p class="card-text"><i>{{$data->name}}</i></p>
+                    <p class="card-text"><i>{{$data->contract_number}}</i></p>
                 </div>
                 <div class="col-md-3"><b>Agency</b></div>
                 <div class="col-md-3">

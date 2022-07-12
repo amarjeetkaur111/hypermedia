@@ -12282,3 +12282,11 @@ label {
         left: -19px;
     }
 }
+
+.table thead th{
+    background-color: #58595B !important;
+    color: white !important;
+}
+.btn-primary{
+    background-color: #004f6d !important;
+}
