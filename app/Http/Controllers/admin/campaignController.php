@@ -360,7 +360,7 @@ class campaignController extends Controller
     }
 
     public function overview($id){
-        $data = Campaigns::with('client')->with('buckets')->with('buckets.locations')->with('campaignStatus')->with('assignee')->with('photos')->with('permits')->find($id);
+        $data = Campaigns::with('client')->with('buckets')->with('buckets.locations')->with('buckets.assets')->with('campaignStatus')->with('assignee')->with('photos')->with('permits')->find($id);
         // dd($data->toArray());
         return view('pages.campaign.overview',compact('data'));
     }

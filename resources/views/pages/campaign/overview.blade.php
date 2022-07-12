@@ -1,6 +1,14 @@
 @extends('layouts.admin')
 @section('content')
-
+<style>
+    .btn-primary{
+        background-color: #004f6d;
+    }
+    .table thead th{
+        background-color: #58595B;
+        color: white;
+    }
+</style>
 
 <div class="page-wrapper">
     <div class="page-breadcrumb">
@@ -22,60 +30,128 @@
     </div><br />
     <div class="card">
         <div class="card-body">
-            <div class="row mt-1">
+            <div class="row mt-2">
                 <div class="col-md-3"><b>Name</b> </div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->name}}</i></p>
                 </div>
-            </div>
-            <div class="row mt-1">
                 <div class="col-md-3"><b>Agency</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->agency}}</i></p>
                 </div>
             </div>
+            <div class="row mt-2">
+                <div class="col-md-3"><b>Client</b> </div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->client->name}}</i></p>
+                </div>
+                <div class="col-md-3"><b>Market</b> </div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->market}}</i></p>
+                </div>
+            </div>
+            <div class="row mt-2">
+            <div class="col-md-3"><b>Contract Name</b></div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->contract_name}}</i></p>
+                </div>
+                <div class="col-md-3"><b>Description</b> </div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->description}}</i></p>
+                </div>
+            </div>
+            <div class="row mt-2">
+            <div class="col-md-3"><b>Campaign Type</b></div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->campaign_type}}</i></p>
+                </div>
+                <div class="col-md-3"><b>Start Date</b> </div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{Carbon\Carbon::parse($data->start_date)->format('d F Y')}}</i></p>
+                </div>
+            </div>
+            <div class="row mt-2">
+            <div class="col-md-3"><b>Start Time</b></div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->start_time}}</i></p>
+                </div>
+                <div class="col-md-3"><b>End Date</b> </div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{Carbon\Carbon::parse($data->end_date)->format('d F Y')}}</i></p>
+                </div>
+            </div>
+            <div class="row mt-2">
+            <div class="col-md-3"><b>End Time</b></div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->end_time}}</i></p>
+                </div>
+                <div class="col-md-3"><b>Payment status</b> </div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->payment_status}}</i></p>
+                </div>
+            </div>
+            <div class="row mt-2">
+            <div class="col-md-3"><b>Booking Order</b></div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->booking_order}}</i></p>
+                </div>
+                @if($data->booking_order_file)
+                <div class="col-md-3"><b>Booking File</b></div>
+                <div class="col-md-3">
+                    <p class="card-text"><a href="{{route('download-file',['table' => Crypt::encrypt('campaign'),'field'=>'booking_order_file', 'id'=>$data->id])}}"><button type="button" class="btn btn-primary">Download</button></a></p>
+                </div>
+
+                @endif
+            </div>
+            <!-- <div class="row mt-1">
+            <div class="col-md-3"><b>Agency</b></div>
+                <div class="col-md-3">
+                    <p class="card-text"><i>{{$data->agency}}</i></p>
+                </div>
+            </div>
+            
             <div class="row mt-1">
                 <div class="col-md-3"><b>Client</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->client->name}}</i></p>
                 </div>
             </div>
             <div class="row mt-1">
                 <div class="col-md-3"><b>Brand</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->brand}}</i></p>
                 </div>
             </div>
             <div class="row mt-1">
                 <div class="col-md-3"><b>Market</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->market}}</i></p>
                 </div>
             </div>
             <div class="row mt-1">
                 <div class="col-md-3"><b>Contract Name</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->contract_name}}</i></p>
                 </div>
             </div>
             <div class="row mt-1">
                 <div class="col-md-3"><b>Description</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->description}}</i></p>
                 </div>
             </div>
             <div class="row mt-1">
                 <div class="col-md-3"><b>Start Date</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{Carbon\Carbon::parse($data->start_date)->format('d F Y')}}</i></p>
                 </div>
             </div>
             <div class="row mt-1">
                 <div class="col-md-3"><b>Start Time</b></div>
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="card-text"><i>{{$data->start_time}}</i></p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="card">
@@ -85,20 +161,32 @@
                 <thead>
                     <tr>
                         <th scope="col" style="font-weight: bold;">#</th>
+                        <th scope="col" style="font-weight: bold;">Asset Name</th>
+                        <th scope="col" style="font-weight: bold;">Asset Type</th>
+                        <th scope="col" style="font-weight: bold;">Location</th>
                         <th scope="col" style="font-weight: bold;">Start Date</th>
                         <th scope="col" style="font-weight: bold;">End Date</th>
-                        <th scope="col" style="font-weight: bold;">Asset Type</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
+                    @php 
+                    $i = 1; 
+                    @endphp
                     @foreach($data->buckets as $bucket)
-
+                    
                     <tr>
-                        <th scope="row">{{$bucket->id}}</th>
+                        <th scope="row">@php echo $i @endphp</th>
+                        <td>{{$bucket->assets->name}}</td>
+                        <td>{{$bucket->asset_type}}</td>
+                        <td>{{$bucket->locations->name}}</td>
                         <td>{{Carbon\Carbon::parse($bucket->start_date)->format('d F Y')}}</td>
                         <td>{{Carbon\Carbon::parse($bucket->end_date)->format('d F Y')}}</td>
-                        <td>Asset Type</td>
+                        
                     </tr>
+                    @php 
+                    $i++; 
+                    @endphp
                     @endforeach
                 </tbody>
             </table>
@@ -119,14 +207,20 @@
                     </tr>
                 </thead>
                 <tbody>
+                @php 
+                    $j = 1; 
+                    @endphp
                     @foreach($data->campaignStatus as $campaign_status)
 
                     <tr>
-                        <th scope="row">{{$campaign_status->id}}</th>
+                        <th scope="row">@php echo $j @endphp</th>
                         <td>{{$campaign_status->status}}</td>
                         <td>{{$bucket->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td>
                     </tr>
+                    @php 
+                    $j++; 
+                    @endphp
                     @endforeach
                 </tbody>
             </table>
@@ -141,21 +235,26 @@
                 <thead>
                     <tr>
                         <th scope="col" style="font-weight: bold;">#</th>
-                        <th scope="col" style="font-weight: bold;">Name</th>
-                        <!-- <th scope="col">Campaign Assign At</th> -->
+                        <th scope="col" style="font-weight: bold;">Assign To</th>
+                       
                         <!-- <th scope="col">Campaign Assign By</th> -->
                     </tr>
                 </thead>
                 <tbody>
+                @php 
+                    $k = 1; 
+                    @endphp
                     @foreach($data->assignee as $assignee)
                     
                     <tr>
-                        <th scope="row">{{$assignee->id}}</th>
+                        <th scope="row">@php echo $k @endphp</th>
                         <td>{{$assignee->name}}</td>
-                        <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
-                        <td>{{$data->client->name}}</td> -->
+                       
+                       
                     </tr>
-                    
+                    @php 
+                    $k++; 
+                    @endphp
                     @endforeach
                 </tbody>
             </table>
@@ -164,36 +263,7 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h4 class="page-title">Campaign Locations</h4>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col" style="font-weight: bold;">#</th>
-                        <th scope="col" style="font-weight: bold;">Name</th>
-                        <!-- <th scope="col">Campaign Assign At</th> -->
-                        <!-- <th scope="col">Campaign Assign By</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach($data->buckets as $bucket)
-                
-                    
-                    <tr>
-                        <td scope="row">{{$bucket->locations->id}}</td>
-                        <td>{{$bucket->locations->name}}</td>
-                        <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
-                        <td>{{$data->client->name}}</td> -->
-                    </tr>
-                    
-                    @endforeach
-                </tbody>
-            </table>
-
-
-        </div>
-    </div>
+    
     <div class="card">
         <div class="card-body">
             <h4 class="page-title">Photos</h4>
@@ -204,6 +274,7 @@
                         <th scope="col" style="font-weight: bold;">Description</th>
                         <th scope="col">Photo</th>
                         <th scope="col">View</th>
+                        <th scope="col">Download</th>
                         <!-- <th scope="col">Campaign Assign By</th> -->
                     </tr>
                 </thead>
@@ -216,6 +287,8 @@
                         <td scope="row">{{$photo->description}}</td>
                         <td scope="row"><img src="{{$photo->photo_path}}" alt="" width="100" height="50"></td>
                         <td><i class="fa fa-eye photos_btn" data-img="{{$photo->photo_path}}"></i></td>
+                        <td><a href="{{route('download-file',['table' => Crypt::encrypt('campaign_monitoring'),'field'=>'photo_path', 'id'=>$photo->id])}}"><button type="button" class="btn btn-primary">Download</button></a></td>
+
                         <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td> -->
                     </tr>
@@ -236,7 +309,6 @@
                     <tr>
                         <th scope="col" style="font-weight: bold;">#</th>
                         <th scope="col" style="font-weight: bold;">Description</th>
-                        <th scope="col">Photo</th>
                         <th scope="col">View</th>
                         <!-- <th scope="col">Campaign Assign By</th> -->
                     </tr>
@@ -248,8 +320,8 @@
                     <tr>
                         <td scope="row">{{$permit->id}}</td>
                         <td scope="row">{{$permit->description}}</td>
-                        <td scope="row"><img src="{{$permit->permit_file}}" alt="" width="100" height="50"></td>
-                        <td><i class="fa fa-eye photos_btn" data-img="{{$permit->permit_file}}"></i></td>
+                        
+                        <td><a href="{{route('download-file',['table' => Crypt::encrypt('campaign_permits'),'field'=>'permit_file', 'id'=>$permit->id])}}"><button type="button" class="btn btn-primary">Download</button></a></td>
                         <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td> -->
                     </tr>

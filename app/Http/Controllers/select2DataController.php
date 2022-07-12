@@ -17,7 +17,9 @@ class select2DataController extends Controller
 {
     public function downloadFile($table, $field, $id)
     {
+        // dd($_GET);
         $table = Crypt::decrypt($table);
+        // dd($table);
         $file = DB::table($table)->find($id);
         $str = str_replace(env('AWS_URL'),'',$file->{$field});
         $str_arr = explode('/',$str);
