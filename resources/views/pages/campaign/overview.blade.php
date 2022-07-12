@@ -221,7 +221,7 @@
                     <tr>
                         <th scope="row">@php echo $j @endphp</th>
                         <td>{{$campaign_status->status}}</td>
-                        <td>{{$data->created_at->format('M d Y')}}</td>
+                        <td>{{$campaign_status->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td>
                     </tr>
                     @php
