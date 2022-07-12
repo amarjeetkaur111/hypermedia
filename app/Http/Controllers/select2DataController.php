@@ -17,18 +17,23 @@ class select2DataController extends Controller
 {
     public function downloadFile($table, $field, $id)
     {
-        // dd($_GET);
         $table = Crypt::decrypt($table);
-        // dd($table);
         $file = DB::table($table)->find($id);
-        $str = str_replace(env('AWS_URL'),'',$file->{$field});
-        $str_arr = explode('/',$str);
-        $s = explode('.',$str_arr[2]);
-        $headers = [
-            'Content-Type' => 'application/'.$s[1],
-            'Content-Disposition' => 'attachment; filename="'.$str_arr[2].'"',
-        ];
-        return \Response::make(Storage::disk('s3')->get($str), 200, $headers);
+        if($file){
+            try{
+                $str = str_replace(env('AWS_URL'),'',$file->{$field});
+                $str_arr = explode('/',$str);
+                $s = explode('.',$str_arr[2]);
+                $headers = [
+                    'Content-Type' => 'application/'.$s[1],
+                    'Content-Disposition' => 'attachment; filename="'.$str_arr[2].'"',
+                ];
+                return \Response::make(Storage::disk('s3')->get($str), 200, $headers);
+            }catch(\Exception $exception){
+                return redirect()->back()->with(['status' => 'Error', 'msg' => 'File Not Found', 'class' => 'danger']);
+            }
+        }
+        return redirect()->back()->with(['status' => 'Error', 'msg' => 'File Not Found', 'class' => 'danger']);
 //        return response()->download(public_path('uploads/' . $file->{$field}));
     }
 
