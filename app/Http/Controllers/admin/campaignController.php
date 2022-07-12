@@ -340,16 +340,27 @@ class campaignController extends Controller
         return view('pages.campaign.inner.permits',compact('data'))->render();
     }
 
-    public function getCampaignPermitsAdd(Request $request,$id){
-        $obj = new CampaignPermits;
-        $obj->campaign_id = $id;
+    public function getCampaignPermitsAdd($id, $permit_id = null){
+        $data = new CampaignPermits;
+        $url = route('admin-campaign-campaign-permits-add',['id' => $id]);
+        if($permit_id){
+            $url = route('admin-campaign-campaign-permits-add',['id' => $id, 'permit_id' => $permit_id]);
+            $data = CampaignPermits::find($permit_id);
+        }
+        return view('pages.campaign.inner.addPermit',compact('data','url'));
+    }
+    public function getCampaignPermitsAddPost(Request $request,$id,$permit_id = null){
+        if($permit_id){
+            $obj = CampaignPermits::find($permit_id);
+        }else{
+            $obj = new CampaignPermits;
+            $obj->campaign_id = $id;
+        }
         $obj->description = $request->description;
         if ($request->hasFile('permit_file')) {
-
             $filename = $request->file('permit_file')->getClientOriginalName();
             $path = Storage::disk('s3')->putFileAs('permit_file',$request->permit_file,$filename ,'public');
             $obj->permit_file = config('filesystems.disks.s3.url').'/'.$path;
-
 
 //            $file = request()->file('permit_file');
 //            $name = $file->store('permit_file', ['disk' => 'my_files']);

@@ -14,7 +14,12 @@
             <td>{{ $d->id }}</td>
             <td>{{ $d->description }}</td>
 {{--            <td><img src="{{ asset('uploads').'/'. $d->permit_file  }}" alt="..." class="img-thumbnail" style="max-width: 100px"></td>--}}
-            <td><a href="{{ route('download-file',['table' => \Illuminate\Support\Facades\Crypt::encrypt('campaign_permits'),'field' => 'permit_file','id' => $d->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a></td>
+            <td>
+                @if($d->permit_file)
+                <a href="{{ route('download-file',['table' => \Illuminate\Support\Facades\Crypt::encrypt('campaign_permits'),'field' => 'permit_file','id' => $d->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+                @endif
+                <a hrefs="{{ route('admin-campaign-campaign-permits-add',['id' => $d->campaign_id,'permit_id' => $d->id]) }}" class="btn btn-sm btn-primary edit-btnss"><i class="fas fa-pen-square"></i></a>
+            </td>
         </tr>
     @empty
         <tr>

@@ -191,18 +191,7 @@
 
                                 $.confirm({
                                     title: 'Add Permit!',
-                                    content: '' +
-                                        '<form action="' + $href_inner + '" class="formName" method="post" enctype="multipart/form-data" >' +
-                                        '{{ csrf_field() }}' +
-                                        '<div class="form-group">' +
-                                        '<label>Description</label>' +
-                                        '<textarea name="description" class="form-control name"></textarea>' +
-                                        '</div>' +
-                                        '<div class="form-group">' +
-                                        '<label>File</label>' +
-                                        '<input type="file" name="permit_file" class="form-control">' +
-                                        '</div>' +
-                                        '</form>',
+                                    content:'url:' + $href_inner,
                                     buttons: {
                                         formSubmit: {
                                             text: 'Submit',
@@ -230,6 +219,35 @@
                         },
                     },
                 });
+            })
+
+            $body.on('click','.edit-btnss',function(e){
+                console.log('clicked')
+                $href_inner = $(this).attr('hrefs')
+                e.preventDefault();
+                $.confirm({
+                    title: 'Add Permit!',
+                    content:'url:' + $href_inner,
+                    buttons: {
+                        formSubmit: {
+                            text: 'Submit',
+                            btnClass: 'btn-blue',
+                            action: function () {
+                                var name = this.$content.find('.name').val();
+                                if (!name) {
+                                    $.alert('Give some description');
+                                    return false;
+                                } else {
+                                    $('.formName').submit()
+                                }
+                            }
+                        },
+                        cancel: function () {
+                            //close
+                        },
+                    },
+                });
+                jc_avail_permit.close();
             })
 
             $body.on('click', '.location-btn', function (e) {
