@@ -30,6 +30,12 @@
     </div><br />
     <div class="card">
         <div class="card-body">
+            @if(\Illuminate\Support\Facades\Session::has('msg'))
+                <div
+                    class="alert alert-{{ \Illuminate\Support\Facades\Session::has('class') ? \Illuminate\Support\Facades\Session::get('class') : 'default' }}">
+                    <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
+                </div>
+            @endif
             <div class="row mt-2">
                 <div class="col-md-3"><b>Name</b> </div>
                 <div class="col-md-3">
@@ -109,7 +115,7 @@
                     <p class="card-text"><i>{{$data->agency}}</i></p>
                 </div>
             </div>
-            
+
             <div class="row mt-1">
                 <div class="col-md-3"><b>Client</b></div>
                 <div class="col-md-3">
@@ -166,15 +172,15 @@
                         <th scope="col" style="font-weight: bold;">Location</th>
                         <th scope="col" style="font-weight: bold;">Start Date</th>
                         <th scope="col" style="font-weight: bold;">End Date</th>
-                        
+
                     </tr>
                 </thead>
                 <tbody>
-                    @php 
-                    $i = 1; 
+                    @php
+                    $i = 1;
                     @endphp
                     @foreach($data->buckets as $bucket)
-                    
+
                     <tr>
                         <th scope="row">@php echo $i @endphp</th>
                         <td>{{$bucket->assets->name}}</td>
@@ -182,10 +188,10 @@
                         <td>{{$bucket->locations->name}}</td>
                         <td>{{Carbon\Carbon::parse($bucket->start_date)->format('d F Y')}}</td>
                         <td>{{Carbon\Carbon::parse($bucket->end_date)->format('d F Y')}}</td>
-                        
+
                     </tr>
-                    @php 
-                    $i++; 
+                    @php
+                    $i++;
                     @endphp
                     @endforeach
                 </tbody>
@@ -207,8 +213,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                @php 
-                    $j = 1; 
+                @php
+                    $j = 1;
                     @endphp
                     @foreach($data->campaignStatus as $campaign_status)
 
@@ -218,8 +224,8 @@
                         <td>{{$bucket->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td>
                     </tr>
-                    @php 
-                    $j++; 
+                    @php
+                    $j++;
                     @endphp
                     @endforeach
                 </tbody>
@@ -236,24 +242,24 @@
                     <tr>
                         <th scope="col" style="font-weight: bold;">#</th>
                         <th scope="col" style="font-weight: bold;">Assign To</th>
-                       
+
                         <!-- <th scope="col">Campaign Assign By</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                @php 
-                    $k = 1; 
+                @php
+                    $k = 1;
                     @endphp
                     @foreach($data->assignee as $assignee)
-                    
+
                     <tr>
                         <th scope="row">@php echo $k @endphp</th>
                         <td>{{$assignee->name}}</td>
-                       
-                       
+
+
                     </tr>
-                    @php 
-                    $k++; 
+                    @php
+                    $k++;
                     @endphp
                     @endforeach
                 </tbody>
@@ -263,7 +269,7 @@
         </div>
     </div>
 
-    
+
     <div class="card">
         <div class="card-body">
             <h4 class="page-title">Photos</h4>
@@ -280,8 +286,8 @@
                 </thead>
                 <tbody>
                 @foreach($data->photos as $photo)
-                
-                    
+
+
                     <tr>
                         <td scope="row">{{$photo->id}}</td>
                         <td scope="row">{{$photo->description}}</td>
@@ -292,7 +298,7 @@
                         <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td> -->
                     </tr>
-                    
+
                     @endforeach
                 </tbody>
             </table>
@@ -315,17 +321,17 @@
                 </thead>
                 <tbody>
                 @foreach($data->permits as $permit)
-                
-                    
+
+
                     <tr>
                         <td scope="row">{{$permit->id}}</td>
                         <td scope="row">{{$permit->description}}</td>
-                        
+
                         <td><a href="{{route('download-file',['table' => Crypt::encrypt('campaign_permits'),'field'=>'permit_file', 'id'=>$permit->id])}}"><button type="button" class="btn btn-primary">Download</button></a></td>
                         <!-- <td>{{$bucket->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td> -->
                     </tr>
-                    
+
                     @endforeach
                 </tbody>
             </table>
