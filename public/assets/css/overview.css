@@ -1,0 +1,44 @@
+.page-title {
+    text-transform: capitalize;
+}
+
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    width: 48%;
+    border: transparent;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    margin-left: 1%;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #0099B0;
+    transform: scale(1.1, 1.1);
+    transition: .2s;
+    color: white;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    /* display: none; */
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
