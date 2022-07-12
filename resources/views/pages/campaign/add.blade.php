@@ -300,6 +300,7 @@
                                        class="col-sm-3 text-end control-label col-form-label">Status</label>
                                 <div class="col-sm-9">
                                     <select type="text" name="status" id="status" class="form-control">
+                                        <option value="Not Started">Not Started</option>
                                         <option value="Active">Active</option>
                                         <option value="Completed">Completed</option>
                                         <option value="Cancelled">Cancelled</option>
@@ -547,7 +548,8 @@
                     ]
                 },callback: {
                     onInit: function () {
-                        console.log('hi') }
+                        console.log('Initializing js type ahead')
+                    }
                 }
             });
 

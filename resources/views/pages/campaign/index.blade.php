@@ -336,6 +336,7 @@
                         '<select type="text" name="campaign_status" id="campaign_status" class="form-control name">' +
                         '<option selected disabled>Select Status</option>' +
                         '<option value="Active">Active</option>' +
+                        '<option value="Not Started">Not Started</option>' +
                         '<option value="Installing">Installing</option>' +
                         '<option value="Dismantling">Dismantling</option>' +
                         '<option value="Completed">Completed</option>' +
