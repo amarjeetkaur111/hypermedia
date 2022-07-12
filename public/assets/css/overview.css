@@ -32,7 +32,13 @@
 
 /* Create an active/current tablink class */
 .tab button.active {
-    background-color: #ccc;
+    background-color: #27a9e3;
+    color: white;
+}
+
+.tab button.active:hover {
+    background-color: #0099B0;
+    color: white;
 }
 
 /* Style the tab content */
@@ -45,3 +51,6 @@
 .calan{
     display: none;
 }
+/* .active{
+    background-color: #27a9e3;
+} */

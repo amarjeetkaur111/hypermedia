@@ -22,7 +22,7 @@
     </div>
     <div class="tab">
         <button class="tablinks campaign_listing" data-id="campaign_listing">Campaign Listing</button>
-        <button class="tablinks" data-id="campaign_calander">Calander</button>
+        <button class="tablinks" data-id="campaign_calander">Calendar</button>
     </div>
     <div class="container-fluid">
         <div id="campaign_listing" class="tabcontent">
@@ -117,7 +117,7 @@
         <div id="campaign_calander" class="tabcontent calan">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="page-title">Calander</h4>
+                    <h4 class="page-title">Calendar</h4>
                 </div>
             </div>
         </div>
