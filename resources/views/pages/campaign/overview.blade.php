@@ -177,7 +177,7 @@
                     
                     <tr>
                         <th scope="row">@php echo $i @endphp</th>
-                        <td>{{$bucket->assets->name}}</td>
+                        <td>{{$bucket->assets->name ?? ''}}</td>
                         <td>{{$bucket->asset_type}}</td>
                         <td>{{$bucket->locations->name}}</td>
                         <td>{{Carbon\Carbon::parse($bucket->start_date)->format('d F Y')}}</td>
@@ -215,7 +215,7 @@
                     <tr>
                         <th scope="row">@php echo $j @endphp</th>
                         <td>{{$campaign_status->status}}</td>
-                        <td>{{$bucket->created_at->format('M d Y')}}</td>
+                        <td>{{$data->created_at->format('M d Y')}}</td>
                         <td>{{$data->client->name}}</td>
                     </tr>
                     @php 
