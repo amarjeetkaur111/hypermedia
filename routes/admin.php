@@ -20,6 +20,13 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
         Route::get('/add/{id?}', [\App\Http\Controllers\admin\usersController::class, 'add'])->name('add');
         Route::post('/add/{id?}', [\App\Http\Controllers\admin\usersController::class, 'addPost'])->name('add');
     });
+    //teams
+    Route::group(['as' => 'teams-', 'prefix' => 'teams'], function () {
+        Route::get('/', [\App\Http\Controllers\admin\teamsController::class, 'index'])->name('index');
+        Route::get('/add/{id?}', [\App\Http\Controllers\admin\teamsController::class, 'add'])->name('add');
+        Route::post('/add/{id?}', [\App\Http\Controllers\admin\teamsController::class, 'addPost'])->name('add');
+    });
+
     //roles
     Route::group(['as' => 'roles-', 'prefix' => 'roles'], function () {
         Route::get('/', [\App\Http\Controllers\admin\roleController::class, 'index'])->name('index');
