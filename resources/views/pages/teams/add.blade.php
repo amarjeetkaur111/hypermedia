@@ -55,7 +55,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group row ">
+                        <div class="form-group row">
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Supervisor</label>
                             <div class="col-sm-9">
                                 <select name="supervisor" class="form-control" id="supervisor" required>
@@ -70,7 +70,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group row ">
+                        <div class="form-group row">
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Team Members</label>
                             <div class="col-sm-9">
                                 <select name="team_members[]" class="form-control" id="team_members" required multiple>
