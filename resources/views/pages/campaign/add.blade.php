@@ -9,6 +9,7 @@
             $agency = old('agency');
             $brand = old('brand');
             $client_name = old('client_name');
+            $department_name = old('department_id');
             $contract_name = old('contract_name');
             $contract_number = old('contract_number');
             $description = old('description');
@@ -27,6 +28,7 @@
             $agency = $data->agency;
             $brand = $data->brand;
             $client_name = $data->client ?? null;
+            $department_name = $data->department ?? null;
             $contract_name = $data->contract_name;
             $contract_number = $data->contract_number;
             $description = $data->description;
@@ -46,6 +48,7 @@
             $agency = null;
             $brand = null;
             $client_name = null;
+            $department_name = null;
             $contract_name = null;
             $contract_number = null;
             $description = null;
@@ -127,13 +130,28 @@
                                     @endif
                                 </div>
                             </div>
+{{--                            <div class="form-group row col-md-6">--}}
+{{--                                <label for="fname" class="col-sm-3 text-end control-label col-form-label">Brand</label>--}}
+{{--                                <div class="col-sm-9">--}}
+{{--                                    <input type="text" class="form-control" name="brand" value="{{$brand}}"--}}
+{{--                                           placeholder="Brand Here" required>--}}
+{{--                                    @if ($errors->has('brand'))--}}
+{{--                                        <span class="text-danger">{{ $errors->first('brand') }}</span>--}}
+{{--                                    @endif--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                             <div class="form-group row col-md-6">
-                                <label for="fname" class="col-sm-3 text-end control-label col-form-label">Brand</label>
+                                <label for="email1" class="col-sm-3 text-end control-label col-form-label">Department</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="brand" value="{{$brand}}"
-                                           placeholder="Brand Here" required>
-                                    @if ($errors->has('brand'))
-                                        <span class="text-danger">{{ $errors->first('brand') }}</span>
+                                    <select type="text" name="department_id" id="department_id" class="form-control">
+                                        <option>Select Department</option>
+                                        @if($department_name)
+                                            <option value="{{ $department_name->id }}"
+                                                    selected>{{ $department_name->name }}</option>
+                                        @endif
+                                    </select>
+                                    @if ($errors->has('department_id'))
+                                        <span class="text-danger">{{ $errors->first('department_id') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -538,6 +556,30 @@
             $count = 1;
         }
         $(function () {
+            $('#department_id').select2({
+                width: '100%',
+                ajax: {
+                    url: '{{ route('select-2-get-departments') }}',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public'
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        }
+                    }
+                }
+            });
 
             $('.js-typeahead').typeahead({
                 // input: '.js-typeahead',
@@ -743,6 +785,8 @@
                     }
                 }
             });
+
+
 
 
             $.mask.definitions['D'] = "[0-3]";

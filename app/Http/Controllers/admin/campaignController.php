@@ -83,7 +83,7 @@ class campaignController extends Controller
         $action = route('admin-campaign-add');
         $add = 'Add';
         if ($id) {
-            $data = Campaigns::with('client', 'buckets')->find($id);
+            $data = Campaigns::with('client', 'buckets', 'department')->find($id);
             $action = route('admin-campaign-add', ['id' => $id]);
             $add = 'Edit';
         }
@@ -102,7 +102,7 @@ class campaignController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'agency' => 'required',
-            'brand' => 'required',
+//            'brand' => 'required',
             'client_name' => 'required',
             'contract_name' => 'required',
             'contract_number' => 'required',
@@ -117,6 +117,7 @@ class campaignController extends Controller
         $user->campaign_type = $request->input('campaign_type');
         $user->payment_status = $request->input('payment_status');
         $user->booking_order = $request->input('booking_order');
+        $user->department_id = $request->input('department_id');
         $user->start_date = Carbon::createFromFormat('d/m/Y', $request->input('start_date'))->toDateString();
         $user->start_time = Carbon::createFromFormat('H:i', $request->input('start_time'))->toTimeString();
         $user->end_date = Carbon::createFromFormat('d/m/Y', $request->input('end_date'))->toDateString();
