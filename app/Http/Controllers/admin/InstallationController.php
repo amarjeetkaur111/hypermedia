@@ -13,7 +13,7 @@ class InstallationController extends Controller
 {
     public function checkDate($start, $end)
     {
-        if (now()->startOfDay()->gt($start)) {
+        if (now()->startOfDay()->lt($start)) {
             return '<label class="label label-primary">Pending</label>';
         } else if (now()->endOfDay()->gt($end)) {
             return '<label class="label label-danger">Done</label>';

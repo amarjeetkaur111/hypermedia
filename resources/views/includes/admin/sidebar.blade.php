@@ -16,6 +16,7 @@
                         ><span class="hide-menu">Dashboard</span></a
                     >
                 </li>
+                @if($user->can('admin-user-manage'))
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -45,6 +46,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"

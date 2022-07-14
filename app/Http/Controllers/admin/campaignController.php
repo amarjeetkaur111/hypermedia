@@ -92,6 +92,9 @@ class campaignController extends Controller
 
     public function addPost(Request $request, $id = null)
     {
+//        if(!Auth::user()->can('')){
+//
+//        }
         $add = 'Add';
         $user = new Campaigns;
         if ($id) {
