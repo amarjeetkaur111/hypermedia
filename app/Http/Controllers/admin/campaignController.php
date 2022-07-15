@@ -13,6 +13,7 @@ use App\Models\Campaigns;
 use App\Models\CampaignStatus;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Storage;
@@ -409,15 +410,25 @@ class campaignController extends Controller
         $data = Campaigns::with(['department' => function($q){
             $q->select('id','name');
         }])->select('id', 'name', 'start_date','end_date','department_id')->whereYear('start_date', $request->data)->whereIn('status', ['Active', 'Live'])->get()->map(function($q){
-
-            $q->start_month = Carbon::parse($q->start_date)->format('F');
-            $q->end_month = Carbon::parse($q->end_date)->format('F');
-            $q->start_day = Carbon::parse($q->start_date)->day;
-            $q->end_day = Carbon::parse($q->end_date)->day;
+            $q->date_range = $this->getDatePeriod($q->start_date,$q->end_date);
+//            $q->start_month = Carbon::parse($q->start_date)->format('F');
+//            $q->end_month = Carbon::parse($q->end_date)->format('F');
+//            $q->start_day = Carbon::parse($q->start_date)->day;
+//            $q->end_day = Carbon::parse($q->end_date)->day;
             return $q;
         });
+//        dd($data);
         $year = $request->data;
         return view('pages.campaign_months', compact('year','month_array', 'data'))->render();
+    }
+
+    public function getDatePeriod($start,$end){
+        $period = CarbonPeriod::create($start,$end);
+        foreach($period as $p){
+            $days[$p->year][$p->month][] = $p->day;
+        }
+        return $days;
+        dd($days,$period->toArray());
     }
 
 }
