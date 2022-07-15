@@ -173,6 +173,9 @@
 <script src="{{ asset('assets/libs/moment/min/moment.min.js')}}"></script>
 <script src="{{ asset('assets/libs/fullcalendar/dist/fullcalendar.min.js')}}"></script>
 <script src="{{ asset('dist/js/pages/calendar/cal-init.js')}}"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script src="{{ asset('jquery-typeahead/dist/jquery.typeahead.min.js') }}"></script>
 <script>
     $start = $('#start_date').val()
     $end = $('#end_date').val()
@@ -484,20 +487,24 @@
 
     $('#dateyear').on('change', function() {
         var value = $(this).val();
-        alert(value)
         var route = "{{route('months')}}"
-        // alert($val);
+        $main = $('#monthsArray');
         $.ajax({
             type: "GET",
             url: route,
             data: {data:value},
+            beforeSend: function() {
+                $main.LoadingOverlay('show');
+            },
             success: function(response) {
                 console.log(response);
                 if(response){
-                    $('#monthsArray').html(response);
+                    $main.html(response);
                 }else{
-                    $('#monthsArray').html('');
+                    $main.html('');
                 }
+            },complete:function(){
+                $main.LoadingOverlay('hide');
             }
         });
     })

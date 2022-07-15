@@ -23,7 +23,7 @@ class campaignController extends Controller
     {
         // $d = Carbon::parse('April')->daysInMonth;
         // dd($d);
-       
+
 
         if ($request->ajax()) {
 
@@ -44,7 +44,7 @@ class campaignController extends Controller
 
                     $btn = '<a href="' . route('admin-campaign-overview', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm">Overview</a>';
                     $btn .= '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm" style="margin-top: 5px;">Edit</a>';
-                    if (in_array($row->status,['Active','Installing','Dismantling','Not Started'])) {
+                    if (in_array($row->status, ['Active', 'Installing', 'Dismantling', 'Not Started'])) {
                         $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn btn-primary btn-sm status-button" style="margin-top: 5px;">Status</a>';
                         $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn btn-primary btn-sm assign-button" style="margin-top: 5px;">Assign</a>';
                     }
@@ -392,40 +392,32 @@ class campaignController extends Controller
 
     public function getCampaignMonths(Request $request)
     {
-
-        // dd($request->data);
-        $month_array = ['January'=>range(1,Carbon::createFromFormat('m/Y','1/'.$request->data)->daysInMonth) ,
-        'February'=>range(1,Carbon::createFromFormat('m/Y','2/'.$request->data)->daysInMonth),
-        'March'=>range(1,Carbon::createFromFormat('m/Y','3/'.$request->data)->daysInMonth),
-        'April'=>range(1,Carbon::createFromFormat('m/Y','4/'.$request->data)->daysInMonth),  
-        'May'=>range(1,Carbon::createFromFormat('m/Y','5/'.$request->data)->daysInMonth),  
-        'June'=>range(1,Carbon::createFromFormat('m/Y','6/'.$request->data)->daysInMonth),  
-        'July'=>range(1,Carbon::createFromFormat('m/Y','7/'.$request->data)->daysInMonth),  
-        'August'=>range(1,Carbon::createFromFormat('m/Y','8/'.$request->data)->daysInMonth),  
-        'September'=>range(1,Carbon::createFromFormat('m/Y','9/'.$request->data)->daysInMonth),  
-        'October'=>range(1,Carbon::createFromFormat('m/Y','10/'.$request->data)->daysInMonth),  
-        'November'=>range(1,Carbon::createFromFormat('m/Y','11/'.$request->data)->daysInMonth),  
-        'December'=>range(1,Carbon::createFromFormat('m/Y','12/'.$request->data)->daysInMonth),  
+        $month_array = [
+            '1' => range(1, Carbon::createFromFormat('m/Y', '1/' . $request->data)->daysInMonth),
+            '2' => range(1, Carbon::createFromFormat('m/Y', '2/' . $request->data)->daysInMonth),
+            '3' => range(1, Carbon::createFromFormat('m/Y', '3/' . $request->data)->daysInMonth),
+            '4' => range(1, Carbon::createFromFormat('m/Y', '4/' . $request->data)->daysInMonth),
+            '5' => range(1, Carbon::createFromFormat('m/Y', '5/' . $request->data)->daysInMonth),
+            '6' => range(1, Carbon::createFromFormat('m/Y', '6/' . $request->data)->daysInMonth),
+            '7' => range(1, Carbon::createFromFormat('m/Y', '7/' . $request->data)->daysInMonth),
+            '8' => range(1, Carbon::createFromFormat('m/Y', '8/' . $request->data)->daysInMonth),
+            '9' => range(1, Carbon::createFromFormat('m/Y', '9/' . $request->data)->daysInMonth),
+            '10' => range(1, Carbon::createFromFormat('m/Y', '10/' . $request->data)->daysInMonth),
+            '11' => range(1, Carbon::createFromFormat('m/Y', '11/' . $request->data)->daysInMonth),
+            '12' => range(1, Carbon::createFromFormat('m/Y', '12/' . $request->data)->daysInMonth),
         ];
-        
-        $data = Campaigns::select('id', 'name','created_at')->whereYear('created_at', $request->data)->whereIn('status', ['Active', 'Live'])->get();
-        // dd($data);
-        $view = view('pages.campaign_months',compact('month_array','data'))->render();
-        // dd($view);
-        // if ($request->has('data')) {
-        //     $data = Campaigns::select('id', 'name','created_at')->whereYear('created_at', $request->data)->whereIn('status', ['Active', 'Live'])->get();
-        //     dd($data);
-        // } else {
-        //     $data = Campaigns::select('id', 'name','created_at')->whereIn('status', ['Active', 'Live'])->get();
-        // }
-        
-        return response()->json($view);
+        $data = Campaigns::with(['department' => function($q){
+            $q->select('id','name');
+        }])->select('id', 'name', 'start_date','end_date','department_id')->whereYear('start_date', $request->data)->whereIn('status', ['Active', 'Live'])->get()->map(function($q){
+
+            $q->start_month = Carbon::parse($q->start_date)->format('F');
+            $q->end_month = Carbon::parse($q->end_date)->format('F');
+            $q->start_day = Carbon::parse($q->start_date)->day;
+            $q->end_day = Carbon::parse($q->end_date)->day;
+            return $q;
+        });
+        $year = $request->data;
+        return view('pages.campaign_months', compact('year','month_array', 'data'))->render();
     }
 
-    public function display_campaign_months()
-    {
-        $data = Campaigns::select('id', 'name','created_at')->whereYear('created_at', $request->data)->whereIn('status', ['Active', 'Live'])->get();
-        //     dd($data);
-        return view('pages.campaign.overview', compact('data'));
-    }
 }
