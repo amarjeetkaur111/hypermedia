@@ -97,4 +97,6 @@ class select2DataController extends Controller
         }
         return response()->json($data);
     }
+
+   
 }

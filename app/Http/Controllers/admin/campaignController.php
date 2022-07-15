@@ -21,7 +21,12 @@ class campaignController extends Controller
 {
     public function index(Request $request)
     {
+        // $d = Carbon::parse('April')->daysInMonth;
+        // dd($d);
+       
+
         if ($request->ajax()) {
+
             $data = Campaigns::with('client', 'buckets', 'buckets.locations')->select('*');
             if ($request->has('start_date') && $request->start_date) {
                 $s_date = Carbon::createFromFormat('d/m/Y', $request->start_date);
@@ -382,6 +387,45 @@ class campaignController extends Controller
         $data = Campaigns::with(['client', 'buckets', 'buckets.locations', 'buckets.assets', 'assignee', 'photos', 'permits', 'campaignStatus' => function ($q) {
             $q->withTrashed();
         }])->find($id);
+        return view('pages.campaign.overview', compact('data'));
+    }
+
+    public function getCampaignMonths(Request $request)
+    {
+
+        // dd($request->data);
+        $month_array = ['January'=>range(1,Carbon::createFromFormat('m/Y','1/'.$request->data)->daysInMonth) ,
+        'February'=>range(1,Carbon::createFromFormat('m/Y','2/'.$request->data)->daysInMonth),
+        'March'=>range(1,Carbon::createFromFormat('m/Y','3/'.$request->data)->daysInMonth),
+        'April'=>range(1,Carbon::createFromFormat('m/Y','4/'.$request->data)->daysInMonth),  
+        'May'=>range(1,Carbon::createFromFormat('m/Y','5/'.$request->data)->daysInMonth),  
+        'June'=>range(1,Carbon::createFromFormat('m/Y','6/'.$request->data)->daysInMonth),  
+        'July'=>range(1,Carbon::createFromFormat('m/Y','7/'.$request->data)->daysInMonth),  
+        'August'=>range(1,Carbon::createFromFormat('m/Y','8/'.$request->data)->daysInMonth),  
+        'September'=>range(1,Carbon::createFromFormat('m/Y','9/'.$request->data)->daysInMonth),  
+        'October'=>range(1,Carbon::createFromFormat('m/Y','10/'.$request->data)->daysInMonth),  
+        'November'=>range(1,Carbon::createFromFormat('m/Y','11/'.$request->data)->daysInMonth),  
+        'December'=>range(1,Carbon::createFromFormat('m/Y','12/'.$request->data)->daysInMonth),  
+        ];
+        
+        $data = Campaigns::select('id', 'name','created_at')->whereYear('created_at', $request->data)->whereIn('status', ['Active', 'Live'])->get();
+        // dd($data);
+        $view = view('pages.campaign_months',compact('month_array','data'))->render();
+        // dd($view);
+        // if ($request->has('data')) {
+        //     $data = Campaigns::select('id', 'name','created_at')->whereYear('created_at', $request->data)->whereIn('status', ['Active', 'Live'])->get();
+        //     dd($data);
+        // } else {
+        //     $data = Campaigns::select('id', 'name','created_at')->whereIn('status', ['Active', 'Live'])->get();
+        // }
+        
+        return response()->json($view);
+    }
+
+    public function display_campaign_months()
+    {
+        $data = Campaigns::select('id', 'name','created_at')->whereYear('created_at', $request->data)->whereIn('status', ['Active', 'Live'])->get();
+        //     dd($data);
         return view('pages.campaign.overview', compact('data'));
     }
 }

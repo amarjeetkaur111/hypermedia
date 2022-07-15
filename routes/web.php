@@ -39,3 +39,6 @@ Route::group(['as' => 'select-2-','prefix' => 'select-2'],function(){
 });
 
 Route::get('download-file/{table}/{field}/{id}',[\App\Http\Controllers\select2DataController::class,'downloadFile'])->name('download-file');
+Route::get('/test', function () {
+    return view('pages.campaign_months');
+});

@@ -122,3 +122,6 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
 
 
 });
+
+Route::get('months',[\App\Http\Controllers\admin\campaignController::class,'getCampaignMonths'])->name('months');
+

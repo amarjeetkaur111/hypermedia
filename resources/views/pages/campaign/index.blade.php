@@ -117,146 +117,43 @@
             </div>
         </div>
         <div id="campaign_calander" class="tabcontent calan">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-12 col-form-label">Select Year</label>
+                        <select class="form-select" aria-label="Default select example" id="dateyear">
+                            <option selected>Select Year</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                            <option value="2031">2031</option>
+                            <option value="2032">2032</option>
+                            <option value="2033">2033</option>
+                            <option value="2034">2034</option>
+                            <option value="2035">2035</option>
+                            <option value="2036">2036</option>
+                            <option value="2037">2037</option>
+                            <option value="2038">2038</option>
+                            <option value="2039">2039</option>
+                            <option value="2040">2040</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div><br />
             <div class="card">
-                <div class="card-body">
-                    <!-- <h4 class="page-title">Calendar</h4> -->
-                    <!-- ----------------------------------------------------------------------- -->
+                <div class="card-body" id="monthsArray">
 
-
-                    <div class="page-breadcrumb">
-                        <div class="row">
-                            <div class="col-12 d-flex no-block align-items-center">
-                                <h4 class="page-title">Calendar</h4>
-                                <div class="ms-auto text-end">
-                                    <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">
-                                                Calendar
-                                            </li>
-                                        </ol>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- End Bread crumb and right sidebar toggle -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- Container fluid  -->
-                    <!-- ============================================================== -->
-                    <div class="container-fluid">
-                        <!-- ============================================================== -->
-                        <!-- Start Page Content -->
-                        <!-- ============================================================== -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="">
-                                        <div class="row">
-
-                                            <div class="col-lg-12">
-                                                <div class="card-body b-l calender-sidebar">
-                                                    <div id="calendar"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- BEGIN MODAL -->
-                        <div class="modal none-border" id="my-event">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title"><strong>Add Event</strong></h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                            &times;
-                                        </button>
-                                    </div>
-                                    <div class="modal-body"></div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                        <button type="button" class="btn btn-success save-event waves-effect waves-light">
-                                            Create event
-                                        </button>
-                                        <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Modal Add Category -->
-                        <div class="modal fade none-border" id="add-new-event">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title"><strong>Add</strong> a category</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                            &times;
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <label class="control-label">Category Name</label>
-                                                    <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name" />
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label">Choose Category Color</label>
-                                                    <select class="form-select shadow-none form-white" data-placeholder="Choose a color..." name="category-color">
-                                                        <option value="success">Success</option>
-                                                        <option value="danger">Danger</option>
-                                                        <option value="info">Info</option>
-                                                        <option value="primary">Primary</option>
-                                                        <option value="warning">Warning</option>
-                                                        <option value="inverse">Inverse</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="
-                      btn btn-danger
-                      waves-effect waves-light
-                      save-category
-                    " data-dismiss="modal">
-                                            Save
-                                        </button>
-                                        <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END MODAL -->
-                        <!-- ============================================================== -->
-                        <!-- End PAge Content -->
-                        <!-- ============================================================== -->
-                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    <!-- ------------------------------------------------------------------------------- -->
                 </div>
             </div>
         </div>
@@ -584,5 +481,25 @@
         $('#campaign_listing').click();
         $('.campaign_listing').addClass('active');
     });
+
+    $('#dateyear').on('change', function() {
+        var value = $(this).val();
+        alert(value)
+        var route = "{{route('months')}}"
+        // alert($val);
+        $.ajax({
+            type: "GET",
+            url: route,
+            data: {data:value},
+            success: function(response) {
+                console.log(response);
+                if(response){
+                    $('#monthsArray').html(response);
+                }else{
+                    $('#monthsArray').html('');
+                }
+            }
+        });
+    })
 </script>
 @endpush
