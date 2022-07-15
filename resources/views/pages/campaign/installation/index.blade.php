@@ -94,6 +94,9 @@
                                                 Timer
                                             </th>
                                             <th class="sorting" tabindex="0">
+                                                Permits
+                                            </th>
+                                            <th class="sorting" tabindex="0">
                                                 Action
                                             </th>
 {{--                                            <th class="sorting" tabindex="0" width="5%">--}}
@@ -110,9 +113,6 @@
 {{--                                            </th>--}}
 {{--                                            <th class="sorting" tabindex="0" width="5%">--}}
 {{--                                                Payment Status--}}
-{{--                                            </th>--}}
-{{--                                            <th class="sorting" tabindex="0" width="5%">--}}
-{{--                                                Permits--}}
 {{--                                            </th>--}}
 {{--                                            <th class="sorting" tabindex="0" width="5%">--}}
 {{--                                                Photos--}}
@@ -315,6 +315,7 @@
                     {data: 'start_date', name: 'start_date'},
                     {data: 'status', name: 'status'},
                     {data: 'timer', name: 'start_date', orderable: false, searchable: false},
+                    {data: 'permits', name: 'permits', orderable: false, searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                     // {data: 'campaign_type', name: 'campaign_type'},
                     // {data: 'client.name', name: 'client_name'},
@@ -322,7 +323,6 @@
                     // {data: 'start_date', name: 'start_date'},
                     // {data: 'booking_order', name: 'booking_order'},
                     // {data: 'payment_status', name: 'payment_status'},
-                    // {data: 'permits', name: 'permits', orderable: false, searchable: false},
                     // {data: 'photos', name: 'photos', orderable: false, searchable: false},
                 ]
             });

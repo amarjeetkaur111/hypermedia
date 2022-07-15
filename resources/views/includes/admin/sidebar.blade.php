@@ -16,6 +16,7 @@
                         ><span class="hide-menu">Dashboard</span></a
                     >
                 </li>
+                @if($user->can('admin-user-manage'))
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -45,6 +46,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -148,6 +150,9 @@
                         </li>
                         <li class="sidebar-item">
                             <a href="{{ route('admin-departments-index') }}" class="sidebar-link" ><i class="fas fa-bars"></i><span class="hide-menu"> Departments </span></a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('admin-teams-index') }}" class="sidebar-link" ><i class="fas fa-users"></i><span class="hide-menu"> Teams </span></a>
                         </li>
                     </ul>
                 </li>
