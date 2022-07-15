@@ -62,11 +62,11 @@ class campaignController extends Controller
                         }
                     }
                     $location .= '</ol>';
-                    $html = '<button data-list-loc="' . $location . '" class="btn btn-primary btn-sm location-btn" >Locations</button>';
+                    $html = '<button data-list-loc="' . $location . '" class="btn btn-primary btn-sm location-btn" ><i class=" fas fa-location-arrow"></i></button>';
                     return $html;
                 })
                 ->addColumn('photos', function ($row) {
-                    return '<button class="btn btn-sm btn-primary photos_btn" dt-data-id="' . route('admin-campaign-campaign-photos', ['id' => $row->id]) . '">Photos</button>';
+                    return '<button class="btn btn-sm btn-primary photos_btn" dt-data-id="' . route('admin-campaign-campaign-photos', ['id' => $row->id]) . '" ><i class="fas fa-image"></i></button>';
                 })
                 ->addColumn('permits', function ($row) {
                     return '<button class="btn btn-sm btn-primary permits_btn" dt-add-href="' . route('admin-campaign-campaign-permits-add', ['id' => $row->id]) . '" dt-data-id="' . route('admin-campaign-campaign-permits', ['id' => $row->id]) . '">Permits</button>';
