@@ -413,13 +413,8 @@ class campaignController extends Controller
             $q->whereYear('start_date', $request->data)->orWhereYear('end_date', $request->data);
         })->whereIn('status', ['Active', 'Live'])->get()->map(function($q){
             $q->date_range = $this->getDatePeriod($q->start_date,$q->end_date);
-//            $q->start_month = Carbon::parse($q->start_date)->format('F');
-//            $q->end_month = Carbon::parse($q->end_date)->format('F');
-//            $q->start_day = Carbon::parse($q->start_date)->day;
-//            $q->end_day = Carbon::parse($q->end_date)->day;
             return $q;
         });
-//        dd($data);
         $year = $request->data;
         return view('pages.campaign_months', compact('year','month_array', 'data'))->render();
     }
@@ -430,7 +425,6 @@ class campaignController extends Controller
             $days[$p->year][$p->month][] = $p->day;
         }
         return $days;
-        dd($days,$period->toArray());
     }
 
 }
