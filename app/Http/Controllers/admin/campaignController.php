@@ -42,8 +42,8 @@ class campaignController extends Controller
                 })
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('admin-campaign-overview', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm">Overview</a>';
-                    $btn .= '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm" style="margin-top: 5px;">Edit</a>';
+                    $btn = '<a href="' . route('admin-campaign-overview', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>';
+                    $btn .= '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm" style="margin-top: 5px;"><i class="fas fa-edit"></i></a>';
                     if (in_array($row->status, ['Active', 'Installing', 'Dismantling', 'Not Started'])) {
                         $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn btn-primary btn-sm status-button" style="margin-top: 5px;">Status</a>';
                         $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn btn-primary btn-sm assign-button" style="margin-top: 5px;">Assign</a>';
@@ -74,7 +74,7 @@ class campaignController extends Controller
                     return '<button class="btn btn-sm btn-primary photos_btn" dt-data-id="' . route('admin-campaign-campaign-photos', ['id' => $row->id]) . '" ><i class="fas fa-image"></i></button>';
                 })
                 ->addColumn('permits', function ($row) {
-                    return '<button class="btn btn-sm btn-primary permits_btn" dt-add-href="' . route('admin-campaign-campaign-permits-add', ['id' => $row->id]) . '" dt-data-id="' . route('admin-campaign-campaign-permits', ['id' => $row->id]) . '">Permits</button>';
+                    return '<button class="btn btn-sm btn-primary permits_btn" dt-add-href="' . route('admin-campaign-campaign-permits-add', ['id' => $row->id]) . '" dt-data-id="' . route('admin-campaign-campaign-permits', ['id' => $row->id]) . '"><i class="fa fa-receipt"></i></button>';
                 })
                 ->rawColumns(['action', 'locations', 'photos', 'permits'])
                 ->make(true);
