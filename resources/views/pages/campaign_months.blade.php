@@ -70,11 +70,15 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach($data as $key)
+            @foreach($data as $keyer)
                 <tr>
-                    @foreach($month_array as $value1)
+                    @foreach($month_array as $key1 => $value1)
                         @foreach($value1 as  $value2)
-                            <td>{{$value2}}</td>
+                            @if(isset($keyer->date_range[$year][$key1]) && in_array($value2,$keyer->date_range[$year][$key1]))
+                                <td class="active-cell">{{$value2}}</td>
+                            @else
+                                <td>{{$value2}}</td>
+                            @endif
                         @endforeach
                     @endforeach
                 </tr>
