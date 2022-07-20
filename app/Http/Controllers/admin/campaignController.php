@@ -43,11 +43,11 @@ class campaignController extends Controller
                 })
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('admin-campaign-overview', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm" title="Overview"><i class="fas fa-eye"></i></a>';
-                    $btn .= '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="edit btn btn-primary btn-sm" style="margin-top: 5px;" title="Edit"><i class="fas fa-edit"></i></a>';
+                    $btn = '<a href="' . route('admin-campaign-overview', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Overview"><i class="fas fa-eye"></i></a>';
+                    $btn .= '<a href="' . route('admin-campaign-add', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm"  title="Edit"><i class="fas fa-edit"></i></a>';
                     if (in_array($row->status, ['Active', 'Installing', 'Dismantling', 'Not Started'])) {
-                        $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn btn-primary btn-sm status-button" style="margin-top: 5px;" title="Status"><i class="fas fa-lightbulb"></i></a>';
-                        $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn btn-primary btn-sm assign-button" title="Assign" style="margin-top: 5px;"><i class="fas fa-user-plus"></i></a>';
+                        $btn .= ' <a data-href="' . route('admin-campaign-change-status', ['id' => $row->id]) . '" class="btn_margin btn btn-primary btn-sm status-button"  title="Status"><i class="fas fa-lightbulb"></i></a>';
+                        $btn .= ' <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn_margin btn btn-primary btn-sm assign-button" title="Assign"><i class="fas fa-user-plus"></i></a>';
                     }
 
                     return $btn;
@@ -57,9 +57,9 @@ class campaignController extends Controller
                     $end = Carbon::parse($row->end_date)->format('d/m/Y');
                     return $start . ' to ' . $end;
                 })
-//                ->addColumn('permits', function ($row) {
-//                    return 'abc';
-//                })
+                //                ->addColumn('permits', function ($row) {
+                //                    return 'abc';
+                //                })
                 ->addColumn('locations', function ($row) {
                     $location = '<ol>';
                     foreach ($row->buckets as $b) {
@@ -98,9 +98,9 @@ class campaignController extends Controller
 
     public function addPost(Request $request, $id = null)
     {
-//        if(!Auth::user()->can('')){
-//
-//        }
+        //        if(!Auth::user()->can('')){
+        //
+        //        }
         $add = 'Add';
         $user = new Campaigns;
         if ($id) {
@@ -111,7 +111,7 @@ class campaignController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'agency' => 'required',
-//            'brand' => 'required',
+            //            'brand' => 'required',
             'client_name' => 'required',
             'contract_name' => 'required',
             'contract_number' => 'required',
@@ -139,10 +139,10 @@ class campaignController extends Controller
             $path = Storage::disk('s3')->putFileAs('booking_order_file', $request->booking_order_file, $filename, 'public');
             $user->booking_order_file = config('filesystems.disks.s3.url') . '/' . $path;
 
-//
-//            $file = request()->file('booking_order_file');
-//            $name = $file->store('booking_order_file', ['disk' => 'my_files']);
-//            $user->booking_order_file = $name;
+            //
+            //            $file = request()->file('booking_order_file');
+            //            $name = $file->store('booking_order_file', ['disk' => 'my_files']);
+            //            $user->booking_order_file = $name;
         }
         $ids = [];
         $done = [];
@@ -316,8 +316,8 @@ class campaignController extends Controller
 
     public function assignCampaignPost(Request $request, $id)
     {
-//        $campaign = Campaigns::find($id);
-//        $campaign->assignee()->sync($request->user);
+        //        $campaign = Campaigns::find($id);
+        //        $campaign->assignee()->sync($request->user);
         CampaignAssign::where('campaign_id', $id)->delete();
         $state = new CampaignAssign;
         $state->campaign_id = $id;
@@ -326,15 +326,15 @@ class campaignController extends Controller
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
     }
 
-//    public function changeCampaignStatus(Request $request, $id)
-//    {
-//        CampaignStatus::where('campaign_id', $id)->delete();
-//        $state = new CampaignStatus;
-//        $state->campaign_id = $id;
-//        $state->status = $request->status;
-//        $state->save();
-//        return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Updated Successfully!"]);
-//    }
+    //    public function changeCampaignStatus(Request $request, $id)
+    //    {
+    //        CampaignStatus::where('campaign_id', $id)->delete();
+    //        $state = new CampaignStatus;
+    //        $state->campaign_id = $id;
+    //        $state->status = $request->status;
+    //        $state->save();
+    //        return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Updated Successfully!"]);
+    //    }
 
 
     public function getCampaignPhotos($id)
@@ -375,9 +375,9 @@ class campaignController extends Controller
             $path = Storage::disk('s3')->putFileAs('permit_file', $request->permit_file, $filename, 'public');
             $obj->permit_file = config('filesystems.disks.s3.url') . '/' . $path;
 
-//            $file = request()->file('permit_file');
-//            $name = $file->store('permit_file', ['disk' => 'my_files']);
-//            $obj->permit_file = $name;
+            //            $file = request()->file('permit_file');
+            //            $name = $file->store('permit_file', ['disk' => 'my_files']);
+            //            $obj->permit_file = $name;
         }
         $obj->save();
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Permit added successfully!"]);
@@ -407,24 +407,24 @@ class campaignController extends Controller
             '11' => range(1, Carbon::createFromFormat('m/Y', '11/' . $request->data)->daysInMonth),
             '12' => range(1, Carbon::createFromFormat('m/Y', '12/' . $request->data)->daysInMonth),
         ];
-        $data = Campaigns::with(['department' => function($q){
-            $q->select('id','name');
-        }])->select('id', 'name', 'start_date','end_date','department_id')->where(function($q) use ($request){
+        $data = Campaigns::with(['department' => function ($q) {
+            $q->select('id', 'name');
+        }])->select('id', 'name', 'start_date', 'end_date', 'department_id')->where(function ($q) use ($request) {
             $q->whereYear('start_date', $request->data)->orWhereYear('end_date', $request->data);
-        })->whereIn('status', ['Active', 'Live'])->get()->map(function($q){
-            $q->date_range = $this->getDatePeriod($q->start_date,$q->end_date);
+        })->whereIn('status', ['Active', 'Live'])->get()->map(function ($q) {
+            $q->date_range = $this->getDatePeriod($q->start_date, $q->end_date);
             return $q;
         });
         $year = $request->data;
-        return view('pages.campaign_months', compact('year','month_array', 'data'))->render();
+        return view('pages.campaign_months', compact('year', 'month_array', 'data'))->render();
     }
 
-    public function getDatePeriod($start,$end){
-        $period = CarbonPeriod::create($start,$end);
-        foreach($period as $p){
+    public function getDatePeriod($start, $end)
+    {
+        $period = CarbonPeriod::create($start, $end);
+        foreach ($period as $p) {
             $days[$p->year][$p->month][] = $p->day;
         }
         return $days;
     }
-
 }

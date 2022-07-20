@@ -46,4 +46,8 @@ class Campaigns extends Model
     {
         return $this->hasOne(Departments::class,'id','department_id');
     }
+    public function campaignInstallationsTypes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(InstallationTypes::class,'campaign_id','id');
+    }
 }

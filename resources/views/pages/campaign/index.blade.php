@@ -4,6 +4,11 @@
 <link href="{{ asset('assets/css/overview.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/libs/fullcalendar/dist/fullcalendar.min.css')}}" rel="stylesheet" />
 <link href="{{ asset('assets/extra-libs/calendar/calendar.css')}}" rel="stylesheet" />
+<style>
+    .btn_margin{
+        margin: 1%;
+    }
+</style>
 <div class="page-wrapper">
     <div class="page-breadcrumb">
         <div class="row">
@@ -66,7 +71,7 @@
                                         <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
                                     </div>
                                     @endif
-                                    <table id="zero_config" class="table table-striped table-bordered dataTable" role="grid" aria-describedby="zero_config_info">
+                                    <table id="zero_config" class="table table-striped table-bordered dataTable" role="grid" aria-describedby="zero_config_info" style="width: 100%;">
                                         <thead>
                                             <tr role="row">
                                                 <th class="sorting" tabindex="0" width="10%">
@@ -102,7 +107,7 @@
                                                 <th class="sorting" tabindex="0" width="5%">
                                                     Status
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="30%">
+                                                <th class="sorting" tabindex="0" width="80%">
                                                     Action
                                                 </th>
                                             </tr>
@@ -331,6 +336,7 @@
             //     // $('[data-toggle="tooltip"]').tooltip()
             //     // $('[data-toggle="tooltip"]').tooltip()
             // },
+            
             columns: [{
                     data: 'name',
                     name: 'name'
@@ -385,13 +391,15 @@
                     data: 'action',
                     name: 'action',
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    
                 },
+                
             ]
         });
 
 
-
+        $('thead > tr> th:nth-child(12)').css({ 'min-width': '200px', 'max-width': '200px' });
 
         $body.on('click', '.assign-button', function() {
             $href = $(this).attr('data-href')

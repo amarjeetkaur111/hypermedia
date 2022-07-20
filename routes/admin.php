@@ -116,8 +116,21 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
         Route::group(['as' => 'installation-', 'prefix' => 'installation'], function () {
             Route::get('/', [\App\Http\Controllers\admin\InstallationController::class, 'index'])->name('index');
             Route::get('/assets/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'getCampaignAssets'])->name('assets');
-//            Route::get('/add/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'add'])->name('add');
+            Route::group(['as' => 'types-', 'prefix' => 'types'], function () {
+                Route::get('/index/{id}', [\App\Http\Controllers\admin\InstallationController::class, 'installationIndex'])->name('index');
+                Route::get('/add/{campaign_id}/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'add'])->name('add');
+                Route::post('/add/{campaign_id}/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'addPost'])->name('add');
+
+            });
+            Route::group(['as' => 'designs-', 'prefix' => 'designs'], function () {
+                Route::get('/index/{id}', [\App\Http\Controllers\admin\InstallationController::class, 'designIndex'])->name('index');
+                Route::get('/add/{installation_id}/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'addDesign'])->name('add');
+                Route::post('/add/{installation_id}/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'addDesignPost'])->name('add');
+
+            });
+        //    Route::get('/add/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'add'])->name('add');
         });
+        
     });
 
 

@@ -6,13 +6,13 @@
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-12 d-flex no-block align-items-center">
-                    <h4 class="page-title">Campaign Installation</h4>
+                    <h4 class="page-title">Campaign Installation Types</h4>
                     <div class="ms-auto text-end">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin-index') }}">Home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Campaign Installation
+                                    Installation Types
                                 </li>
                             </ol>
                         </nav>
@@ -57,10 +57,10 @@
 {{--                                            <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i--}}
 {{--                                                    class="fas fa-redo-alt"> Reset</i></button>--}}
 {{--                                        </div>--}}
-{{--                                        <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">--}}
-{{--                                            <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i--}}
-{{--                                                    class="fa fa-plus"> Add Campaign</i></a>--}}
-{{--                                        </div>--}}
+                                       <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">
+                                            <a class="btn btn-primary" href="{{ route('admin-campaign-installation-types-add',['campaign_id'=>$campaign_id]) }}"><i
+                                                    class="fa fa-plus"> Add Types</i></a>
+                                       </div>
 {{--                                    </div>--}}
                                     @if(\Illuminate\Support\Facades\Session::has('msg'))
                                         <div
@@ -72,17 +72,14 @@
                                            role="grid" aria-describedby="zero_config_info">
                                         <thead>
                                         <tr role="row">
-{{--                                            <th class="sorting" tabindex="0">--}}
+{{--                                            <th class="sorting" tabindex="0">
 {{--                                                Type--}}
 {{--                                            </th>--}}
                                             <th class="sorting" tabindex="0">
-                                                Name
+                                                Type
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Assets
-                                            </th>
-                                            <th class="sorting" tabindex="0">
-                                                Locations
+                                                Instructions
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Dates
@@ -91,32 +88,15 @@
                                                 Status
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Timer
+                                                Priority
                                             </th>
-                                            <th class="sorting" tabindex="0">
+                                            <!-- <th class="sorting" tabindex="0">
                                                 Permits
-                                            </th>
+                                            </th> -->
                                             <th class="sorting" tabindex="0">
                                                 Action
                                             </th>
-{{--                                            <th class="sorting" tabindex="0" width="5%">--}}
-{{--                                                Client--}}
-{{--                                            </th>--}}
-{{--                                            <th class="sorting" tabindex="0" width="5%">--}}
-{{--                                                Market--}}
-{{--                                            </th>--}}
-{{--                                            <th class="sorting" tabindex="0" width="10%">--}}
-{{--                                                Dates--}}
-{{--                                            </th>--}}
-{{--                                            <th class="sorting" tabindex="0" width="10%">--}}
-{{--                                                Booking Order--}}
-{{--                                            </th>--}}
-{{--                                            <th class="sorting" tabindex="0" width="5%">--}}
-{{--                                                Payment Status--}}
-{{--                                            </th>--}}
-{{--                                            <th class="sorting" tabindex="0" width="5%">--}}
-{{--                                                Photos--}}
-{{--                                            </th>--}}
+                                          
                                         </tr>
                                         </thead>
                                     </table>
@@ -309,13 +289,11 @@
                 // },
                 columns: [
                     // {data: 'type', name: 'status'},
-                    {data: 'name', name: 'name'},
-                    {data: 'assets', name: 'assets', orderable: false, searchable: false},
-                    {data: 'locations', name: 'locations', orderable: false, searchable: false},
+                    {data: 'type', name: 'type'},
+                    {data: 'instructions', name: 'instructions'},
                     {data: 'start_date', name: 'start_date'},
                     {data: 'status', name: 'status'},
-                    {data: 'timer', name: 'start_date', orderable: false, searchable: false},
-                    {data: 'permits', name: 'permits', orderable: false, searchable: false},
+                    {data: 'priority', name: 'priority', orderable: false, searchable: false},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                     // {data: 'campaign_type', name: 'campaign_type'},
                     // {data: 'client.name', name: 'client_name'},
