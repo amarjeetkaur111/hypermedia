@@ -409,6 +409,19 @@ class campaignController extends Controller
             '11'=> range(1, Carbon::createFromFormat('m/Y', '11/' . $request->data)->daysInMonth),
             '12'=> range(1, Carbon::createFromFormat('m/Y', '12/' . $request->data)->daysInMonth),
         ];
+
+        $year = $request->data;
+        $newarray = array();    
+        foreach($month_array as $key => $month)
+        {
+            foreach($month as $date)
+            {   
+                $fullDate = $year.'-'.$key.'-'.$date;
+                $weekDay = Carbon::parse($fullDate)->format('l');
+                $weekDay = substr($weekDay,0,1);
+                $newarray[$key][$date] = array('Date'=>$date,'Weekday'=> $weekDay);
+            }
+        }
         // dd($month_array);
         $data = Campaigns::with(['department' => function ($q) {
             $q->select('id', 'name');
@@ -418,8 +431,7 @@ class campaignController extends Controller
             $q->date_range = $this->getDatePeriod($q->start_date, $q->end_date);
             return $q;
         });
-        $year = $request->data;
-        return view('pages.campaign_months', compact('year', 'month_array', 'data'))->render();
+        return view('pages.campaign_months', compact('year', 'newarray', 'data'))->render();
     }
 
     public function getDatePeriod($start, $end)
