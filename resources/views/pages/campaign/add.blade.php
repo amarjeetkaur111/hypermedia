@@ -22,6 +22,7 @@
             $booking_order = old('booking_order');
             $status = old('status');
             $market = old('market');
+            $type = old('type');
         }
         else if(isset($data) && $data){
             $name = $data->name;
@@ -41,6 +42,7 @@
             $booking_order = $data->booking_order;
             $status = $data->status;
             $market = $data->market;
+            $type = $data->type;
             $buckets = $data->buckets ? $data->buckets->load('locations','assets','assetNetwork') : collect();
         }
         else{
@@ -61,6 +63,7 @@
             $booking_order = null;
             $status = null;
             $market = null;
+            $type = null;
         }
     @endphp
     <style>
@@ -329,9 +332,26 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="form-group row col-md-12">
-                                <label for="fname"
-                                       class="col-sm-2 text-end control-label col-form-label">Description</label>
+                            <div class="row">
+                            <div class="form-group row col-md-6">
+                            <label for="email1"
+                                       class="col-sm-3 text-end control-label col-form-label">Type</label>
+                                <div class="col-sm-9">
+                                    <select type="text" name="type" id="type" class="form-control">
+                                        <option >Select</option>
+                                        <option value="digital">Digital</option>
+                                        <option value="Static">Static</option>
+                                        <!-- <option value="Completed">Completed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                        <option value="Inactive">Inactive</option> -->
+                                    </select>
+                                    @if ($errors->has('type'))
+                                        <span class="text-danger">{{ $errors->first('type') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="form-group row col-md-6">
+                                <label for="fname" class="col-sm-2 text-end control-label col-form-label">Description</label>
                                 <div class="col-sm-9">
                                 <textarea class="form-control" name="description"
                                           placeholder="Description Here">{{$description}}</textarea>
@@ -340,6 +360,8 @@
                                     @endif
                                 </div>
                             </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

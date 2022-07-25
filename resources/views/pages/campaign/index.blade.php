@@ -86,6 +86,9 @@
                                                 <th class="sorting" tabindex="0" width="5%">
                                                     Market
                                                 </th>
+                                                <th class="sorting" tabindex="0" width="5%">
+                                                    Campaign Type
+                                                </th>
                                                 <th class="sorting" tabindex="0" width="10%">
                                                     Dates
                                                 </th>
@@ -354,6 +357,10 @@
                     name: 'market'
                 },
                 {
+                    data: 'type',
+                    name: 'type'
+                },
+                {
                     data: 'start_date',
                     name: 'start_date'
                 },
@@ -399,7 +406,7 @@
         });
 
 
-        $('thead > tr> th:nth-child(12)').css({ 'min-width': '200px', 'max-width': '200px' });
+        $('thead > tr> th:nth-child(13)').css({ 'min-width': '200px', 'max-width': '200px' });
 
         $body.on('click', '.assign-button', function() {
             $href = $(this).attr('data-href')

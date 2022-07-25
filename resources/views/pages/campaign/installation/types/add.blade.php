@@ -80,7 +80,7 @@ $status = null;
                         <div class="form-group row col-md-6">
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Instructions</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" name="instructions" value="{{$instructions}}" placeholder="Instructions Here" required>
+                                <textarea type="text" class="form-control" name="instructions" value="{!! $instructions !!}" placeholder="Instructions Here" required>{!! $instructions !!}</textarea>
                                 @if ($errors->has('instructions'))
                                 <span class="text-danger">{{ $errors->first('instructions') }}</span>
                                 @endif

@@ -115,6 +115,7 @@ class campaignController extends Controller
             'client_name' => 'required',
             'contract_name' => 'required',
             'contract_number' => 'required',
+            'type' => 'required',
         ]);
         $user->name = $request->input('name');
         $user->agency = $request->input('agency');
@@ -133,6 +134,7 @@ class campaignController extends Controller
         $user->end_time = Carbon::createFromFormat('H:i', $request->input('end_time'))->toTimeString();
         $user->status = $request->input('status');
         $user->market = $request->input('market');
+        $user->type = $request->input('type');
         if ($request->hasFile('booking_order_file')) {
 
             $filename = $request->file('booking_order_file')->getClientOriginalName();
@@ -403,9 +405,9 @@ class campaignController extends Controller
             '7' => range(1, Carbon::createFromFormat('m/Y', '7/' . $request->data)->daysInMonth),
             '8' => range(1, Carbon::createFromFormat('m/Y', '8/' . $request->data)->daysInMonth),
             '9' => range(1, Carbon::createFromFormat('m/Y', '9/' . $request->data)->daysInMonth),
-            '10' => range(1, Carbon::createFromFormat('m/Y', '10/' . $request->data)->daysInMonth),
-            '11' => range(1, Carbon::createFromFormat('m/Y', '11/' . $request->data)->daysInMonth),
-            '12' => range(1, Carbon::createFromFormat('m/Y', '12/' . $request->data)->daysInMonth),
+            '10'=> range(1, Carbon::createFromFormat('m/Y', '10/' . $request->data)->daysInMonth),
+            '11'=> range(1, Carbon::createFromFormat('m/Y', '11/' . $request->data)->daysInMonth),
+            '12'=> range(1, Carbon::createFromFormat('m/Y', '12/' . $request->data)->daysInMonth),
         ];
 
         $year = $request->data;
