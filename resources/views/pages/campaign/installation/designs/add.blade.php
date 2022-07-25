@@ -11,7 +11,7 @@
                 $installation_id = $data->campaignInstallation ?? null;
                 $description = $data->description;
                 $status = $data->status;
-                $asset = asset('uploads/'.$data->photo_path);
+                $asset = $data->photo_path;
             }
             else{
                 $installation_id = null;

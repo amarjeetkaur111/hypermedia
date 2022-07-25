@@ -96,15 +96,19 @@ class InstallationController extends Controller
                 })
                
                 
-                
+                ->editColumn('instructions', function ($row) {
+                    return '<button class="btn btn-sm btn-primary instruction_view" dt-data-id="'.$row->instructions.'"><i class="fas fa-eye"></i></button>';
+                })
                 
                 ->addColumn('action', function ($row) use ($id) {
                     // dd($row->id);
                     $btn = '<a href="' . route('admin-campaign-installation-types-add', ['campaign_id' => $id,'id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Installations"><i class="fas fa-edit"></i></a>
-                            <a href="' . route('admin-campaign-installation-designs-index', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Designs"><i class="fas fa-image"></i></a>';
+                            <a href="' . route('admin-campaign-installation-designs-index', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Designs"><i class="fas fa-image"></i></a>;
+                            <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn_margin btn btn-primary btn-sm assign-button" title="Assign"><i class="fas fa-user-plus"></i></a>';
+
                     return $btn;
                 })
-                ->rawColumns(['action',  'timer'])
+                ->rawColumns(['action',  'timer','instructions'])
                 ->make(true);
         }
         return view('pages.campaign.installation.types.index',compact('campaign_id'));
