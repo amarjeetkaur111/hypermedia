@@ -35,6 +35,11 @@
         background: peachpuff;
         color: black;
     }
+    .size{
+        font-size:10px;
+        font-weight:700;
+        color:#F3811F;
+    }
 
 </style>
 
@@ -50,6 +55,7 @@
                 </tr>
             </thead>
             <tbody>
+                <tr><td colspan="2" class="m-auto text-justify size">Week Days</td></tr>
                 @foreach($data as $key)
                     <tr>
                         <td>{{$key->name}}</td>
@@ -64,20 +70,27 @@
         <table>
             <thead>
                 <tr>
-                    @foreach($month_array as $key => $value)
-                        <th colspan="{{ end($value) }}">{{ config('months.'.$key) }}</th>
+                    @foreach($newarray as $key => $value)
+                        <th colspan="{{ count($value) }}">{{ config('months.'.$key) }}</th>
+                    @endforeach
+                </tr>
+                <tr>
+                    @foreach($newarray as $key1 => $value1)
+                        @foreach($value1 as  $value2)
+                            <td class="size">{{$value2['Weekday']}}</td>
+                        @endforeach
                     @endforeach
                 </tr>
             </thead>
             <tbody>
             @foreach($data as $keyer)
                 <tr>
-                    @foreach($month_array as $key1 => $value1)
+                    @foreach($newarray as $key1 => $value1)
                         @foreach($value1 as  $value2)
-                            @if(isset($keyer->date_range[$year][$key1]) && in_array($value2,$keyer->date_range[$year][$key1]))
-                                <td class="active-cell">{{$value2}}</td>
+                            @if(isset($keyer->date_range[$year][$key1]) && in_array($value2['Date'],$keyer->date_range[$year][$key1]))
+                                <td class="active-cell">{{$value2['Date']}}</td>
                             @else
-                                <td>{{$value2}}</td>
+                                <td>{{$value2['Date']}}</td>
                             @endif
                         @endforeach
                     @endforeach
