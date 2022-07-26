@@ -422,15 +422,41 @@ class campaignController extends Controller
                 $newarray[$key][$date] = array('Date'=>$date,'Weekday'=> $weekDay);
             }
         }
-        // dd($month_array);
-        $data = Campaigns::with(['department' => function ($q) {
+        $data = Campaigns::with(['campaignInstallationsTypes' ,
+        'department' => function ($q) {
             $q->select('id', 'name');
-        }])->select('id', 'name', 'start_date', 'end_date', 'department_id')->where(function ($q) use ($request) {
+        }])->where(function ($q) use ($request) {
             $q->whereYear('start_date', $request->data)->orWhereYear('end_date', $request->data);
-        })->whereIn('status', ['Active', 'Live'])->get()->map(function ($q) {
+        })
+        ->whereIn('status', ['Active', 'Live'])
+        ->get()
+        ->map(function ($q) {
             $q->date_range = $this->getDatePeriod($q->start_date, $q->end_date);
             return $q;
+        })
+        ->map(function ($campaign){
+            $campaign->activity = $campaign->campaignInstallationsTypes ? 
+                        $campaign->campaignInstallationsTypes->map(function($inner){
+                            $innerarray = array();
+                            if($inner->type == 'dismantle'){
+                                $innerarray['type'] = 'Dismantle';
+                                $innerarray['dates'] = $this->getDatePeriod($inner->start_date,   $inner->end_date);
+                                // $inner->Dismantle = $this->getDatePeriod($inner->start_date, $inner->end_date);
+                            }elseif($inner->type == 'maintenance'){
+                                $innerarray['type'] = 'Maintenance';
+                                $innerarray['dates'] = $this->getDatePeriod($inner->start_date,   $inner->end_date);
+                                // $inner->Maintenance = $this->getDatePeriod($inner->start_date, $inner->end_date);
+                            }elseif($inner->type == 'installation'){
+                                $innerarray['type']  = 'Installation';
+                                $innerarray['dates'] = $this->getDatePeriod($inner->start_date,   $inner->end_date);
+                                // $inner->Installation = $this->getDatePeriod($inner->start_date, $inner->end_date);
+                            }
+                            return $innerarray;                                            
+                        }) : null ;
+            return $campaign;
         });
+        // ->toArray();
+        // dd($data);
         return view('pages.campaign_months', compact('year', 'newarray', 'data'))->render();
     }
 
