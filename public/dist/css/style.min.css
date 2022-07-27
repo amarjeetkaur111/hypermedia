@@ -3184,7 +3184,7 @@ fieldset:disabled .btn {
 }
 .btn-group-sm > .btn,
 .btn-sm {
-    padding: 0.25rem 0.5rem;
+    padding: 0.2rem 0.2rem;
     font-size: 0.765625rem;
     border-radius: 1px;
 }

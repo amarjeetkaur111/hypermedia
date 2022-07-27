@@ -9,13 +9,13 @@
         border: 1px solid #dddddd;
         text-align: left;
         padding: 8px;
-        width: 30%;
+        /* width: 30%; */
     }
     th {
         border: 1px solid white;
         text-align: left;
         padding: 8px;
-        width: 10%;
+        /* width: 10%; */
     }
 
     table thead tr th{
@@ -59,7 +59,7 @@
             <thead>
                 <tr>
                     <th>Campaign</th>
-                    <th>Departments</th>
+                    <th>Department</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -69,9 +69,10 @@
                     <tr>
                         <td>{{$key->name}}</td>
                         <td>{{$key->department ?$key->department->name : 'N/A'}}</td>
-                        <td>
+                        <td style="display: flex; flex-direction: row;">
                             <a href="{{route('admin-campaign-overview', $key->id)}}" class="btn_margin edit btn btn-primary btn-sm" title="Overview"><i class="fas fa-eye"></i></a>
                             <a href="{{route('admin-campaign-installation-types-index', $key->id)}}" class="btn_margin edit btn btn-primary btn-sm" title="installation"><i class="fa fa-wrench"></i></a>
+                            <a href="{{route('admin-campaign-add', $key->id)}}" class="btn_margin edit btn btn-primary btn-sm" title="installation"><i class="fas fa-edit"></i></a>
                         </td>
                     </tr>
                 @endforeach
@@ -100,21 +101,30 @@
                 <tr>
                     @foreach($newarray as $key1 => $value1)
                         @foreach($value1 as  $value2)
-                            @php $class = ''; $tooltip='';@endphp
+                            @php $class = ''; $tooltip='';$LV= 0; $IV = 0; $DV = 0; $MV= 0;@endphp
                             @if(isset($keyer->date_range[$year][$key1]) && in_array($value2['Date'],$keyer->date_range[$year][$key1]))
-                                @php $class = 'active-cell';$tooltip='Live';@endphp
-                            @else
-                                @foreach($keyer->activity as $act)                                   
-                                    @if(isset($act['type']) &&  $act['type'] == 'Installation' && isset($act['dates'][$year][$key1]) && in_array($value2['Date'],$act['dates'][$year][$key1]))
-                                        @php $class = 'install-cell'; $tooltip='Installation'; @endphp
-                                    @elseif(isset($act['type']) &&  $act['type'] == 'Maintenance' && isset($act['dates'][$year][$key1]) && in_array($value2['Date'],$act['dates'][$year][$key1]))
-                                        @php $class = 'maintenance-cell'; $tooltip='Maintenance'; @endphp
-                                    @elseif(isset($act['type']) &&  $act['type'] == 'Dismantle' && isset($act['dates'][$year][$key1]) && in_array($value2['Date'],$act['dates'][$year][$key1]))
-                                        @php $class = 'dismantle-cell'; $tooltip='Dismantle';@endphp    
-                                    @endif
-                                    
-                                @endforeach
+                                @php $class = 'active-cell';$tooltip='Live';$LV = $value2['Date'];@endphp
                             @endif
+                            @foreach($keyer->activity as $act)                                   
+                                @if(isset($act['type']) &&  $act['type'] == 'Installation' && isset($act['dates'][$year][$key1]) && in_array($value2['Date'],$act['dates'][$year][$key1]))
+                                    @php $class = 'install-cell'; $tooltip='Installation'; $IV = $value2['Date']; @endphp
+                                    @if($LV== $IV)
+                                        @php $class = 'clash-cell'; $tooltip='Clash'; @endphp
+                                    @endif    
+                                @endif    
+                                @if(isset($act['type']) &&  $act['type'] == 'Maintenance' && isset($act['dates'][$year][$key1]) && in_array($value2['Date'],$act['dates'][$year][$key1]))
+                                    @php $class = 'maintenance-cell'; $tooltip='Maintenance'; $MV = $value2['Date']; @endphp
+                                    @if($MV == $IV || $MV == $LV)
+                                        @php $class = 'clash-cell'; $tooltip='Clash';@endphp
+                                    @endif    
+                                @endif
+                                @if(isset($act['type']) &&  $act['type'] == 'Dismantle' && isset($act['dates'][$year][$key1]) && in_array($value2['Date'],$act['dates'][$year][$key1]))
+                                    @php $class = 'dismantle-cell'; $tooltip='Dismantle'; $DV = $value2['Date']; @endphp
+                                    @if($DV == $IV || $DV == $LV || $DV == $MV)
+                                        @php $class = 'clash-cell'; $tooltip='Clash'; @endphp
+                                    @endif
+                                @endif                                                                   
+                            @endforeach                           
                             <td class="{{$class}}" title="{{$tooltip}}">{{$value2['Date']}}</td>
                         @endforeach
                     @endforeach

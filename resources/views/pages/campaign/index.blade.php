@@ -4,10 +4,14 @@
 <link href="{{ asset('assets/css/overview.css') }}" rel="stylesheet" />
 <link href="{{ asset('assets/libs/fullcalendar/dist/fullcalendar.min.css')}}" rel="stylesheet" />
 <link href="{{ asset('assets/extra-libs/calendar/calendar.css')}}" rel="stylesheet" />
-<style>
+
+
+<style> 
     .btn_margin{
         margin: 1%;
     }
+    #zero_config{font-size:11px;}
+    .table th {    padding: 0.4rem; }
 </style>
 <div class="page-wrapper">
     <div class="page-breadcrumb">
@@ -71,46 +75,46 @@
                                         <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
                                     </div>
                                     @endif
-                                    <table id="zero_config" class="table table-striped table-bordered dataTable" role="grid" aria-describedby="zero_config_info" style="width: 100%;">
+                                    <table id="zero_config" class="table table-striped table-bordered dataTable text-center" role="grid" aria-describedby="zero_config_info" style="width: 100%;">
                                         <thead>
                                             <tr role="row">
-                                                <th class="sorting" tabindex="0" width="10%">
+                                                <th class="sorting" tabindex="0">
                                                     Name
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Type
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Client
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Market
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Campaign Type
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="10%">
+                                                <th class="sorting" tabindex="0">
                                                     Dates
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="10%">
+                                                <th class="sorting" tabindex="0">
                                                     Booking Order
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Payment Status
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Permits
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Locations
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Photos
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="5%">
+                                                <th class="sorting" tabindex="0">
                                                     Status
                                                 </th>
-                                                <th class="sorting" tabindex="0" width="80%">
+                                                <th class="sorting" tabindex="0">
                                                     Action
                                                 </th>
                                             </tr>
@@ -184,6 +188,9 @@
 <script
     src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <script src="{{ asset('jquery-typeahead/dist/jquery.typeahead.min.js') }}"></script>
+
+
+
 <script>
     $start = $('#start_date').val()
     $end = $('#end_date').val()
@@ -342,7 +349,7 @@
             
             columns: [{
                     data: 'name',
-                    name: 'name'
+                    name: 'name',"bSort": true
                 },
                 {
                     data: 'campaign_type',

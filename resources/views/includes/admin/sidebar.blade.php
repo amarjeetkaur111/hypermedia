@@ -104,12 +104,23 @@
                     ><i class="fas fa-cog"></i
                         ><span class="hide-menu">Production</span></a
                     >
-                    <ul aria-expanded="false" class="collapse first-level">
+                    <ul aria-expanded="false" class="collapse first-level in">
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-campaign-installation-index') }}" ><i class="mdi mdi-brightness-7"></i><span class="hide-menu">Campaign Installation</span></a>
                         </li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a
+                        class="sidebar-link has-arrow waves-effect waves-dark"
+                        href="javascript:void(0)"
+                        aria-expanded="false"
+                    ><i class="mdi mdi-camera-party-mode"></i
+                        ><span class="hide-menu">Campaign Photos</span></a
+                    >
+                    <ul aria-expanded="false" class="collapse first-level">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('admin-campaign-monitoring-index') }}" ><i class="mdi mdi-camera-party-mode"></i><span class="hide-menu">Campaign Monitoring</span></a>
+                            <a class="sidebar-link" href="{{ route('admin-campaign-monitoring-index') }}" ><i class="mdi mdi-laptop"></i><span class="hide-menu">Campaign Monitoring</span></a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-defect-tracking-index') }}" ><i class="mdi mdi-camera-off"></i><span class="hide-menu">Defect Tracking</span></a>

@@ -16,6 +16,7 @@
 <link href="{{ asset('assets/libs/flot/css/float-chart.css') }}" rel="stylesheet"/>
 <!-- Custom CSS -->
 <link href="{{ asset('dist/css/style.min.css') }}" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ asset('assets/extra-libs/DataTables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}" />
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
