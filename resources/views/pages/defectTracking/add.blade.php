@@ -14,12 +14,14 @@
                 $photo = asset('uploads/'.$data->photo_path);
                 $asset = $data->asset ?? null;
                 $location = $data->location ?? null;
+                $department = $data->campaign->department;
             }
             else{
                 $description = null;
                 $status = null;
                 $location = null;
                 $asset = null;
+                $department = null;
             }
     @endphp
     <style>
@@ -65,6 +67,43 @@
                                         @if ($errors->has('campaign_id'))
                                             <span class="text-danger">{{ $errors->first('campaign_id') }}</span>
                                         @endif
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for=""
+                                           class="col-sm-3 text-end control-label col-form-label">Video</label>
+                                    <div class="col-md-9">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input form-control"
+                                                   name="video" id="photo"
+                                                   accept="video/*">
+                                        </div>                                        
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for=""
+                                           class="col-sm-3 text-end control-label col-form-label">Department</label>
+                                    <div class="col-md-9">
+                                        <select type="text" name="department_id" id="department" class="form-control">
+                                            @if($department)
+                                                <option value="{{ $department->id }}">{{ $department->ref_no.' - '.$department->name }}</option>
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('department_id'))
+                                            <span class="text-danger">{{ $errors->first('department_id') }}</span>
+                                        @endif                                 
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for=""
+                                           class="col-sm-3 text-end control-label col-form-label">Owner</label>
+                                    <div class="col-md-9">
+                                        <select type="text" name="owner_id" id="owner" class="form-control">
+                                            <option value="1">Hypermedia</option>
+                                            <option value="2">Mall Owned</option>
+                                            <option value="3">MAF Owned</option>
+                                            <option value="4">Metro Owned</option>
+                                        </select>                
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -190,6 +229,31 @@
                 width: '100%',
                 ajax: {
                     url: '{{ route('select-2-get-locations') }}',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public'
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+
+            $('#department').select2({
+                width: '100%',
+                ajax: {
+                    url: '{{ route('select-2-get-departments') }}',
                     data: function (params) {
                         var query = {
                             search: params.term,

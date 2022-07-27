@@ -40,7 +40,7 @@ class DigitalPhotosController extends Controller
         $action = route('admin-campaign-monitoring-add');
         $add = 'Add';
         if ($id) {
-            $data = DigitalPhotos::with('campaign')->find($id);
+            $data = DigitalPhotos::with(['campaign','campaign.department'])->find($id);
             $action = route('admin-campaign-monitoring-add', ['id' => $id]);
             $add = 'Edit';
         }
@@ -49,8 +49,6 @@ class DigitalPhotosController extends Controller
 
     public function addPost(Request $request, $id = null)
     {
-
-
         $add = 'Add';
         $obj = new DigitalPhotos;
         if ($id) {
@@ -76,6 +74,12 @@ class DigitalPhotosController extends Controller
 //            $file = request()->file('photo');
 //            $name = $file->store('campaign_monitoring', ['disk' => 'my_files']);
 //            $obj->photo_path = $name;
+        }
+        if ($request->hasFile('video')) {
+
+            $filename = $request->file('video')->getClientOriginalName();
+            $path = Storage::disk('s3')->putFileAs('campaign_monitoring_video',$request->photo,$filename ,'public');
+            $obj->photo_path = config('filesystems.disks.s3.url').'/'.$path;
         }
         $obj->campaign_id = $request->input('campaign_id');
         $obj->description = $request->input('description');

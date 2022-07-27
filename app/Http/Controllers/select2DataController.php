@@ -98,5 +98,15 @@ class select2DataController extends Controller
         return response()->json($data);
     }
 
+    public function getDepartment(Request $request)
+    {
+        if ($request->has('search')) {
+            $data = Departments::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->where('status', 'Active')->get();
+        } else {
+            $data = Departments::select('id', 'name')->where('status', 'Active')->get();
+        }
+        return response()->json($data);
+    }
+
    
 }
