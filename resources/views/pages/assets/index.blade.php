@@ -54,6 +54,9 @@
                                                 Preview
                                             </th>
                                             <th class="sorting" tabindex="0">
+                                                OwnedBy
+                                            </th>
+                                            <th class="sorting" tabindex="0">
                                                 Installation Time
                                             </th>
                                             <th class="sorting" tabindex="0">
@@ -104,6 +107,7 @@
                     {data: 'ref_no', name: 'ref_no'},
                     {data: 'name', name: 'name'},
                     {data: 'asset_photo', name: 'asset_photo'},
+                    {data: 'owned_by', name: 'owned_by'},
                     {data: 'installation_time', name: 'installation_time'},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},

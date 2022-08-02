@@ -96,17 +96,35 @@ class select2DataController extends Controller
             $data = User::select('id', 'name')->where('status', 'Active')->get();
         }
         return response()->json($data);
-    }
+    }   
 
-    public function getDepartment(Request $request)
+    public function getCampaignAssets(Request $request)
     {
-        if ($request->has('search')) {
-            $data = Departments::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->where('status', 'Active')->get();
-        } else {
-            $data = Departments::select('id', 'name')->where('status', 'Active')->get();
+        if($request->has('campaign_id') && $request->campaign_id !='')
+        {
+            $cid = $request->campaign_id;
+            if ($request->has('search')) {
+                $data = Assets::with('assetStatus')            
+                    ->whereHas('assetStatus',function($query) use($cid){
+                        $query->where('campaign_id',$cid);
+                    })      
+                    ->select('id', 'name', 'ref_no')->where('name', 'like', '%' . $request->search . '%')/*->where('location',$key)*/ ->get();
+            } else {
+                $data = Assets::with('assetStatus')            
+                    ->whereHas('assetStatus',function($query) use($cid){
+                        $query->where('campaign_id',$cid);
+                    })                    
+                    ->select('id', 'name', 'ref_no')/*->where('location',$key)*/ ->get();
+            }
         }
+        else{
+            if ($request->has('search')) {
+                $data = Assets::select('id', 'name', 'ref_no')->where('name', 'like', '%' . $request->search . '%')/*->where('location',$key)*/ ->get();
+            } else {
+                $data = Assets::select('id', 'name', 'ref_no')/*->where('location',$key)*/ ->get();
+            }
+        }
+        
         return response()->json($data);
-    }
-
-   
+    }   
 }

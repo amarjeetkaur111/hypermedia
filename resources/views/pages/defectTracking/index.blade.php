@@ -1,5 +1,10 @@
 @extends('layouts.admin')
 @section('content')
+<style>
+    .table th {    padding: 0.6rem; }
+    .table-responsive {font-size:12px;}
+    #zero_config_wrapper{padding-left:0;}
+</style>
     <link href="{{ asset('assets/expand.css') }}" rel="stylesheet" />
     <div class="page-wrapper">
         <div class="page-breadcrumb">
@@ -49,10 +54,28 @@
                                                 Asset
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Preview
+                                                Campaign
+                                            </th>
+                                            <th class="sorting" tabindex="0">
+                                                Department
+                                            </th>
+                                            <th class="sorting" tabindex="0">
+                                                OwnedBy
+                                            </th>
+                                            <th class="sorting" tabindex="0">
+                                                Photo
+                                            </th>
+                                            <th class="sorting" tabindex="0">
+                                                Video
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Status
+                                            </th>
+                                            <th class="sorting" tabindex="0">
+                                                ReportedOn
+                                            </th>
+                                            <th class="sorting" tabindex="0">
+                                                FixedOn
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Action
@@ -75,9 +98,10 @@
 
 
     <script src="{{asset('assets/expand.js')}}"></script>
+    
     <script>
 
-
+        $body = $('body');
         $(function () {
 
 
@@ -102,11 +126,37 @@
                     {data: 'id', name: 'id'},
                     {data: 'description', name: 'description'},
                     {data: 'asset_id', name: 'asset_id'},
+                    {data: 'campaign_id', name: 'campaign_id'},
+                    {data: 'deparment_id', name: 'deparment_id'},
+                    {data: 'owned_by', name: 'owned_by'},
                     {data: 'photo_preview', name: 'photo_preview' , orderable: false, searchable: false},
+                    {data: 'video_download', name: 'video_download' , orderable: false, searchable: false},
                     {data: 'status', name: 'status'},
+                    {data: 'created_at', name: 'created_at'},
+                    {data: 'fixed_at', name: 'fixed_at'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
+
+            $body.on('click', '.defect_fixed', function() {
+            $href = $(this).attr('data-href')
+            $.confirm({
+                title: '',
+                content: 'url:' + $href,
+                buttons: {
+                    formSubmit: {
+                        text: 'Submit',
+                        btnClass: 'btn-blue',
+                        action: function() {                            
+                            $('#defect-fixed').submit();                           
+                        }
+                    },
+                    cancel: function() {
+                        //close
+                    },
+                },
+            });
+        });
 
         });
     </script>

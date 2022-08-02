@@ -24,19 +24,34 @@ class campaignController extends Controller
     {
         // $d = Carbon::parse('April')->daysInMonth;
         // dd($d);
-
-
         if ($request->ajax()) {
-
-            $data = Campaigns::with('client', 'buckets', 'buckets.locations')->select('*');
+            
+            $data = Campaigns::with('client', 'department', 'buckets', 'buckets.locations')->select('*');
             if ($request->has('start_date') && $request->start_date) {
                 $s_date = Carbon::createFromFormat('d/m/Y', $request->start_date);
                 $data = $data->whereDate('start_date', '>=', $s_date)->orWhereDate('end_date', '>=', $s_date);
             }
             if ($request->has('end_date') && $request->end_date) {
                 $e_date = Carbon::createFromFormat('d/m/Y', $request->end_date);
-                $data = $data->whereDate('end_date', '<=', $e_date)->orWhereDate('start_date', '<=', $e_date);
+                $data = $data->whereDate('end_date', '<=', $e_date)->orWhereDate('start_date', '<=', $e_date);               
             }
+            if ($request->has('market') && $request->market != 0) {
+                $data = $data->where('market', $request->market);          
+            }
+            if ($request->has('type') && $request->type != 0) {
+                $data = $data->where('type', $request->type);
+            }
+            if ($request->has('department_id') && $request->department_id != 0) {
+                $data = $data->where('department_id', $request->department_id);
+            }
+            if ($request->has('payment') && $request->payment != 0) {
+                $data = $data->where('payment_status', $request->payment);
+            }
+            if ($request->has('status') && $request->status != 0) {
+                $data = $data->where('status', $request->status);
+            }
+            // echo $request->market;
+            // exit();
             return DataTables::eloquent($data)
                 ->editColumn('client_name', function ($row) {
                     return $row->client ? $row->client->name : $row->client_name;
@@ -77,6 +92,14 @@ class campaignController extends Controller
                 ->addColumn('permits', function ($row) {
                     return '<button class="btn btn-sm btn-primary permits_btn" dt-add-href="' . route('admin-campaign-campaign-permits-add', ['id' => $row->id]) . '" dt-data-id="' . route('admin-campaign-campaign-permits', ['id' => $row->id]) . '" title="Permits"><i class="fas fa-list"></i></button>';
                 })
+                ->addColumn('department', function ($row) {                    
+                    return $row->department ? $row->department->name : 'NA';
+                })
+                // ->filter(function ($instance) use ($request) {
+                //     if ($request->get('market')) {
+                //         $instance->where('market', $request->get('approved'));
+                //     }
+                // })
                 ->rawColumns(['action', 'locations', 'photos', 'permits'])
                 ->make(true);
         }

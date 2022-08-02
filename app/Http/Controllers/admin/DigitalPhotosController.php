@@ -7,6 +7,7 @@ use App\Models\DigitalPhotos;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Storage;
+use App\Models\DefectTracking;  
 
 class DigitalPhotosController extends Controller
 {
@@ -40,7 +41,7 @@ class DigitalPhotosController extends Controller
         $action = route('admin-campaign-monitoring-add');
         $add = 'Add';
         if ($id) {
-            $data = DigitalPhotos::with(['campaign','campaign.department'])->find($id);
+            $data = DigitalPhotos::with(['campaign'])->find($id);
             $action = route('admin-campaign-monitoring-add', ['id' => $id]);
             $add = 'Edit';
         }
@@ -74,17 +75,39 @@ class DigitalPhotosController extends Controller
 //            $file = request()->file('photo');
 //            $name = $file->store('campaign_monitoring', ['disk' => 'my_files']);
 //            $obj->photo_path = $name;
-        }
-        if ($request->hasFile('video')) {
-
-            $filename = $request->file('video')->getClientOriginalName();
-            $path = Storage::disk('s3')->putFileAs('campaign_monitoring_video',$request->photo,$filename ,'public');
-            $obj->photo_path = config('filesystems.disks.s3.url').'/'.$path;
-        }
+        }        
         $obj->campaign_id = $request->input('campaign_id');
         $obj->description = $request->input('description');
         $obj->status = $request->input('status');
         $obj->save();
+
+        if($request->input('defect') == 1)
+        {
+            $this->validate($request, [
+                'asset_id' => 'required',
+                'location_id' => 'required',
+                'photo' => 'required|max:1000',
+                'video' => 'file|mimes:mp4,mov,ogg,qt|max:2000',
+            ]);
+            $obj = new DefectTracking;
+            if ($request->hasFile('photo')) {
+
+                $filename = $request->file('photo')->getClientOriginalName();
+                $path = Storage::disk('s3')->putFileAs('defect_tracking',$request->photo,$filename ,'public');
+                $obj->photo_path = config('filesystems.disks.s3.url').'/'.$path;
+            }
+            if ($request->hasFile('video')) {
+                $filename = $request->file('video')->getClientOriginalName();
+                $path = Storage::disk('s3')->putFileAs('campaign_monitoring_video',$request->video,$filename ,'public');
+                $obj->video_path = config('filesystems.disks.s3.url').'/'.$path;
+            }
+            $obj->campaign_id = $request->input('campaign_id');
+            $obj->description = $request->input('description');
+            $obj->status = $request->input('status');
+            $obj->asset_id = $request->input('asset_id');
+            $obj->location_id = $request->input('location_id');
+            $obj->save();
+        }
         return redirect()->route('admin-campaign-monitoring-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "{$add}ed Successfully!"]);
     }
 }

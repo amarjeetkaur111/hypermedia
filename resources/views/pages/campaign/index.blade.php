@@ -10,8 +10,9 @@
     .btn_margin{
         margin: 1%;
     }
-    #zero_config{font-size:11px;}
+    #zero_config, .filters{font-size:11px;}
     .table th {    padding: 0.4rem; }
+    #zero_config_wrapper{padding-left:0;}
 </style>
 <div class="page-wrapper">
     <div class="page-breadcrumb">
@@ -42,39 +43,103 @@
                     <div class="table-responsive">
                         <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label class="mt-3">Start Date</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control datepicker-autoclose" id="start_date" placeholder="dd/mm/yyyy" autocomplete="off" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="mt-3">End Date</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control  datepicker-autoclose" id="end_date" placeholder="dd/mm/yyyy" autocomplete="off" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="btn-group"></div>
-                                            <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
-                                        </div>
-                                        <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">
-                                            <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i class="fa fa-plus"> Add Campaign</i></a>
-                                        </div>
+                                <div class="col-sm-12">                                    
+                                    <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">
+                                        <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i class="fa fa-plus"> Add Campaign</i></a>
                                     </div>
                                     @if(\Illuminate\Support\Facades\Session::has('msg'))
                                     <div class="alert alert-{{ \Illuminate\Support\Facades\Session::has('class') ? \Illuminate\Support\Facades\Session::get('class') : 'default' }}">
                                         <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
                                     </div>
                                     @endif
+                                    <div style="padding:0px 15px;border:0.5px solid lightgray;border-radius:20px;margin-bottom: 10px;">
+                                        <div class="row filters mb-4">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="mt-3">Market</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="market" id="market" class="form-control">
+                                                                <option value="0" selected="selected">Select Market</option>
+                                                                @include('includes.admin.select.country')
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mt-3">Type</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="type" id="type" class="form-control">
+                                                                <option value="0">Select Type</option>
+                                                                <option value="digital">Digital</option>
+                                                                <option value="Static">Static</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mt-3">Department</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="department_id" id="department_id" class="form-control">
+                                                                <option value="0" selected="selected">Select Department</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mt-3">Payment</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="payment" id="payment" class="form-control"> 
+                                                                <option value="0">Payment Status</option>                
+                                                                <option value="Pending">Pending</option>
+                                                                <option value="Completed">Completed</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label class="mt-3">Status</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="status" id="status" class="form-control">
+                                                                <option value="0">Select Status</option>
+                                                                <option value="Not Started">Not Started</option>
+                                                                <option value="Active">Active</option>
+                                                                <option value="Completed">Completed</option>
+                                                                <option value="Cancelled">Cancelled</option>
+                                                                <option value="Inactive">Inactive</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mt-3">Start Date</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control datepicker-autoclose" id="start_date" placeholder="dd/mm/yyyy" autocomplete="off" />
+                                                            <!-- <div class="input-group-append">
+                                                                <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
+                                                            </div> -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mt-3">End Date</label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control  datepicker-autoclose" id="end_date" placeholder="dd/mm/yyyy" autocomplete="off" />
+                                                            <!-- <div class="input-group-append">
+                                                                <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
+                                                            </div> -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-md-3">
+                                                        <div class="btn-group"></div>
+                                                        <button class="btn btn-primary" style="margin-top: 39px" id="date_reset"><i class="fas fa-redo-alt"> Apply</i></button>
+                                                    </div> -->
+                                                    <div class="col-md-3">
+                                                        <div class="btn-group"></div>
+                                                        <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
+                                                    </div>     
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                    </div>
                                     <table id="zero_config" class="table table-striped table-bordered dataTable text-center" role="grid" aria-describedby="zero_config_info" style="width: 100%;">
                                         <thead>
                                             <tr role="row">
@@ -92,6 +157,9 @@
                                                 </th>
                                                 <th class="sorting" tabindex="0">
                                                     Campaign Type
+                                                </th>
+                                                <th class="sorting" tabindex="0">
+                                                    Department
                                                 </th>
                                                 <th class="sorting" tabindex="0">
                                                     Dates
@@ -202,6 +270,11 @@
         $('#date_reset').on('click', function() {
             $('#start_date').val('').change()
             $('#end_date').val('').change()
+            $('#market').val('0').change()
+            $('#type').val('0').change()
+            $('#department_id').val('0').change()
+            $('#payment').val('0').change()
+            $('#status').val('0').change()
         })
         $("#start_date").datepicker({
             format: "dd/mm/yyyy",
@@ -338,6 +411,11 @@
             ajax: {
                 url: "{{ url()->current() }}",
                 data: function(d) {
+                    d.market = $('#market').val(),
+                    d.type = $('#type').val(),
+                    d.department_id = $('#department_id').val(),
+                    d.payment = $('#payment').val(),
+                    d.status = $('#status').val(),
                     d.start_date = $start;
                     d.end_date = $end;
                 }
@@ -366,6 +444,10 @@
                 {
                     data: 'type',
                     name: 'type'
+                },
+                {
+                    data: 'department',
+                    name: 'department'
                 },
                 {
                     data: 'start_date',
@@ -412,8 +494,23 @@
             ]
         });
 
+        $('#market').change(function(){
+            table.draw(true);
+        });
+        $('#type').change(function(){
+            table.draw(true);
+        });
+        $('#department_id').change(function(){
+            table.draw(true);
+        });
+        $('#payment').change(function(){
+            table.draw(true);
+        });
+        $('#status').change(function(){
+            table.draw(true);
+        });
 
-        $('thead > tr> th:nth-child(13)').css({ 'min-width': '200px', 'max-width': '200px' });
+        $('thead > tr> th:nth-child(14)').css({ 'min-width': '100px', 'max-width': '200px' });
 
         $body.on('click', '.assign-button', function() {
             $href = $(this).attr('data-href')
@@ -529,6 +626,34 @@
                 $main.LoadingOverlay('hide');
             }
         });
-    })
+    });
+    $('#market').select2();
+    $('#payment').select2();
+    $('#status').select2();
+    $('#type').select2();
+    $('#department_id').select2({
+        width: '100%',
+        ajax: {
+            url: '{{ route('select-2-get-departments') }}',
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                    type: 'public'
+                }
+                return query;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        }
+                    })
+                }
+            }
+        }
+    });
 </script>
 @endpush

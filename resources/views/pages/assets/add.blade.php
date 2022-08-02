@@ -11,6 +11,7 @@
             $ref_no = old('ref_no');
             $description = old('description');
             $status = old('status');
+            $owner = old('owner_id');
         }
         else if(isset($data) && $data){
             $name = $data->name;
@@ -22,6 +23,7 @@
             $description = $data->description;
             $status = $data->status;
             $current_network = $data->network ? $data->network->id : null;
+            $owner = $data->owned_by;
         }
         else{
             $name = null;
@@ -30,6 +32,7 @@
             $ref_no = null;
             $description = null;
             $status = null;
+            $owner = null;
         }
     @endphp
     <div class="page-wrapper">
@@ -115,6 +118,19 @@
                                 @if ($errors->has('department_id'))
                                     <span class="text-danger">{{ $errors->first('department_id') }}</span>
                                 @endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for=""
+                                    class="col-sm-3 text-end control-label col-form-label">Owner</label>
+                            <div class="col-md-9">
+                                <select type="text" name="owner_id" id="owner" class="form-control" required>
+                                    <option value="">Select Owner</option>
+                                    <option value="Hypermedia">Hypermedia</option>
+                                    <option value="Mall Owned">Mall Owned</option>
+                                    <option value="MAF Owned">MAF Owned</option>
+                                    <option value="Metro Owned">Metro Owned</option>
+                                </select>                
                             </div>
                         </div>
                         <div class="form-group row">
@@ -266,6 +282,9 @@
         });
         @if($status)
         $('#status').val('{!!$status!!}').trigger('change');
+        @endif
+        @if($owner)
+        $('#owner').val('{!!$owner!!}');
         @endif
 
     </script>

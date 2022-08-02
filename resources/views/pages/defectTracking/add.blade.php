@@ -5,23 +5,21 @@
             if(old('description')){
                 $description = old('description');
                 $status = old('status');
-                $location = old('location_id');
-                $asset = old('asset_id');
             }
             else if(isset($data) && $data){
                 $description = $data->description;
                 $status = $data->status;
-                $photo = asset('uploads/'.$data->photo_path);
+                $photo = asset($data->photo_path);
                 $asset = $data->asset ?? null;
                 $location = $data->location ?? null;
-                $department = $data->campaign->department;
+                $campaign = $data->campaign ?? null;
             }
             else{
                 $description = null;
                 $status = null;
                 $location = null;
                 $asset = null;
-                $department = null;
+                $campaign = null;
             }
     @endphp
     <style>
@@ -64,8 +62,8 @@
                                                    name="photo" id="photo"
                                                    accept="image/*">
                                         </div>
-                                        @if ($errors->has('campaign_id'))
-                                            <span class="text-danger">{{ $errors->first('campaign_id') }}</span>
+                                        @if ($errors->has('photo'))
+                                            <span class="text-danger">{{ $errors->first('photo') }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -75,35 +73,26 @@
                                     <div class="col-md-9">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input form-control"
-                                                   name="video" id="photo"
+                                                   name="video" id="video"
                                                    accept="video/*">
-                                        </div>                                        
+                                        </div>  
+                                        @if ($errors->has('video'))
+                                            <span class="text-danger">{{ $errors->first('video') }}</span>
+                                        @endif                                           
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for=""
-                                           class="col-sm-3 text-end control-label col-form-label">Department</label>
+                                           class="col-sm-3 text-end control-label col-form-label">Campaign</label>
                                     <div class="col-md-9">
-                                        <select type="text" name="department_id" id="department" class="form-control">
-                                            @if($department)
-                                                <option value="{{ $department->id }}">{{ $department->ref_no.' - '.$department->name }}</option>
+                                        <select type="text" name="campaign_id" id="campaign" class="form-control">
+                                            @if(isset($campaign))
+                                                <option value="{{ $campaign->id }}">{{ $campaign->name }}</option>
                                             @endif
                                         </select>
-                                        @if ($errors->has('department_id'))
-                                            <span class="text-danger">{{ $errors->first('department_id') }}</span>
+                                        @if ($errors->has('campaign_id'))
+                                            <span class="text-danger">{{ $errors->first('campaign_id') }}</span>
                                         @endif                                 
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for=""
-                                           class="col-sm-3 text-end control-label col-form-label">Owner</label>
-                                    <div class="col-md-9">
-                                        <select type="text" name="owner_id" id="owner" class="form-control">
-                                            <option value="1">Hypermedia</option>
-                                            <option value="2">Mall Owned</option>
-                                            <option value="3">MAF Owned</option>
-                                            <option value="4">Metro Owned</option>
-                                        </select>                
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -121,9 +110,9 @@
                                     <label for="email1"
                                            class="col-sm-3 text-end control-label col-form-label">Asset</label>
                                     <div class="col-sm-9">
-                                        <select type="text" name="asset_id" id="asset" class="form-control">
-                                            @if($asset)
-                                                <option value="{{ $asset->id }}">{{ $asset->ref_no.' - '.$asset->name }}</option>
+                                        <select type="text" name="asset_id" id="asset" class="form-control" required>
+                                            @if(isset($asset))
+                                                <option value="{{ $asset->id }}">{{ $asset->ref_no.' - '.$asset->name }}</option>   
                                             @endif
                                         </select>
                                         @if ($errors->has('asset_id'))
@@ -135,8 +124,8 @@
                                     <label for="email1"
                                            class="col-sm-3 text-end control-label col-form-label">Location</label>
                                     <div class="col-sm-9">
-                                        <select type="text" name="location_id" id="location" class="form-control">
-                                            @if($location)
+                                        <select type="text" name="location_id" id="location" class="form-control" required>
+                                            @if(isset($location))
                                                 <option value="{{ $location->id }}">{{ $location->name }}</option>
                                             @endif
                                         </select>
@@ -149,7 +138,7 @@
                                     <label for="email1"
                                            class="col-sm-3 text-end control-label col-form-label">Status</label>
                                     <div class="col-sm-9">
-                                        <select type="text" name="status" id="status" class="form-control">
+                                        <select type="text" name="status" id="status" class="form-control" required>
                                             <option value="Active">Active</option>
                                             <option value="Inactive">Inactive</option>
                                         </select>
@@ -204,11 +193,12 @@
             $('#asset').select2({
                 width: '100%',
                 ajax: {
-                    url: '{{ route('select-2-get-assets') }}',
+                    url: '{{ route('select-2-get-campaign-asset') }}',
                     data: function (params) {
                         var query = {
                             search: params.term,
-                            type: 'public'
+                            type: 'public',
+                            campaign_id:$('#campaign').val(),
                         }
                         return query;
                     },
@@ -249,11 +239,11 @@
                     }
                 }
             });
-
-            $('#department').select2({
+            
+            $('#campaign').select2({
                 width: '100%',
                 ajax: {
-                    url: '{{ route('select-2-get-departments') }}',
+                    url: '{{ route('select-2-get-campaigns') }}',
                     data: function (params) {
                         var query = {
                             search: params.term,

@@ -83,6 +83,8 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
         Route::get('/', [\App\Http\Controllers\admin\DefectTrackingController::class, 'index'])->name('index');
         Route::get('/add/{id?}', [\App\Http\Controllers\admin\DefectTrackingController::class, 'add'])->name('add');
         Route::post('/add/{id?}', [\App\Http\Controllers\admin\DefectTrackingController::class, 'addPost'])->name('add');
+        Route::get('/fixed/{id?}', [\App\Http\Controllers\admin\DefectTrackingController::class, 'fixed'])->name('fixed');
+        Route::post('/fixed/{id?}', [\App\Http\Controllers\admin\DefectTrackingController::class, 'fixedPost'])->name('fixed');
     });
     //assets network
     Route::group(['as' => 'assets-network-', 'prefix' => 'assets-network'], function () {

@@ -74,6 +74,7 @@ class assetsController extends Controller
         $user->name = $request->input('name');
         $user->department_id = $request->input('department_id');
         $user->location_id = $request->input('location');
+        $user->owned_by = $request->input('owner_id');
         $user->description = $request->input('description');
         $user->type = $request->input('type');
         $user->status = $request->input('status');

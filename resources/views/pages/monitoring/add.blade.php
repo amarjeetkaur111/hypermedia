@@ -6,17 +6,22 @@
                 $campaign_id = old('campaign_id');
                 $description = old('description');
                 $status = old('status');
+                $asset = old('asset_id');
+                $location = old('location_id');
             }
             else if(isset($data) && $data){
                 $campaign_id = $data->campaign ?? null;
                 $description = $data->description;
                 $status = $data->status;
-                $asset = asset('uploads/'.$data->photo_path);
+                $asset = $data->asset ?? null;
+                $location = $data->location ?? null;
             }
             else{
                 $campaign_id = null;
                 $description = null;
                 $status = null;
+                $asset = null;
+                $location = null;
             }
     @endphp
     <style>
@@ -24,7 +29,7 @@
             border: 1px solid #aaa;
         }
     </style>
-    <div class="page-wrapper">
+    <div class="page-wrapper" id='monitoring'>
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-12 d-flex no-block align-items-center">
@@ -54,7 +59,7 @@
                                     <label for="email1"
                                            class="col-sm-3 text-end control-label col-form-label">Campaign</label>
                                     <div class="col-sm-9">
-                                        <select type="text" name="campaign_id" id="campaign_id" class="form-control">
+                                        <select type="text" name="campaign_id" id="campaign_id" class="form-control" required>
                                             @if($campaign_id)
                                                 <option value="{{ $campaign_id->id }}">{{ $campaign_id->name }}</option>
                                             @endif
@@ -102,6 +107,59 @@
                                         @endif
                                     </div>
                                 </div>
+                                @if($add == 'Add')
+                                <div class="form-group row">
+                                    <div class="col-sm-3"></div>
+                                    <div class="col-sm-9 form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="defect_btn">
+                                        <input type="hidden" name="defect" id="defect" value='0'>
+                                        <label class="form-check-label" for="defect_btn">
+                                            Add To Defect Asset List
+                                        </label>
+                                    </div>
+                                </div>  
+                                @endif
+                                <div class="defect_group hide">
+                                    <div class="form-group row">
+                                        <label for=""
+                                            class="col-sm-3 text-end control-label col-form-label">Video</label>
+                                        <div class="col-md-9">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input form-control"
+                                                    name="video" id="video"
+                                                    accept="video/*">
+                                            </div>                                        
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="asset"
+                                            class="col-sm-3 text-end control-label col-form-label">Asset</label>
+                                        <div class="col-sm-9">
+                                            <select type="text" name="asset_id" id="asset" class="form-control">
+                                            @if($asset)
+                                                <option value="{{ $asset->id }}">{{ $asset->ref_no.' - '.$asset->name }}</option>
+                                            @endif
+                                            </select>
+                                            @if ($errors->has('asset_id'))
+                                                <span class="text-danger">{{ $errors->first('asset_id') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="location"
+                                            class="col-sm-3 text-end control-label col-form-label">Location</label>
+                                        <div class="col-sm-9">
+                                            <select type="text" name="location_id" id="location" class="form-control">
+                                                @if($location)
+                                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                                @endif
+                                            </select>
+                                            @if ($errors->has('location_id'))
+                                                <span class="text-danger">{{ $errors->first('location_id') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>                                
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12" style="display: flex; justify-content: center; align-items: center">
                                     <img id="output"
@@ -149,6 +207,55 @@
                 width: '100%',
                 ajax: {
                     url: '{{ route('select-2-get-campaigns') }}',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public'
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+            $('#asset').select2({
+                width: '100%',
+                ajax: {
+                    url: '{{ route('select-2-get-campaign-asset') }}',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public',
+                            campaign_id:$('#campaign_id').val(),
+                        }
+                        return query;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.ref_no +' - '+ item.name,
+                                    id: item.id
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+            $('#location').select2({
+                width: '100%',
+                ajax: {
+                    url: '{{ route('select-2-get-locations') }}',
                     data: function (params) {
                         var query = {
                             search: params.term,

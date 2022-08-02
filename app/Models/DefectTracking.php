@@ -18,4 +18,8 @@ class DefectTracking extends Model
     public function location(){
         return $this->hasOne(Locations::class,'id','location_id');
     }
+
+    public function campaign(){
+        return $this->hasOne(Campaigns::class,'id','campaign_id');
+    }
 }
