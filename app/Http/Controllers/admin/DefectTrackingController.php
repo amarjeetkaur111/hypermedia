@@ -44,7 +44,10 @@ class DefectTrackingController extends Controller
                             </a>';
                 })
                 ->addColumn('video_download', function ($row) {
-                    return '<a href="'.route('download-file',['table' => \Illuminate\Support\Facades\Crypt::encrypt('defect_monitoring'),'field' => 'video_path','id' => $row->id]).'" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>';
+                    if($row->video_path)
+                        return '<a href="'.route('download-file',['table' => \Illuminate\Support\Facades\Crypt::encrypt('defect_monitoring'),'field' => 'video_path','id' => $row->id]).'" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>';
+                    else 
+                        return 'N/A';
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="' . route('admin-defect-tracking-add', ['id' => $row->id]) . '" " class="btn_margin edit btn btn-primary btn-sm"   ><i class="fas fa-edit"></i></a>';
