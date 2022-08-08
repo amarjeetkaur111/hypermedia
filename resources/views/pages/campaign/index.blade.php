@@ -13,6 +13,7 @@
     #zero_config, .filters{font-size:11px;}
     .table th {    padding: 0.4rem; }
     #zero_config_wrapper{padding-left:0;}
+    .select2-dropdown {z-index: 100000000 !important;}
 </style>
 <div class="page-wrapper">
     <div class="page-breadcrumb">

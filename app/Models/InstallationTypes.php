@@ -11,4 +11,9 @@ class InstallationTypes extends Model
 {
     use HasFactory,Userstamps,SoftDeletes;
     protected $table = 'campaign_installations';
+
+    public function assignee(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class,(new CampaignInstallationAssign)->getTable(),'campaign_installation_id','user_id','id','id');
+    }
 }
