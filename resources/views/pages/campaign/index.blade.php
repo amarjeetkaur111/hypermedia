@@ -13,7 +13,7 @@
     #zero_config, .filters{font-size:11px;}
     .table th {    padding: 0.4rem; }
     #zero_config_wrapper{padding-left:0;}
-    .select2-dropdown {z-index: 100000000 !important;}
+   
 </style>
 <div class="page-wrapper">
     <div class="page-breadcrumb">
@@ -524,11 +524,12 @@
                         text: 'Submit',
                         btnClass: 'btn-blue',
                         action: function() {
-                            var name = this.$content.find('#user').val();
-                            if (!name) {
+                            var name = this.$content.find('#users').val();
+                            if (name=='') {
                                 $.alert('Select a User first');
                                 return false;
                             } else {
+                                $('#from-assign #from').val('campaign');
                                 $('#from-assign').submit()
                             }
                         }

@@ -24,8 +24,15 @@ class authController extends Controller
 
         Auth::login($user);
         if (Auth::check()) {
-            return redirect()->route('admin-index')
+            if($user->can('Level7'))
+                return redirect()->route('admin-campaign-monitoring-index')
+                 ->with(['status' => 'Success','class' => 'success', 'msg' => 'Logged In']);
+            elseif($user->can('Level5') || $user->can('Level6'))
+                return redirect()->route('admin-campaign-index')
                 ->with(['status' => 'Success','class' => 'success', 'msg' => 'Logged In']);
+            else
+                return redirect()->route('admin-index')
+                    ->with(['status' => 'Success','class' => 'success', 'msg' => 'Logged In']);
         }
 
         return redirect()->route('login')->with(['status' => 'Error', 'class' => 'danger', 'msg' => "Invalid Credentials!"]);

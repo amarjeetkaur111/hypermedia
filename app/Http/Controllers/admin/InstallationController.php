@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\CampaignBucket;
 use App\Models\Campaigns;
 use App\Models\InstallationTypes;
+use App\Models\CampaignInstallationAssign;
 use App\Models\InstallationDesigns;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+
 
 class InstallationController extends Controller
 {
@@ -103,8 +106,8 @@ class InstallationController extends Controller
                 ->addColumn('action', function ($row) use ($id) {
                     // dd($row->id);
                     $btn = '<a href="' . route('admin-campaign-installation-types-add', ['campaign_id' => $id,'id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Installations"><i class="fas fa-edit"></i></a>
-                            <a href="' . route('admin-campaign-installation-designs-index', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Designs"><i class="fas fa-image"></i></a>;
-                            <a data-href="' . route('admin-campaign-assign', ['id' => $row->id]) . '" class="btn_margin btn btn-primary btn-sm assign-button" title="Assign"><i class="fas fa-user-plus"></i></a>';
+                        <a href="' . route('admin-campaign-installation-designs-index', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Designs"><i class="fas fa-image"></i></a>;
+                        <a data-href="' . route('admin-campaign-installation-types-assign', ['id' => $row->id]) . '" class="btn_margin btn btn-primary btn-sm assign-button" title="Assign"><i class="fas fa-user-plus"></i></a>';
 
                     return $btn;
                 })
@@ -241,6 +244,54 @@ class InstallationController extends Controller
         $obj->status = $request->input('status');
         $obj->save();
         return redirect()->route('admin-campaign-installation-designs-index',$installation_id)->with(['status' => 'Success', 'class' => 'success', 'msg' => "{$add}ed Successfully!"]);
+    }
+    public function assignInstallation($id)
+    {
+        // $campaign = Campaigns::with('assignee')
+        //                        ->find($id)->toArray();
+        $campaign = CampaignInstallationAssign::where('campaign_installation_id',$id)->whereNull('deleted_at')->get();         
+        $users = User::all();
+        $action = route('admin-campaign-installation-types-assign-post', ['id' => $id]);
+        return view('pages.campaign.inner.users', compact('users', 'action', 'campaign'))->render();
+    }
+
+    public function assignInstallationPost(Request $request, $id)
+    {
+        $existUsers =  CampaignInstallationAssign::where('campaign_installation_id', $id)->get()->toArray();
+        $existUsers = array_column($existUsers,'user_id');
+        $newUsers = $request->users;
+        if(!empty($existUsers))
+        {
+            $uniqueUsers = array_diff($existUsers,$newUsers);
+            if(!empty($uniqueUsers))
+            {
+                foreach($uniqueUsers as $user)
+                {
+                    CampaignInstallationAssign::where('campaign_installation_id', $id)->where('user_id',$user)->delete();
+                }
+            }
+            $uniqueUsers = array_diff($newUsers,$existUsers);
+            if(!empty($uniqueUsers))
+            {
+                foreach($uniqueUsers as $user)
+                {
+                    $state = new CampaignInstallationAssign;
+                    $state->campaign_installation_id = $id;
+                    $state->user_id = $user;
+                    $state->save();
+                }
+            }
+        }
+        else{
+            foreach($newUsers as $user)
+            {
+                $state = new CampaignInstallationAssign;
+                $state->campaign_installation_id = $id;
+                $state->user_id = $user;
+                $state->save();
+            }
+        }
+        return redirect()->back()->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
     }
     // ---------------------------------------------------------End-----------------------------------------------------------------
 }

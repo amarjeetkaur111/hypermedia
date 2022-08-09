@@ -365,8 +365,8 @@
                         text: 'Submit',
                         btnClass: 'btn-blue',
                         action: function() {
-                            var name = this.$content.find('#user').val();
-                            if (!name) {
+                            var name = this.$content.find('#users').val();
+                            if (name=='') {
                                 $.alert('Select a User first');
                                 return false;
                             } else {

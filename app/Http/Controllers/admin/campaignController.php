@@ -17,6 +17,7 @@ use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class campaignController extends Controller
 {
@@ -27,6 +28,15 @@ class campaignController extends Controller
         if ($request->ajax()) {
             
             $data = Campaigns::with('client', 'department', 'buckets', 'buckets.locations')->select('*');
+            $user = Auth::user();
+            if($user->hasRole('O&M Manager') || $user->hasRole('O&M Coordinator'))
+                $data = $data->where('department_id', 1)->orWhere('department_id', 2);
+            elseif($user->hasRole('InMall Manager') || $user->hasRole('InMall Coordinator'))
+                $data = $data->where('department_id', 3);
+            elseif($user->hasRole('InStore Manager') || $user->hasRole('InStore Coordinator'))
+                $data = $data->where('department_id', 4);
+
+
             if ($request->has('start_date') && $request->start_date) {
                 $s_date = Carbon::createFromFormat('d/m/Y', $request->start_date);
                 $data = $data->whereDate('start_date', '>=', $s_date)->orWhereDate('end_date', '>=', $s_date);
@@ -42,7 +52,7 @@ class campaignController extends Controller
                 $data = $data->where('type', $request->type);
             }
             if ($request->has('department_id') && $request->department_id != 0) {
-                $data = $data->where('department_id', $request->department_id);
+                    $data = $data->where('department_id', $request->department_id);
             }
             if ($request->has('payment') && $request->payment != 0) {
                 $data = $data->where('payment_status', $request->payment);
@@ -333,7 +343,9 @@ class campaignController extends Controller
 
     public function assignCampaign($id)
     {
-        $campaign = Campaigns::with('assignee')->find($id);
+        // $campaign = Campaigns::with('assignee')
+        //                        ->find($id)->toArray();
+        $campaign = CampaignAssign::where('campaign_id',$id)->whereNull('deleted_at')->get();         
         $users = User::all();
         $action = route('admin-campaign-assign-post', ['id' => $id]);
         return view('pages.campaign.inner.users', compact('users', 'action', 'campaign'))->render();
@@ -341,13 +353,40 @@ class campaignController extends Controller
 
     public function assignCampaignPost(Request $request, $id)
     {
-        //        $campaign = Campaigns::find($id);
-        //        $campaign->assignee()->sync($request->user);
-        CampaignAssign::where('campaign_id', $id)->delete();
-        $state = new CampaignAssign;
-        $state->campaign_id = $id;
-        $state->user_id = $request->user;
-        $state->save();
+        $existUsers =  CampaignAssign::where('campaign_id', $id)->get()->toArray();
+        $existUsers = array_column($existUsers,'user_id');
+        $newUsers = $request->users;
+        if(!empty($existUsers))
+        {
+            $uniqueUsers = array_diff($existUsers,$newUsers);
+            if(!empty($uniqueUsers))
+            {
+                foreach($uniqueUsers as $user)
+                {
+                    CampaignAssign::where('campaign_id', $id)->where('user_id',$user)->delete();
+                }
+            }
+            $uniqueUsers = array_diff($newUsers,$existUsers);
+            if(!empty($uniqueUsers))
+            {
+                foreach($uniqueUsers as $user)
+                {
+                    $state = new CampaignAssign;
+                    $state->campaign_id = $id;
+                    $state->user_id = $user;
+                    $state->save();
+                }
+            }
+        }
+        else{
+            foreach($newUsers as $user)
+            {
+                $state = new CampaignAssign;
+                $state->campaign_id = $id;
+                $state->user_id = $user;
+                $state->save();
+            }
+        }
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
     }
 

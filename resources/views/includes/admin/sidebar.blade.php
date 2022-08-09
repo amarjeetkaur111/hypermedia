@@ -7,6 +7,8 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav" class="pt-4">
+                @auth
+                @canany(['Level1', 'Level2','Level3','Level4'])
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link waves-effect waves-dark sidebar-link"
@@ -16,7 +18,8 @@
                         ><span class="hide-menu">Dashboard</span></a
                     >
                 </li>
-                @if($user->can('admin-user-manage'))
+                @endcanany
+                @canany(['Level2'])
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -46,7 +49,8 @@
                         </li>
                     </ul>
                 </li>
-                @endif
+                @endcanany
+                @canany(['Level1', 'Level2','Level3','Level4','Level5','Level6'])
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -59,43 +63,16 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-campaign-index') }}" ><i class="fas fa-diagnoses"></i><span class="hide-menu">Campaign Listing</span></a>
                         </li>
-                        @if($user->can('admin-asset-list'))
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-assets-index') }}" ><i class="fas fa-microchip"></i><span class="hide-menu">Assets</span></a>
                         </li>
-                        @endif
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-assets-network-index') }}" ><i class="fas fa-parachute-box"></i><span class="hide-menu">Assets Network</span></a>
                         </li>
                     </ul>
                 </li>
-{{--                <li class="sidebar-item">--}}
-{{--                    <a--}}
-{{--                        class="sidebar-link waves-effect waves-dark sidebar-link"--}}
-{{--                        href="{{ route('admin-assets-index') }}"--}}
-{{--                        aria-expanded="false"--}}
-{{--                    ><i class="fas fas fa-microchip"></i--}}
-{{--                        ><span class="hide-menu">Assets</span></a--}}
-{{--                    >--}}
-{{--                </li>--}}
-{{--                <li class="sidebar-item">--}}
-{{--                    <a--}}
-{{--                        class="sidebar-link waves-effect waves-dark sidebar-link"--}}
-{{--                        href="{{ route('admin-assets-network-index') }}"--}}
-{{--                        aria-expanded="false"--}}
-{{--                    ><i class="fas fa-parachute-box"></i--}}
-{{--                        ><span class="hide-menu">Assets Network</span></a>--}}
-{{--                </li>--}}
-{{--                </li>--}}
-{{--                <li class="sidebar-item">--}}
-{{--                    <a--}}
-{{--                        class="sidebar-link waves-effect waves-dark sidebar-link"--}}
-{{--                        href="{{ route('admin-campaign-index') }}"--}}
-{{--                        aria-expanded="false"--}}
-{{--                    ><i class="fas fas fa-diagnoses"></i--}}
-{{--                        ><span class="hide-menu">Campaign Listing</span></a--}}
-{{--                    >--}}
-{{--                </li>--}}
+                @endcanany
+                @canany(['Level1', 'Level2','Level3','Level4'])
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -110,6 +87,8 @@
                         </li>
                     </ul>
                 </li>
+                @endcanany
+                @canany(['Level1', 'Level2','Level3','Level4','Level7'])
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -127,6 +106,8 @@
                         </li>
                     </ul>
                 </li>
+                @endcanany
+                @canany(['Level1', 'Level2','Level3','Level4'])
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -147,7 +128,7 @@
                         href="javascript:void(0)"
                         aria-expanded="false"
                     ><i class="fas fa-cogs"></i
-                        ><span class="hide-menu">Master</span></a
+                        ><span class="hide-menu"> Master </span></a
                     >
                     <ul aria-expanded="false" class="collapse first-level">
                         <li class="sidebar-item">
@@ -176,6 +157,8 @@
                         ><span class="hide-menu">Availability Helper</span></a
                     >
                 </li>
+                @endcanany
+                @endauth
             </ul>
         </nav>
         <!-- End Sidebar navigation -->
