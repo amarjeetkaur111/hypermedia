@@ -147,7 +147,15 @@
                     formSubmit: {
                         text: 'Submit',
                         btnClass: 'btn-blue',
-                        action: function() {                            
+                        action: function() {   
+                            var start_date = this.$content.find('#start_date').val();   
+                            if(!start_date) 
+                            {     
+                                $.alert('Select A Date');
+                                return false;    
+                            }
+                            else      
+                                // $.alert(start_date);            
                             $('#defect-fixed').submit();                           
                         }
                     },

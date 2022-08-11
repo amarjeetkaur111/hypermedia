@@ -69,6 +69,7 @@ class DefectTrackingController extends Controller
             $action = route('admin-defect-tracking-add', ['id' => $id]);
             $add = 'Edit';
         }
+        
         return view('pages.defectTracking.add', compact('data', 'action', 'add'));
     }
 
@@ -131,8 +132,9 @@ class DefectTrackingController extends Controller
             $add = 'Edit';
             $obj = DefectTracking::find($id);
         }
-        $fixedtime = Carbon::now();
-        echo $fixedtime->toDateTimeString();        
+        // $fixedtime = Carbon::now();
+        // $fixedtime->toDateTimeString();        
+        $fixedtime = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d H:i:s');
         $obj->fixed_at = $fixedtime;
         $obj->fixed_by = auth()->id();
         $obj->save();

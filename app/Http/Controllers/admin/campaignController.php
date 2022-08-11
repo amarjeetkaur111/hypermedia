@@ -11,6 +11,7 @@ use App\Models\CampaignBucket;
 use App\Models\CampaignPermits;
 use App\Models\Campaigns;
 use App\Models\CampaignStatus;
+use App\Models\InstallationTypes;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -529,5 +530,41 @@ class campaignController extends Controller
             $days[$p->year][$p->month][] = $p->day;
         }
         return $days;
+    }
+
+    public function checkAssignment(Request $request)
+    {
+        // print_r($request->all());
+        // // $data = Campaigns::with('permits')->find($id);
+        $date = $request->input('date');
+        $date = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
+        $campaign = Campaigns::with('assignee')->whereDate('start_date','<=',$date)->whereDate('end_date','>=',$date)->get()->toArray();
+        $campaign_ppl = array();
+        foreach($campaign as $campaign)
+        {
+            foreach($campaign['assignee'] as $assignee)
+            {
+                array_push($campaign_ppl,$assignee['name']);
+            }
+        }
+
+        $campaign_install = InstallationTypes::with('assignee')->whereDate('start_date','<=',$date)->whereDate('end_date','>=',$date)->get()->toArray();
+        $install_ppl = array();
+        foreach($campaign_install as $campaign)
+        {
+            foreach($campaign['assignee'] as $assignee)
+            {
+                array_push($install_ppl,$assignee['name']);
+            }
+        }
+        $unique = array_values(array_unique(array_merge($campaign_ppl, $install_ppl)));
+        $data = "<ul>";
+        foreach($unique as $list)
+        {
+            $data .= "<li>".$list."</li>";
+        }
+        $data .= "</ul>";
+
+        return response()->json(['success'=>'Form is successfully submitted!','data'=> $data]);
     }
 }

@@ -44,10 +44,26 @@
                     <div class="table-responsive">
                         <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                             <div class="row">
-                                <div class="col-sm-12">                                    
-                                    <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">
-                                        <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i class="fa fa-plus"> Add Campaign</i></a>
-                                    </div>
+                                <div class="col-sm-12">    
+                                    <div style="padding-bottom: 10px">
+                                        <div class="row">
+                                            <!-- <div class="col-md-2" style="margin-right:-30px;">
+                                                <label class="mt-2">Check Assignment</label>
+                                            </div> 
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control  datepicker-autoclose" id="end_date" placeholder="dd/mm/yyyy" autocomplete="off" />
+                                            </div> 
+                                            <div class="col-md-2 mt-n5">
+                                                <button class="btn btn-primary" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
+                                            </div>
+                                            <div class="col-md-4">
+                                                
+                                            </div> -->
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i class="fa fa-plus"> Add Campaign</i></a>
+                                            </div> 
+                                        </div>                                       
+                                    </div>  
                                     @if(\Illuminate\Support\Facades\Session::has('msg'))
                                     <div class="alert alert-{{ \Illuminate\Support\Facades\Session::has('class') ? \Illuminate\Support\Facades\Session::get('class') : 'default' }}">
                                         <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
@@ -198,6 +214,24 @@
             </div>
         </div>
         <div id="campaign_calander" class="tabcontent calan">
+            <form class="check_form" method="post" action="" enctype="multipart/form-data">
+                @csrf     
+                 <div class="row mb-4">                           
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-2" style="margin-right:-30px; margin-left:30px;">
+                        <label class="mt-2">Check Assignment</label>
+                    </div> 
+                    <div class="col-md-2">
+                        <input type="text" class="form-control  datepicker-autoclose" name="date" id="check_date" placeholder="dd/mm/yyyy" autocomplete="off" required/>
+                    </div> 
+                    <div class="col-md-2 mt-n5">
+                        <button class="btn btn-primary" type="submit"> Check</button>
+                    </div>
+                    <div class="col-md-3">                    
+                    </div>                 
+                </div> 
+            </form>              
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
@@ -250,7 +284,7 @@
 <!-- <script src="{{ asset('dist/js/jquery.ui.touch-punch-improved.js')}}"></script> -->
 <!-- <script src="{{ asset('dist/js/jquery-ui.min.js')}}"></script> -->
 <!-- Bootstrap tether Core JavaScript -->
-<script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+<!-- <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script> -->
 <script src="{{ asset('assets/libs/moment/min/moment.min.js')}}"></script>
 <script src="{{ asset('assets/libs/fullcalendar/dist/fullcalendar.min.js')}}"></script>
 <script src="{{ asset('dist/js/pages/calendar/cal-init.js')}}"></script>
@@ -296,6 +330,17 @@
             todayHighlight: true,
         }).on('change', function() {
             $end = $('#end_date').val()
+            table.draw();
+        });
+
+        $("#check_date").datepicker({
+            format: "dd/mm/yyyy",
+            changeMonth: true,
+            changeYear: true,
+            autoclose: true,
+            todayHighlight: true,
+        }).on('change', function() {
+            $start = $('#start_date').val()
             table.draw();
         });
 
@@ -657,5 +702,30 @@
             }
         }
     });
+
+    var frm = $('#campaign_calander .check_form');
+
+    $("#campaign_calander .check_form").on("submit", function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: frm.attr('method'),
+            url: "{{route('admin-campaign-assignment')}}",
+            data: frm.serialize(),
+            success: function (data) {
+                console.log('Submission was successful.');
+                console.log(data.data);
+                $.confirm({
+                    title: 'People Assigned',
+                    content: data.data.data,
+                    columnClass: 'medium',
+                });
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        });
+    });
+
 </script>
 @endpush

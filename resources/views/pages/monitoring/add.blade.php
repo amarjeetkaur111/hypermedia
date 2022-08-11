@@ -1,28 +1,11 @@
 @extends('layouts.admin')
 @section('content')
     @php
-        $asset = asset('assets/dummy.png');
-            if(old('description')){
-                $campaign_id = old('campaign_id');
-                $description = old('description');
-                $status = old('status');
-                $asset = old('asset_id');
-                $location = old('location_id');
-            }
-            else if(isset($data) && $data){
-                $campaign_id = $data->campaign ?? null;
-                $description = $data->description;
-                $status = $data->status;
-                $asset = $data->asset ?? null;
-                $location = $data->location ?? null;
-            }
-            else{
-                $campaign_id = null;
-                $description = null;
-                $status = null;
-                $asset = null;
-                $location = null;
-            }
+        $photo = asset('assets/dummy.png');
+        if(isset($data) && $data){
+            $photo = asset($data->photo_path);
+        }
+            
     @endphp
     <style>
         .form-control {
@@ -60,15 +43,15 @@
                                            class="col-sm-3 text-end control-label col-form-label">Campaign</label>
                                     <div class="col-sm-9">
                                         <select type="text" name="campaign_id" id="campaign_id" class="form-control" required>
-                                            @if($campaign_id)
-                                                <option value="{{ $campaign_id->id }}">{{ $campaign_id->name }}</option>
+                                            @if(isset($data->campaign))
+                                                <option value="{{ old('campaign_id',$data->campaign->id) }}">{{ $data->campaign->name }}</option>
                                             @endif
                                         </select>
                                         @if ($errors->has('campaign_id'))
                                             <span class="text-danger">{{ $errors->first('campaign_id') }}</span>
                                         @endif
                                     </div>
-                                </div>
+                                </div>  
                                 <div class="form-group row">
                                     <label for="email1"
                                            class="col-sm-3 text-end control-label col-form-label">Photo</label>
@@ -87,8 +70,13 @@
                                     <label for="fname"
                                            class="col-sm-3 text-end control-label col-form-label">Description</label>
                                     <div class="col-sm-9">
-                                <textarea type="text" class="form-control" name="description"
-                                          placeholder="Description Here">{{$description}}</textarea>
+                                        @if(isset($data->description))
+                                            <textarea type="text" class="form-control" name="description"
+                                          placeholder="Description Here">{{old('description',$data->description)}}</textarea>
+                                        @else
+                                            <textarea type="text" class="form-control" name="description"
+                                          placeholder="Description Here">{{old('description')}}</textarea>
+                                        @endif
                                         @if ($errors->has('description'))
                                             <span class="text-danger">{{ $errors->first('description') }}</span>
                                         @endif
@@ -99,8 +87,13 @@
                                            class="col-sm-3 text-end control-label col-form-label">Status</label>
                                     <div class="col-sm-9">
                                         <select type="text" name="status" id="status" class="form-control">
-                                            <option value="Active">Active</option>
-                                            <option value="Inactive">Inactive</option>
+                                        @if(isset($data->status))
+                                            <option value="Active" {{old('status',$data->status)=='Active'?"selected":' '}}>Active</option>
+                                            <option value="Inactive" {{old('status',$data->status)=='Inactive'?"selected":' '}}>Inactive</option>
+                                        @else
+                                            <option value="Active" {{old('status')=='Active'?"selected":' '}}>Active</option>
+                                            <option value="Inactive" {{old('status')=='Inactive'?"selected":' '}}>Inactive</option>
+                                        @endif
                                         </select>
                                         @if ($errors->has('status'))
                                             <span class="text-danger">{{ $errors->first('status') }}</span>
@@ -136,9 +129,6 @@
                                             class="col-sm-3 text-end control-label col-form-label">Asset</label>
                                         <div class="col-sm-9">
                                             <select type="text" name="asset_id" id="asset" class="form-control">
-                                            @if($asset)
-                                                <option value="{{ $asset->id }}">{{ $asset->ref_no.' - '.$asset->name }}</option>
-                                            @endif
                                             </select>
                                             @if ($errors->has('asset_id'))
                                                 <span class="text-danger">{{ $errors->first('asset_id') }}</span>
@@ -150,9 +140,6 @@
                                             class="col-sm-3 text-end control-label col-form-label">Location</label>
                                         <div class="col-sm-9">
                                             <select type="text" name="location_id" id="location" class="form-control">
-                                                @if($location)
-                                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
-                                                @endif
                                             </select>
                                             @if ($errors->has('location_id'))
                                                 <span class="text-danger">{{ $errors->first('location_id') }}</span>
@@ -163,7 +150,7 @@
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12" style="display: flex; justify-content: center; align-items: center">
                                     <img id="output"
-                                         src="{{$asset}}"
+                                         src="{{$photo}}"
                                          alt="Joseph Doe Junior" class="img-fluid img-thumbnail" height="100%"
                                          style="min-height: 50px">
                             </div>
@@ -278,7 +265,7 @@
             });
 
         });
-        @if($status)
+        @if(isset($status))
         $('#status').val('{!!$status!!}').trigger('change');
         @endif
 

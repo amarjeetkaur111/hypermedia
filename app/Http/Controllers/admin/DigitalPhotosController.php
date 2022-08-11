@@ -45,6 +45,7 @@ class DigitalPhotosController extends Controller
             $action = route('admin-campaign-monitoring-add', ['id' => $id]);
             $add = 'Edit';
         }
+        // echo"<pre>";print_r($data);exit();
         return view('pages.monitoring.add', compact('data', 'action', 'add'));
     }
 
@@ -59,10 +60,11 @@ class DigitalPhotosController extends Controller
         if ($id) {
             $this->validate($request, [
                 'status' => 'required',
+                'photo' => 'mimes:jpeg,png,jpg|max:1000',
             ]);
         } else {
             $this->validate($request, [
-                'photo' => 'required',
+                'photo' => 'required|mimes:jpeg,png,jpg|max:1000',
                 'status' => 'required',
             ]);
         }
@@ -86,7 +88,7 @@ class DigitalPhotosController extends Controller
             $this->validate($request, [
                 'asset_id' => 'required',
                 'location_id' => 'required',
-                'photo' => 'required|max:1000',
+                'photo' => 'required|mimes:jpeg,png,jpg|max:1000',
                 'video' => 'file|mimes:mp4,mov,ogg,qt|max:2000',
             ]);
             $obj = new DefectTracking;

@@ -60,7 +60,7 @@
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input form-control"
                                                    name="photo" id="photo"
-                                                   accept="image/*">
+                                                   accept="image/*" required>
                                         </div>
                                         @if ($errors->has('photo'))
                                             <span class="text-danger">{{ $errors->first('photo') }}</span>
@@ -87,7 +87,7 @@
                                     <div class="col-md-9">
                                         <select type="text" name="campaign_id" id="campaign" class="form-control">
                                             @if(isset($campaign))
-                                                <option value="{{ $campaign->id }}">{{ $campaign->name }}</option>
+                                                <option value="{{ old('campaign_id',$campaign->id) }}">{{ $campaign->name }}</option>
                                             @endif
                                         </select>
                                         @if ($errors->has('campaign_id'))
@@ -174,11 +174,33 @@
     <script>
         photo.onchange = evt => {
             const [file] = photo.files
-            if (file) {
-                output.src = URL.createObjectURL(file)
-            }
+            // if (file) {
+            //     output.src = URL.createObjectURL(file)
+            // }
         }
 
+        $(document).ready(function() {       
+            $('#photo').bind('change', function() {
+                var a=(this.files[0].size);
+                if(a > 1000000) {
+                    alert('Image cannot be large than 1MB');
+                    $('#photo').val(null);
+                }else{
+                    const [file] = photo.files
+                    if (file) {
+                        output.src = URL.createObjectURL(file)
+                    }
+
+                }
+            });
+            $('#video').bind('change', function() {
+                var a=(this.files[0].size);
+                if(a > 2000000) {
+                    alert('Video cannot be large than 2MB');
+                    $('#video').val(null);
+                }
+            });
+        });
 
         $(function () {
 

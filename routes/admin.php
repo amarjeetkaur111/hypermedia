@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 'prefix' => 'admin'], function () {
-    Route::group(['middleware' => ['can:Level2','can:Level1','can:Level3','can:Level4']], function () { 
+    Route::group(['middleware' => ['permission:Level2|Level1|Level3|Level4']], function () { 
         Route::get('/', [\App\Http\Controllers\admin\dashboardController::class, 'index'])->name('index');
     });
     Route::group(['middleware' => ['can:Level2']], function () {
@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
             Route::post('/add/{id?}', [\App\Http\Controllers\admin\permissionController::class, 'addPost'])->name('add');
         });
     });  
-    Route::group(['middleware' => ['can:Level2','can:Level1','can:Level3','can:Level4']], function () {  
+    Route::group(['middleware' => ['permission:Level2|Level1|Level3|Level4']], function () {  
         //clients
         Route::group(['as' => 'clients-', 'prefix' => 'clients'], function () {
             Route::get('/', [\App\Http\Controllers\admin\clientsController::class, 'index'])->name('index');
@@ -71,7 +71,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
         });
     });
     
-    Route::group(['middleware' => ['can:Level2','can:Level1','can:Level7','can:Level3','can:Level4']], function () {  
+    Route::group(['middleware' => ['permission:Level2|Level1|Level7|Level3|Level4']], function () {  
         //digital-photos
         Route::group(['as' => 'campaign-monitoring-', 'prefix' => 'campaign-monitoring'], function () {
             Route::get('/', [\App\Http\Controllers\admin\DigitalPhotosController::class, 'index'])->name('index');
@@ -87,7 +87,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
             Route::post('/fixed/{id?}', [\App\Http\Controllers\admin\DefectTrackingController::class, 'fixedPost'])->name('fixed');
         });
     });
-    Route::group(['middleware' => ['can:Level2','can:Level1','can:Level3','can:Level4','can:Level5','can:Level6']], function () {  
+    Route::group(['middleware' => ['permission:Level2|Level1|Level3|Level4|Level5|Level6']], function () {  
         //assets network
         Route::group(['as' => 'assets-network-', 'prefix' => 'assets-network'], function () {
             Route::get('/', [\App\Http\Controllers\admin\assetsNetworkController::class, 'index'])->name('index');
@@ -110,6 +110,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
             Route::post('/campaign-permits-add/{id?}/{permit_id?}', [\App\Http\Controllers\admin\campaignController::class, 'getCampaignPermitsAddPost'])->name('campaign-permits-add');
             Route::get('/assign/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'assignCampaign'])->name('assign');
             Route::post('/assign-post/{id?}', [\App\Http\Controllers\admin\campaignController::class, 'assignCampaignPost'])->name('assign-post');
+            Route::post('/assignment', [\App\Http\Controllers\admin\campaignController::class, 'checkAssignment'])->name('assignment');
             Route::group(['as' => 'bucket-', 'prefix' => 'bucket'], function () {
                 Route::get('/{id}', [\App\Http\Controllers\admin\campaignBucketController::class, 'index'])->name('index');
                 Route::get('/add/{campaign_id}/{id?}', [\App\Http\Controllers\admin\campaignBucketController::class, 'add'])->name('add');
