@@ -175,13 +175,35 @@
 
         photo.onchange = evt => {
             const [file] = photo.files
-            if (file) {
-                output.src = URL.createObjectURL(file)
-            } else {
-                output.src = '{{asset('assets/images/RAYQUBE_logo_White Text-01-01.png')}}'
-            }
+            // if (file) {
+            //     output.src = URL.createObjectURL(file)
+            // } else {
+            //     output.src = '{{asset('assets/images/RAYQUBE_logo_White Text-01-01.png')}}'
+            // }
         }
 
+        $(document).ready(function() {       
+            $('#photo').bind('change', function() {
+                var a=(this.files[0].size);
+                if(a > 1000000) {
+                    alert('Image cannot be large than 1MB');
+                    $('#photo').val(null);
+                }else{
+                    const [file] = photo.files
+                    if (file) {
+                        output.src = URL.createObjectURL(file)
+                    }
+
+                }
+            });
+            $('#video').bind('change', function() {
+                var a=(this.files[0].size);     
+                if(a > 2000000) {
+                    alert('Video cannot be large than 2MB');
+                    $('#video').val(null);
+                }
+            });
+        });
 
         $(function () {
 

@@ -98,8 +98,8 @@ class assetsController extends Controller
             $new = new AssetInNetwork;
             $new->network_id = $request->network;
             $new->asset_id = $user->id;
-            $new->from_date = null;
-            $new->to_date = null;
+            // $new->from_date = null;
+            // $new->to_date = null;
             $new->save();
         }
         if(!$id){
