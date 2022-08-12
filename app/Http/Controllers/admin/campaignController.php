@@ -489,7 +489,7 @@ class campaignController extends Controller
         'department' => function ($q) {
             $q->select('id', 'name');
         }])->where(function ($q) use ($request) {
-            $q->whereYear('start_date', $request->data)->orWhereYear('end_date', $request->data);
+            $q->whereYear('start_date','<=',$request->data)->whereYear('end_date','>=',$request->data);
         })
         ->whereIn('status', ['Active', 'Live'])
         ->get()
@@ -535,10 +535,13 @@ class campaignController extends Controller
     public function checkAssignment(Request $request)
     {
         // print_r($request->all());
-        // // $data = Campaigns::with('permits')->find($id);
         $date = $request->input('date');
         $date = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
-        $campaign = Campaigns::with('assignee')->whereDate('start_date','<=',$date)->whereDate('end_date','>=',$date)->get()->toArray();
+        $campaign = Campaigns::with('assignee')
+                    ->whereDate('start_date','<=',$date)
+                    ->whereDate('end_date','>=',$date)
+                    ->whereIn('status', ['Active', 'Live'])
+                    ->get()->toArray();
         $campaign_ppl = array();
         foreach($campaign as $campaign)
         {
@@ -548,7 +551,10 @@ class campaignController extends Controller
             }
         }
 
-        $campaign_install = InstallationTypes::with('assignee')->whereDate('start_date','<=',$date)->whereDate('end_date','>=',$date)->get()->toArray();
+        $campaign_install = InstallationTypes::with('assignee')
+                            ->whereDate('start_date','<=',$date)
+                            ->whereDate('end_date','>=',$date)
+                            ->get()->toArray();
         $install_ppl = array();
         foreach($campaign_install as $campaign)
         {
@@ -558,12 +564,16 @@ class campaignController extends Controller
             }
         }
         $unique = array_values(array_unique(array_merge($campaign_ppl, $install_ppl)));
-        $data = "<ul>";
-        foreach($unique as $list)
+        if($unique)
         {
-            $data .= "<li>".$list."</li>";
-        }
-        $data .= "</ul>";
+            $data = "<div class='mt-3'><ol>";
+            foreach($unique as $list)
+            {
+                $data .= "<li>".$list."</li>";
+            }
+            $data .= "</ol></div>";
+        }else
+            $data = "<div class='mt-3'><h5>No One Assigned</h5></div>";
 
         return response()->json(['success'=>'Form is successfully submitted!','data'=> $data]);
     }

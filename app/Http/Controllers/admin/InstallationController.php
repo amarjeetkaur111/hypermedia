@@ -83,7 +83,8 @@ class InstallationController extends Controller
 
     public function installationIndex(Request $request, $id){
         $campaign_id = $id;
-
+        $campaign_name = Campaigns::findorfail($id);
+        $campaign_name=$campaign_name->name;
         
         if ($request->ajax()) {
             $data = InstallationTypes::where('campaign_id',$id)->select('*');
@@ -114,7 +115,7 @@ class InstallationController extends Controller
                 ->rawColumns(['action',  'timer','instructions'])
                 ->make(true);
         }
-        return view('pages.campaign.installation.types.index',compact('campaign_id'));
+        return view('pages.campaign.installation.types.index',compact('campaign_id','campaign_name'));
     }
 
     public function add($campaign_id ,$id = null)

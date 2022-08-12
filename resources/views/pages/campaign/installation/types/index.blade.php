@@ -5,7 +5,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-12 d-flex no-block align-items-center">
-                <h4 class="page-title">Campaign Installation Types</h4>
+                <h4 class="page-title">{{strtoupper($campaign_name)}}</h4>
                 <div class="ms-auto text-end">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -258,11 +258,13 @@
                 },
                 {
                     data: 'instructions',
-                    name: 'instructions'
+                    name: 'instructions',
+                    orderable: false
                 },
                 {
                     data: 'start_date',
-                    name: 'start_date'
+                    name: 'start_date',
+                    orderable: false
                 },
                 {
                     data: 'status',
@@ -271,7 +273,6 @@
                 {
                     data: 'priority',
                     name: 'priority',
-                    orderable: false,
                     searchable: false
                 },
                 {

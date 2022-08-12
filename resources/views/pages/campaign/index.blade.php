@@ -706,6 +706,7 @@
     var frm = $('#campaign_calander .check_form');
 
     $("#campaign_calander .check_form").on("submit", function (e) {
+        var date = $('#check_date').val();
         e.preventDefault();
         $.ajax({
             type: frm.attr('method'),
@@ -715,8 +716,8 @@
                 console.log('Submission was successful.');
                 console.log(data.data);
                 $.confirm({
-                    title: 'People Assigned',
-                    content: data.data.data,
+                    title: 'People Working on '+date,
+                    content: data.data,
                     columnClass: 'medium',
                 });
             },
