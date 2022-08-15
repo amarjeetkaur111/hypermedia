@@ -77,7 +77,7 @@
                         <div class="form-group row">
                             <label for="email1" class="col-sm-3 text-end control-label col-form-label">Roles</label>
                             <div class="col-sm-9">
-                                <select name="roles[]" id="roles" multiple>
+                                <select name="roles[]" id="roles">
                                     @foreach ($roles as $p)
                                         <option value="{{$p->id}}">{{$p->name}}</option>
                                     @endforeach

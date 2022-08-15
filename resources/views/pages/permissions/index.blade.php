@@ -44,9 +44,9 @@
                                             <th class="sorting" tabindex="0" style="width: 204.156px;">
                                                 Name
                                             </th>
-                                            <th class="sorting" tabindex="0"   style="width: 34.4375px;">
+                                            <!-- <th class="sorting" tabindex="0"   style="width: 34.4375px;">
                                                 Action
-                                            </th>
+                                            </th> -->
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -76,7 +76,7 @@
                 columns: [
                     {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    // {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
 
