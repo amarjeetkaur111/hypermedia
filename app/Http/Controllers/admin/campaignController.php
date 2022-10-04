@@ -145,6 +145,7 @@ class campaignController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'agency' => 'required',
+            'department_id' => 'required',
             //            'brand' => 'required',
             'client_name' => 'required',
             'contract_name' => 'required',

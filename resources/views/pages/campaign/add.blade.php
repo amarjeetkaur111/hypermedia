@@ -146,8 +146,8 @@
                             <div class="form-group row col-md-6">
                                 <label for="email1" class="col-sm-3 text-end control-label col-form-label">Department</label>
                                 <div class="col-sm-9">
-                                    <select type="text" name="department_id" id="department_id" class="form-control">
-                                        <option>Select Department</option>
+                                    <select type="text" name="department_id" id="department_id" class="form-control" required>
+                                        <option value="">Select Department</option>
                                         @if($department_name)
                                             <option value="{{ $department_name->id }}"
                                                     selected>{{ $department_name->name }}</option>

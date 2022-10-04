@@ -63,11 +63,15 @@ class assetsController extends Controller
             $this->validate($request, [
                 'ref_no' => 'required|unique:assets,ref_no,' . $id.'id',
                 'name' => 'required',
+                'department_id' => 'required',
+                'location' => 'required',
             ]);
         } else {
             $this->validate($request, [
                 'ref_no' => 'required|unique:assets,ref_no',
                 'name' => 'required',
+                'department_id' => 'required',
+                'location' => 'required',
             ]);
         }
         $user->ref_no = $request->input('ref_no');

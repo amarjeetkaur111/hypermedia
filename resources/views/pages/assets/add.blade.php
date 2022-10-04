@@ -110,7 +110,7 @@
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Location</label>
                             <div class="col-sm-9">
                                 <select name="location" class="form-control" id="location" required>
-                                    <option selected disabled>Select Location</option>
+                                    <option selected disabled  value="">Select Location</option>
                                     @if($location)
                                         <option value="{{ $location->id }}" selected>{{ $location->name }}</option>
                                     @endif
@@ -137,7 +137,7 @@
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Department</label>
                             <div class="col-sm-9">
                                 <select name="department_id" class="form-control" id="department_id" required>
-                                    <option>Select Department</option>
+                                    <option  value="">Select Department</option>
                                     @if($department)
                                         <option value="{{ $department->id }}" selected>{{ $department->name }}</option>
                                     @endif
