@@ -81,7 +81,13 @@ class select2DataController extends Controller
     public function getCampaign(Request $request)
     {
         if ($request->has('search')) {
-            $data = Campaigns::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->where('agency', 'like', '%' . $request->search . '%')->where('brand', 'like', '%' . $request->search . '%')->whereIn('status', ['Active', 'Live'])->get();
+            $data = Campaigns::select('id', 'name')->whereIn('status', ['Active', 'Live'])
+            ->where(function($q) use($request){
+                $q->where('name', 'like', '%' . $request->search . '%');
+                $q->orWhere('agency', 'like', '%' . $request->search . '%');
+                $q->orWhere('brand', 'like', '%' . $request->search . '%');
+            })
+           ->get();
         } else {
             $data = Campaigns::select('id', 'name')->whereIn('status', ['Active', 'Live'])->get();
         }

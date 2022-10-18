@@ -14,7 +14,7 @@ class DigitalPhotosController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = DigitalPhotos::with('campaign')->select('*');
+            $data = DigitalPhotos::with('campaign')->select('*')->orderBy('id','DESC');
             return DataTables::eloquent($data)
                 ->addIndexColumn()
                 ->addColumn('campaign_id', function ($row) {

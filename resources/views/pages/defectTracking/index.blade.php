@@ -68,9 +68,9 @@
                                             <th class="sorting" tabindex="0">
                                                 Video
                                             </th>
-                                            <th class="sorting" tabindex="0">
+                                            <!-- <th class="sorting" tabindex="0">
                                                 Status
-                                            </th>
+                                            </th> -->
                                             <th class="sorting" tabindex="0">
                                                 ReportedOn
                                             </th>
@@ -131,7 +131,7 @@
                     {data: 'owned_by', name: 'owned_by'},
                     {data: 'photo_preview', name: 'photo_preview' , orderable: false, searchable: false},
                     {data: 'video_download', name: 'video_download' , orderable: false, searchable: false},
-                    {data: 'status', name: 'status'},
+                    // {data: 'status', name: 'status'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'fixed_at', name: 'fixed_at'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},

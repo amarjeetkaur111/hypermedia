@@ -8,8 +8,7 @@
             $name = old('name');
             $agency = old('agency');
             $brand = old('brand');
-            $client_name = old('client_name');
-            $department_name = old('department_id');
+           
             $contract_name = old('contract_name');
             $contract_number = old('contract_number');
             $description = old('description');

@@ -15,7 +15,7 @@ class DefectTrackingController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = DefectTracking::with(['asset.department','campaign'])->select('*');
+            $data = DefectTracking::with(['asset.department','campaign'])->select('*')->orderBy('id','DESC');
             return DataTables::eloquent($data)
                 ->addIndexColumn()
                 ->addColumn('campaign_id', function ($row) {
@@ -94,6 +94,10 @@ class DefectTrackingController extends Controller
                 'status' => 'required',
                 'video' => 'file|mimes:mp4,mov,ogg,qt|max:2000',
             ]);
+            $asset = $request->asset_id;
+            $checkAsset = DefectTracking::where('asset_id',$asset)->where('fixed_at',NULL)->first();
+            if($checkAsset)
+                return redirect()->back()->with(['status' => 'Success', 'class' => 'warning', 'msg' => "Already Asset is Added in Defect Tracking and is yet Not Fixed"]);
         }
         if ($request->hasFile('photo')) {
 

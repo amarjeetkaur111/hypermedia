@@ -51,13 +51,19 @@
                                                 Name
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Preview
+                                                Type
                                             </th>
+                                            <th class="sorting" tabindex="0">
+                                                Location
+                                            </th>                                            
                                             <th class="sorting" tabindex="0">
                                                 OwnedBy
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Installation Time
+                                            </th>
+                                            <th class="sorting" tabindex="0">
+                                                Preview
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Status
@@ -104,11 +110,13 @@
                 },
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'ref_no', name: 'ref_no'},
-                    {data: 'name', name: 'name'},
-                    {data: 'asset_photo', name: 'asset_photo'},
-                    {data: 'owned_by', name: 'owned_by'},
+                    {data: 'ref_no', name: 'ref_no', orderable: true, searchable: true},
+                    {data: 'name', name: 'name', orderable: true, searchable: true},
+                    {data: 'type', name: 'type', orderable: true, searchable: true},
+                    {data: 'location', name: 'location', orderable: true, searchable: true},
+                    {data: 'owned_by', name: 'owned_by', orderable: true, searchable: true},
                     {data: 'installation_time', name: 'installation_time'},
+                    {data: 'asset_photo', name: 'asset_photo'},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]

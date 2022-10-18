@@ -16,7 +16,7 @@ class assetsController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $data = Assets::select('*');
+            $data = Assets::with('location')->select('*');
             return DataTables::eloquent($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -28,10 +28,14 @@ class assetsController extends Controller
                                 <img src="' . $row->asset_photo . '"  href="' . $row->asset_photo . '" alt="" height=35 />
                             </a>';
                 })
+                ->addColumn('location',function($row){
+                    $location = ($row->location->name) ?? 'NA';
+                    return $location;
+                })
                 ->addColumn('installation_time',function($row){
                     return getFormattedTimeHuman($row->installation_time);
                 })
-                ->rawColumns(['action','asset_photo'])
+                ->rawColumns(['action','asset_photo','location'])
                 ->make(true);
         }
         return view('pages.assets.index');

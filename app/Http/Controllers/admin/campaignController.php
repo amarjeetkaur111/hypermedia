@@ -28,7 +28,7 @@ class campaignController extends Controller
         // dd($d);
         if ($request->ajax()) {
             
-            $data = Campaigns::with('client', 'department', 'buckets', 'buckets.locations')->select('*');
+            $data = Campaigns::with('client', 'department', 'buckets', 'buckets.locations')->select('*')->orderBy('id','DESC');
             $user = Auth::user();
             if($user->hasRole('O&M Manager') || $user->hasRole('O&M Coordinator'))
                 $data = $data->where('department_id', 1)->orWhere('department_id', 2);
@@ -143,7 +143,6 @@ class campaignController extends Controller
         }
 
         $this->validate($request, [
-            'name' => 'required',
             'agency' => 'required',
             'department_id' => 'required',
             //            'brand' => 'required',
@@ -152,6 +151,16 @@ class campaignController extends Controller
             'contract_number' => 'required',
             'type' => 'required',
         ]);
+        if ($id) {
+            $this->validate($request, [
+                'name' => 'required|unique:campaign,name,' . $id.'id',
+            ]);
+        } else {
+            $this->validate($request, [
+                'name' => 'required|unique:campaign,name',
+            ]);
+        }
+
         $user->name = $request->input('name');
         $user->agency = $request->input('agency');
         $user->brand = $request->input('brand');

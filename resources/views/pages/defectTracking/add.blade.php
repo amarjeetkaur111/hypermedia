@@ -47,6 +47,11 @@
         </div>
         <div class="container-fluid">
             <div class="card">
+            @if(\Illuminate\Support\Facades\Session::has('msg'))
+                <div class="alert alert-{{ \Illuminate\Support\Facades\Session::has('class') ? \Illuminate\Support\Facades\Session::get('class') : 'default' }}">
+                    <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
+                </div>
+            @endif
                 <form class="form-horizontal" method="post" action="{{ $action }}" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
@@ -60,7 +65,7 @@
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input form-control"
                                                    name="photo" id="photo"
-                                                   accept="image/*" required>
+                                                   accept="image/*" @if($add == 'Add') required @endif>
                                         </div>
                                         @if ($errors->has('photo'))
                                             <span class="text-danger">{{ $errors->first('photo') }}</span>

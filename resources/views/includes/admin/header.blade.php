@@ -228,7 +228,7 @@
                             id="navbarDropdown"
                             role="button"
                             data-bs-toggle="dropdown"
-                            aria-expanded="false" >
+                            aria-expanded="false" >{{session('username')}}
                             <img
                                 src="{{ asset('assets/images/users/1.jpg') }}"
                                 alt="user"

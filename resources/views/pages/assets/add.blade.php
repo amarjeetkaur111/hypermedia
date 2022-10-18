@@ -130,6 +130,10 @@
                                     <option value="Mall Owned">Mall Owned</option>
                                     <option value="MAF Owned">MAF Owned</option>
                                     <option value="Metro Owned">Metro Owned</option>
+                                    <option value="Lulu Owned">Lulu Owned</option>
+                                    <option value="Carrefour Owned">Carrefour Owned</option>
+                                    <option value="Abu Dhabi Union Co-op">Abu Dhabi Union Co-op</option>
+                                    <option value="Sharjah Union Co-op">Sharjah Union Co-op</option>
                                 </select>                
                             </div>
                         </div>
