@@ -90,7 +90,7 @@
     <script>
 
         $(function () {
-
+            var i =1;
             var table = $('#zero_config').DataTable({
                 processing: true,
                 serverSide: true,
@@ -109,7 +109,8 @@
                     });
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
+                    // {data: 'id', name: 'id'},
+                    {"render": function() { return i++; }, orderable: true},
                     {data: 'ref_no', name: 'ref_no', orderable: true, searchable: true},
                     {data: 'name', name: 'name', orderable: true, searchable: true},
                     {data: 'type', name: 'type', orderable: true, searchable: true},

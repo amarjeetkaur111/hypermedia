@@ -73,7 +73,7 @@
                                         <div class="row filters mb-4">
                                             <div class="col-md-6">
                                                 <div class="row">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <label class="mt-3">Market</label>
                                                         <div class="input-group">
                                                             <select type="text" name="market" id="market" class="form-control">
@@ -82,7 +82,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <label class="mt-3">Type</label>
                                                         <div class="input-group">
                                                             <select type="text" name="type" id="type" class="form-control">
@@ -92,7 +92,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <label class="mt-3">Department</label>
                                                         <div class="input-group">
                                                             <select type="text" name="department_id" id="department_id" class="form-control">
@@ -100,7 +100,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <label class="mt-3">Payment</label>
                                                         <div class="input-group">
                                                             <select type="text" name="payment" id="payment" class="form-control"> 
@@ -114,7 +114,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="row">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <label class="mt-3">Status</label>
                                                         <div class="input-group">
                                                             <select type="text" name="status" id="status" class="form-control">
@@ -127,7 +127,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <label class="mt-3">Start Date</label>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control datepicker-autoclose" id="start_date" placeholder="dd/mm/yyyy" autocomplete="off" />
@@ -136,7 +136,7 @@
                                                             </div> -->
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <label class="mt-3">End Date</label>
                                                         <div class="input-group">
                                                             <input type="text" class="form-control  datepicker-autoclose" id="end_date" placeholder="dd/mm/yyyy" autocomplete="off" />
@@ -149,7 +149,7 @@
                                                         <div class="btn-group"></div>
                                                         <button class="btn btn-primary" style="margin-top: 39px" id="date_reset"><i class="fas fa-redo-alt"> Apply</i></button>
                                                     </div> -->
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-3 col-sm-12">
                                                         <div class="btn-group"></div>
                                                         <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
                                                     </div>     
