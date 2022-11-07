@@ -99,7 +99,8 @@
                     });
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
+                    // {data: 'id', name: 'id'},
+                    {data: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'campaign_id', name: 'campaign_id'},
                     {data: 'description', name: 'description'},
                     {data: 'photo_preview', name: 'photo_preview' , orderable: false, searchable: false},

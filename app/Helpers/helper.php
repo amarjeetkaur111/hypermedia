@@ -44,9 +44,52 @@ function getAssetAndNetwork($select = [])
         $options .= '<optgroup label="Assets">';
         foreach ($assets as $a) {
             if (count($select) && $select[0] == 'asset') {
-                $options .= '<option value="asset:' . $a->id . '" '.($a->id == $select[1] ? 'selected="selected"' : '') . ' >' . $a->name . '</option>';
+                $options .= '<option value="asset:' . $a->id . '" '.($a->id == $select[1] ? 'selected="selected"' : '') . ' >' . $a->name .' : ' . $a->ref_no . '</option>';
             } else {
-                $options .= '<option value="asset:' . $a->id . '">' . $a->ref_no . ' : ' . $a->name . '</option>';
+                $options .= '<option value="asset:' . $a->id . '">' . $a->ref_no . ' : ' . $a->name .' : ' . $a->ref_no . '</option>';
+            }
+        }
+        $options .= '</optgroup>';
+    }
+    return $options;
+}
+
+function getAssetAndNetworkNew($name=null,$deparment=null,$location=null,$assettype=null,$select = [])
+{
+    $assets = \App\Models\Assets::select('id', 'name', 'ref_no');
+
+    if($name)
+        $assets = $assets->where('name',$name);
+    if($deparment)
+        $assets = $assets->where('department_id',$deparment);
+    if($location)
+        $assets = $assets->where('location_id',$location);
+    if($assettype)
+        $assets = $assets->where('type',$assettype);
+
+    $assets=$assets->get();
+
+    // $assets = \App\Models\Assets::select('id', 'name', 'ref_no')->get();
+    $networks = \App\Models\AssetNetwork::select('id', 'name')->get();
+    $options = '<option selected disabled>Select Asset</option>';
+    // if ($networks->count()) {
+    //     $options .= '<optgroup label="Networks">';
+    //     foreach ($networks as $n) {
+    //         if (count($select) && $select[0] == 'network') {
+    //             $options .= '<option value="network:' . $n->id . '" '.($n->id == $select[1] ? 'selected="selected"' : '') . ' >' . $n->name . '</option>';
+    //         } else {
+    //             $options .= '<option value="network:' . $n->id . '">' . $n->name . '</option>';
+    //         }
+    //     }
+    //     $options .= '</optgroup>';
+    // }
+    if ($assets->count()) {
+        $options .= '<optgroup label="Assets">';
+        foreach ($assets as $a) {
+            if (count($select) && $select[0] == 'asset') {
+                $options .= '<option value="asset:' . $a->id . '" '.($a->id == $select[1] ? 'selected="selected"' : '') . ' >' . $a->name .' : ' . $a->ref_no . '</option>';
+            } else {
+                $options .= '<option value="asset:' . $a->id . '">' . $a->ref_no . ' : ' . $a->name .' : ' . $a->ref_no . '</option>';
             }
         }
         $options .= '</optgroup>';

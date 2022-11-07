@@ -24,7 +24,7 @@
                 <div class="card-body">
                     {{--                    <h5 class="card-title">Basic Datatable</h5>--}}
                     <div class="table-responsive">
-                        <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                        <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4" style="margin-left:-20px">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">
@@ -42,22 +42,22 @@
                                         <thead>
                                         <tr role="row">
                                             <th class="sorting_asc" tabindex="0">
-                                                Id
+                                                No
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Ref No
-                                            </th>
-                                            <th class="sorting" tabindex="0">
-                                                Name
+                                                OwnedBy
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Type
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Location
-                                            </th>                                            
+                                                Name
+                                            </th>
                                             <th class="sorting" tabindex="0">
-                                                OwnedBy
+                                                Location
+                                            </th>  
+                                            <th class="sorting" tabindex="0">
+                                                Ref No
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Installation Time
@@ -110,12 +110,13 @@
                 },
                 columns: [
                     // {data: 'id', name: 'id'},
-                    {"render": function() { return i++; }, orderable: true},
-                    {data: 'ref_no', name: 'ref_no', orderable: true, searchable: true},
-                    {data: 'name', name: 'name', orderable: true, searchable: true},
-                    {data: 'type', name: 'type', orderable: true, searchable: true},
-                    {data: 'location', name: 'location', orderable: true, searchable: true},
+                    // {"render": function() { return i++; }, orderable: true},
+                    {data: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'owned_by', name: 'owned_by', orderable: true, searchable: true},
+                    {data: 'type', name: 'type', orderable: true, searchable: true},
+                    {data: 'name', name: 'name', orderable: true, searchable: true},
+                    {data: 'location', name: 'location', orderable: true, searchable: true},
+                    {data: 'ref_no', name: 'ref_no', orderable: true, searchable: true},
                     {data: 'installation_time', name: 'installation_time'},
                     {data: 'asset_photo', name: 'asset_photo'},
                     {data: 'status', name: 'status'},

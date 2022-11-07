@@ -10,6 +10,7 @@ use App\Models\AssetStatus;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class assetsController extends Controller
 {
@@ -35,7 +36,7 @@ class assetsController extends Controller
                 ->addColumn('installation_time',function($row){
                     return getFormattedTimeHuman($row->installation_time);
                 })
-                ->rawColumns(['action','asset_photo','location'])
+                ->rawColumns(['action','asset_photo','location','installation_time'])
                 ->make(true);
         }
         return view('pages.assets.index');
@@ -132,5 +133,60 @@ class assetsController extends Controller
     public function availabilityCheckPost($id){
         $asset = Assets::with('assetStatus')->find($id);
         return view('pages.assets.inner.availability-table',compact('asset'))->render();
+    }
+
+    public function availabilityCheckNew(){
+        return view('pages.assets.inner.availabilityNew');
+    }
+
+    public function availabilityCheckPostNew(Request $request){
+        // echo "<pre>";print_r($request->all());exit();
+        $startdate = $request->startdate;
+        $enddate = $request->enddate;
+        $department = $request->department;
+        $location = $request->location;
+        $name = $request->name;
+        $ref_no = $request->ref_no;
+        $assettype = $request->assettype;
+
+        $asset = Assets::with('assetStatus.campaign');
+     
+        if($ref_no != 0)        
+            $asset  = $asset->where('id',$ref_no);
+        if($name != 0)
+            $asset  = $asset->where('name',$name);
+        if($assettype != 0)
+            $asset  = $asset->where('type',$assettype);    
+        if($department != 0)
+            $asset  = $asset->where('department_id',$department);
+        if($location != 0)
+            $asset  = $asset->where('location_id',$location);  
+
+        $asset=array_values($asset->get()->toArray());
+        $startdate = Carbon::createFromFormat('d/m/Y', $startdate)->format('Y-m-d');
+        $enddate = Carbon::createFromFormat('d/m/Y', $enddate)->format('Y-m-d');
+        
+        for($i = 0;$i < count($asset);$i++)
+        {
+            if($asset[$i]['asset_status'])
+            {              
+                $status = $asset[$i]['asset_status'];
+                $from_date = $asset[$i]['asset_status']['from_date'];
+                $to_date = $asset[$i]['asset_status']['to_date'];
+                if(($from_date >= $startdate && $from_date <= $enddate)|| ($to_date >= $startdate && $to_date <= $enddate) || ($from_date <= $startdate && $to_date >= $enddate))
+                {
+                    // echo $startdate." DC is greator </br>";  
+                    $asset[$i]['asset_status']['status'] = 'Booked';                  
+                }else{        
+                    // echo $to_date." DB is greator </br>";  
+                    $asset[$i]['asset_status']['status'] = 'Available';
+                }
+            }
+           
+        }
+        // echo "<pre>";print_r($asset); 
+        // exit();
+
+        return view('pages.assets.inner.availability-table-new',compact('asset'))->render();
     }
 }

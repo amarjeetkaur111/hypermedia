@@ -148,7 +148,7 @@
                         </li> -->
                     </ul>
                 </li>
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                     <a
                         class="sidebar-link waves-effect waves-dark sidebar-link availability-helper"
                         href="#"
@@ -156,6 +156,9 @@
                     ><i class="mdi mdi-calendar-multiple"></i
                         ><span class="hide-menu">Availability Helper</span></a
                     >
+                </li> -->
+                <li class="sidebar-item">
+                    <a href="{{ route('admin-assets-availability-helper-new') }}" class="sidebar-link" ><i class="fas fa-bars"></i><span class="hide-menu"> Availability Helper </span></a>
                 </li>
                 @endcanany
                 @endauth

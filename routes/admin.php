@@ -145,6 +145,10 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
             Route::get('/', [\App\Http\Controllers\admin\assetsController::class, 'index'])->name('index');
             Route::get('/add/{id?}', [\App\Http\Controllers\admin\assetsController::class, 'add'])->name('add');
             Route::post('/add/{id?}', [\App\Http\Controllers\admin\assetsController::class, 'addPost'])->name('add');
+
+
+            Route::get('/availability-helper-new', [\App\Http\Controllers\admin\assetsController::class, 'availabilityCheckNew'])->name('availability-helper-new');
+            Route::post('/availability-helper-postnew/{id?}', [\App\Http\Controllers\admin\assetsController::class, 'availabilityCheckPostNew'])->name('availability-helper-postnew');
         });
     });
 });

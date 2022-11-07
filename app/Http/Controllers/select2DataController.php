@@ -133,4 +133,94 @@ class select2DataController extends Controller
         
         return response()->json($data);
     }   
+
+    public function getAssetsName(Request $request)
+    {
+        // print_r($request->all());exit();
+        $data = Assets::select('name')->distinct('name');
+        if ($request->has('search')) {
+            $data = $data->where('name', 'like', '%' . $request->search . '%');
+        }
+        if($request->has('department') && $request->department != 0)        {
+            $did = $request->department;
+            $data = $data->where('department_id', $did);
+        }
+        if($request->has('location') && $request->location != 0)        {
+            $lid = $request->location;
+            $data = $data->where('location_id', $lid);
+        }
+        if($request->has('assettype') && $request->assettype != 0)        {
+            $assettype = $request->assettype;
+            $data = $data->where('type', $assettype);
+        }
+
+        $data = $data->get();
+        return response()->json($data);
+    }  
+
+    public function getAssetsNameRef(Request $request)
+    {
+        $data = Assets::select('id','name','ref_no');
+        // echo "<pre>";print_r($request->all());exit();
+        if ($request->has('search')) {
+            $data = $data->where('name', 'like', '%' . $request->search . '%');
+        }
+        if($request->has('department') && $request->department != 0)        {
+            $did = $request->department;
+            $data = $data->where('department_id', $did);
+        }
+        if($request->has('location') && $request->location != 0)        {
+            $lid = $request->location;
+            $data = $data->where('location_id', $lid);
+        }
+        if($request->has('assettype') && $request->assettype != 0)        {
+            $assettype = $request->assettype;
+            $data = $data->where('type', $assettype);
+        }
+        if($request->has('name') && $request->name != 0)        {
+            $name = $request->name;
+            $data = $data->where('name', $name);
+        }
+
+        $data = $data->get();
+        return response()->json($data);
+    }   
+
+    // public function getAssetsNameNNetork(Request $request,$select=[])
+    // {
+    //     // echo "<pre>";print_r('asdfasdf');exit();
+
+    //     $assets = \App\Models\Assets::select('id', 'name', 'ref_no')->get();
+    //     $networks = \App\Models\AssetNetwork::select('id', 'name')->get();
+    //     $options = '<option selected disabled>Select Asset</option>';
+    //     if ($networks->count()) {
+    //         $options .= '<optgroup label="Networks">';
+    //         foreach ($networks as $n) {
+    //             if (count($select) && $select[0] == 'network') {
+    //                 $options .= '<option value="network:' . $n->id . '" '.($n->id == $select[1] ? 'selected="selected"' : '') . ' >' . $n->name . '</option>';
+    //             } else {
+    //                 $options .= '<option value="network:' . $n->id . '">' . $n->name . '</option>';
+    //             }
+    //         }
+    //         $options .= '</optgroup>';
+    //     }
+    //     // if ($assets->count()) {
+    //     //     $options .= '<optgroup label="Assets">';
+    //     //     foreach ($assets as $a) {
+    //     //         if (count($select) && $select[0] == 'asset') {
+    //     //             $options .= '<option value="asset:' . $a->id . '" '.($a->id == $select[1] ? 'selected="selected"' : '') . ' >' . $a->name .' : ' . $a->ref_no . '</option>';
+    //     //         } else {
+    //     //             $options .= '<option value="asset:' . $a->id . '">' . $a->ref_no . ' : ' . $a->name .' : ' . $a->ref_no . '</option>';
+    //     //         }
+    //     //     }
+    //     //     $options .= '</optgroup>';
+    //     // }
+    //     return $options;
+    // }  
+
+    public function getAssetsNameNNetork(Request $request,$select=[])
+    {
+        // print_r($request->all());exit();
+        return getAssetAndNetworkNew($request->name,$request->department,$request->location,$request->assettype);
+    }  
 }

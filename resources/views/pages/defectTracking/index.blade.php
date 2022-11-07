@@ -123,7 +123,8 @@
                     });
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
+                    // {data: 'id', name: 'id'},
+                    {data: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'description', name: 'description'},
                     {data: 'asset_id', name: 'asset_id'},
                     {data: 'campaign_id', name: 'campaign_id'},
