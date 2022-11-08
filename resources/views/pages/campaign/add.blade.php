@@ -381,8 +381,25 @@
                                 <div class="row  row-data" style="margin-right: 0;">
                                     <input type="hidden" name="bucket_id[{{ $count }}]" value="{{$bucket->id}}">
                                     <div class="form-group row col-md-6">
+
                                         <div class="form-group col-md-3">
-                                            <label class="mt-3">Department</label>
+                                            <label class="mt-3">Start Date</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control date_mask" name="bucket_start_date[{{ $count }}]" id="start_date_{{ $count }}" value="{{ \Carbon\Carbon::parse($bucket->start_date)->format('d/m/Y') }}"
+                                                    placeholder="Start Date" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label class="mt-3">End Date</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control date_mask" id="end_date_{{ $count }}" name="bucket_end_date[{{ $count }}]"
+                                                   placeholder="End Date"
+                                                   value="{{ \Carbon\Carbon::parse($bucket->end_date)->format('d/m/Y') }}"
+                                                    placeholder="End Date" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label class="mt-3">Department{{ $count }}</label>
                                             <div class="input-group">
                                                 <select type="text" name="bucket_department[{{ $count }}]" id="department_{{ $count }}" class="form-control department">
                                                     <option value="{{ $bucket->assets->department->id }}" selected="selected">{{ $bucket->assets->department->name }}</option>
@@ -398,7 +415,9 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>                                        
+                                    </div>
+                                    <div class="form-group row col-md-6">
                                         <div class="form-group col-md-3">
                                             <label class="mt-3">Type</label>
                                             <div class="input-group">
@@ -417,86 +436,20 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group row col-md-6">
                                         <div class="form-group col-md-5">
                                             <label class="mt-3">Specific Asset</label>
                                             <div class="input-group">
                                                 <!-- <select class="form-control assets" id="ref_no"  name="bucket_asset[0]"
                                                         required>{!! getAssetAndNetwork() !!} </select> -->
-                                                    <select class="form-control assets" id="refno_{{ $count }}"  name="bucket_asset[{{ $count }}]"
+                                                    <select class="form-control assets" id="refno_{{ $count }}"  name="bucket_asset[{{ $count++ }}]"
                                                         required>{!! getAssetAndNetwork($bucket->asset ? ['asset',$bucket->asset] : ['network',$bucket->asset_network]) !!}</select>
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">Start Date</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control date_mask" name="bucket_start_date[{{ $count }}]" value="{{ \Carbon\Carbon::parse($bucket->start_date)->format('d/m/Y') }}"
-                                                    placeholder="Start Date" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">End Date</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control date_mask" name="bucket_end_date[{{ $count++ }}]"
-                                                   placeholder="End Date"
-                                                   value="{{ \Carbon\Carbon::parse($bucket->end_date)->format('d/m/Y') }}"
-                                                    placeholder="End Date" required>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="form-group col-md-1">
                                                 <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button>
                                             </div>
-                                        </div>    
-                                    
-
-
-                                    <!-- <div class="form-group row col-md-3">
-                                        <label for="fname"
-                                               class="col-sm-3 text-end control-label col-form-label">Asset</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control assets" name="bucket_asset[{{ $count }}]"
-                                                    required> {!! getAssetAndNetwork($bucket->asset ? ['asset',$bucket->asset] : ['network',$bucket->asset_network]) !!}</select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row col-md-3">
-                                        <label for="fname"
-                                               class="col-sm-4 text-end control-label col-form-label">Location</label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control locations" name="bucket_location[{{ $count }}]"
-                                                    required>
-                                                <option disabled selected>Select Location</option>
-                                                <option value="{{ $bucket->location }}"
-                                                        selected>{{ $bucket->locations->name }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row col-md-3">
-                                        <label for="fname" class="col-sm-3 text-end control-label col-form-label">Start
-                                            Date</label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control date_mask"
-                                                   name="bucket_start_date[{{ $count }}]"
-                                                   placeholder="Start Date"
-                                                   value="{{ \Carbon\Carbon::parse($bucket->start_date)->format('d/m/Y') }}"
-                                                   required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row col-md-3">
-                                        <label for="fname" class="col-sm-3 text-end control-label col-form-label">End
-                                            Date</label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control date_mask"
-                                                   name="bucket_end_date[{{ $count++ }}]"
-                                                   placeholder="End Date"
-                                                   value="{{ \Carbon\Carbon::parse($bucket->end_date)->format('d/m/Y') }}"
-                                                   required>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                    </div> -->
-
+                                        </div>                                       
 
                                     <div class="details_div" style="display: flex; flex-flow: row;">
                                         <div class="form-group row col-md-3">
@@ -544,6 +497,18 @@
                             <div class="row  row-data" style="margin-right: 0;">
                                 <div class="form-group row col-md-6">
                                     <div class="form-group col-md-3">
+                                        <label class="mt-3">Start Date</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control date_mask" name="bucket_start_date[0]" id="start_date_0"  placeholder="Start Date" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label class="mt-3">End Date</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control date_mask" name="bucket_end_date[0]" id="end_date_0"  placeholder="End Date" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
                                         <label class="mt-3">Department</label>
                                             <div class="input-group">
                                                 <select type="text" name="bucket_department[0]" id="department_0" class="form-control department">
@@ -560,7 +525,9 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>                                    
+                                </div>
+                                <div class="form-group row col-md-6">
                                     <div class="form-group col-md-3">
                                         <label class="mt-3">Type</label>
                                         <div class="input-group">
@@ -579,8 +546,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group row col-md-6">
                                     <div class="form-group col-md-5">
                                         <label class="mt-3">Specific Asset</label>
                                         <div class="input-group">
@@ -590,20 +555,7 @@
                                                     required> </select>
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">Start Date</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control date_mask" name="bucket_start_date[0]"
-                                                placeholder="Start Date" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">End Date</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control date_mask" name="bucket_end_date[0]"
-                                                placeholder="End Date" required>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group col-md-1">
                                             <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button>
                                         </div>
@@ -678,7 +630,6 @@
         <script src="{{ asset('jquery-typeahead/dist/jquery.typeahead.min.js') }}"></script>
     <script>
         $count = {{ $count ?? 1 }};
-        alert($count);
         if ($count < 1) {
             $count = 1;
         }
@@ -754,6 +705,20 @@
                 $html = '<div class="row row-data" style="margin-right: 0;">' +
                 '           <div class="form-group row col-md-6"> ' +
                 '                   <div class="form-group col-md-3"> '+
+                '                       <label class="mt-3">Start Date</label> '+
+                '                       <div class="input-group"> '+
+                '                           <input type="text" class="form-control date_mask" id="start_date_' + $count + '" name="bucket_start_date[' + $count + ']" '+
+                '                               placeholder="Start Date" required> '+
+                '                       </div> '+
+                '                   </div> '+
+                '                   <div class="form-group col-md-3"> '+
+                '                       <label class="mt-3">End Date</label> '+
+                '                       <div class="input-group"> '+
+                '                           <input type="text" class="form-control date_mask" id="end_date_' + $count + '" name="bucket_end_date[' + $count + ']" '+
+                '                               placeholder="End Date" required> '+
+                '                       </div> '+
+                '                   </div> '+
+                '                   <div class="form-group col-md-3"> '+
                 '                      <label class="mt-3">Department</label> '+
                 '                            <div class="input-group"> '+
                 '                                <select type="text" name="bucket_department[' + $count + ']" id="department_' + $count + '" class="form-control department" required> '+
@@ -771,6 +736,9 @@
                 '                           </div> '+
                 '                       </div> '+
                 '                   </div> '+
+               
+                '               </div> '+
+                '               <div class="form-group row col-md-6"> '+
                 '                   <div class="form-group col-md-3"> '+
                 '                       <label class="mt-3">Type</label> '+
                 '                       <div class="input-group"> '+
@@ -789,29 +757,14 @@
                 '                           </select> '+
                 '                       </div> '+
                 '                   </div> '+
-                '               </div> '+
-                '               <div class="form-group row col-md-6"> '+
                 '                   <div class="form-group col-md-5"> '+
                 '                       <label class="mt-3">Specific Asset</label> '+
                 '                       <div class="input-group"> '+
-                '                               <select class="form-control assets" id="refno_' + $count + '"  name="bucket_asset[' + $count + ']" '+
+                '                               <select class="form-control assets" id="refno_' + $count + '"  name="bucket_asset[' + $count++ + ']" '+
                 '                                   required> </select> '+
                 '                       </div> '+ 
                 '                   </div> '+
-                '                   <div class="form-group col-md-3"> '+
-                '                       <label class="mt-3">Start Date</label> '+
-                '                       <div class="input-group"> '+
-                '                           <input type="text" class="form-control date_mask" id="start_date" name="bucket_start_date[' + $count + ']" '+
-                '                               placeholder="Start Date" required> '+
-                '                       </div> '+
-                '                   </div> '+
-                '                   <div class="form-group col-md-3"> '+
-                '                       <label class="mt-3">End Date</label> '+
-                '                       <div class="input-group"> '+
-                '                           <input type="text" class="form-control date_mask" id="end_date" name="bucket_end_date[' + $count++ + ']" '+
-                '                               placeholder="End Date" required> '+
-                '                       </div> '+
-                '                   </div> '+
+                
                 '                   <div class="form-group col-md-1"> '+
                 '                           <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button> '+
                 '                       </div> '+
@@ -971,12 +924,14 @@
                             data: function (params) {
                                 var query = {
                                     search: params.term,
+                                    department:$('#department_'+ii).val(),
                                     type: 'public'
                                 }
                                 return query;
                             },
                             processResults: function (data) {
                                 // Transforms the top-level key of the response object from 'items' to 'results'
+                                console.log(data);
                                 return {
                                     results: $.map(data, function (item) {
                                         return {
@@ -1030,38 +985,50 @@
                     }
                     $(ele).select2({
                         width: '100%'
-                    }).on('select2:select', function () {
-                        $this = $(this).val()
-                        $main = $(this).closest('.row-data');
-                        $main.LoadingOverlay('show');
-                        // var startdate = $('#start_date_' + ii).val();
-                        // var enddate = $('#end_date_' + ii).val();
-                        // var startdate = $(this).closest('#start_date').val();
-                        // alert(startdate);
-                        $.ajax({
-                            url: '{{ route('admin-campaign-bucket-get-asset-data') }}',
-                            method: 'post',
-                            async: false,
-                            data: {
-                                data: $this
-                            },
-                            success: function (response) {
-                                if (response.status === 'Success') {
-                                    $asset_type = response.data.asset_type;
-                                    $quantity = response.data.quantity;
-                                    $availability = response.data.availability;
-                                    $inst_time = response.data.inst_time;
-                                    $main.find('.asset_type').html($asset_type)
-                                    $main.find('.quantity').html($quantity)
-                                    $main.find('.availability').html($availability)
-                                    $main.find('.inst_time').html($inst_time)
-                                    $main.LoadingOverlay('hide');
+                    }).on('select2:select', function () {                       
+                        var startdate = $('#start_date_' + ii).val();
+                        var enddate = $('#end_date_' + ii).val();
+                        var location = $('#location_' + ii).val();
+                        if(startdate == '' || enddate == '' || location==0)
+                        {
+                            $.dialog({
+                                title: 'Warning!',
+                                content: 'Select Location & Date Range!',
+                            });
+                            $('#refno_'+ii).val('0').trigger('change')
+                        }
+                        else
+                        {
+                            $this = $(this).val()
+                            $main = $(this).closest('.row-data');
+                            $main.LoadingOverlay('show');
+                            $.ajax({
+                                url: '{{ route('admin-campaign-bucket-get-asset-data') }}',
+                                method: 'post',
+                                async: false,
+                                data: {
+                                    data: $this,
+                                    startdate: startdate,
+                                    enddate: enddate,
+                                },
+                                success: function (response) {
+                                    if (response.status === 'Success') {
+                                        $asset_type = response.data.asset_type;
+                                        $quantity = response.data.quantity;
+                                        $availability = response.data.availability;
+                                        $inst_time = response.data.inst_time;
+                                        $main.find('.asset_type').html($asset_type)
+                                        $main.find('.quantity').html($quantity)
+                                        $main.find('.availability').html($availability)
+                                        $main.find('.inst_time').html($inst_time)
+                                        $main.LoadingOverlay('hide');
+                                    }
+                                },
+                                error: function (xhr) {
+                                    console.log(xhr)
                                 }
-                            },
-                            error: function (xhr) {
-                                console.log(xhr)
-                            }
-                        })
+                            })
+                        }
                     });
                 });
             }

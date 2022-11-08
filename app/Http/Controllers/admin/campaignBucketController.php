@@ -8,6 +8,8 @@ use App\Models\Assets;
 use App\Models\CampaignBucket;
 use Illuminate\Http\Request;
 use DataTables;
+use Carbon\Carbon;
+
 
 class campaignBucketController extends Controller
 {
@@ -82,6 +84,12 @@ class campaignBucketController extends Controller
         $asset_type = '---';
         $availability = '---';
         $inst_time = '---';
+        $startdate = $request->startdate;
+        $enddate = $request->enddate;
+
+        $startdate = Carbon::createFromFormat('d/m/Y', $startdate)->format('Y-m-d');
+        $enddate = Carbon::createFromFormat('d/m/Y', $enddate)->format('Y-m-d');
+
         if($data[0] == 'network'){
             $network = AssetNetwork::with('assets')->find($data[1]);
             $quantity = $network->assets->count();
@@ -89,10 +97,21 @@ class campaignBucketController extends Controller
         }
         else if($data[0] == 'asset'){
             $assets = Assets::with('assetStatus')->find($data[1]);
+            $from_date =   $assets->assetStatus ? $assets->assetStatus->from_date : 'N/A';
+            $to_date =   $assets->assetStatus ?  $assets->assetStatus->to_date : 'N/A';
             $quantity = 1;
             $asset_type = $assets->type;
             $availability = $assets->assetStatus ? $assets->assetStatus->status : 'N/A';
             $inst_time = getFormattedTimeHuman($assets->installation_time);
+
+            if($assets->assetStatus && (($from_date >= $startdate && $from_date <= $enddate)|| ($to_date >= $startdate && $to_date <= $enddate) || ($from_date <= $startdate && $to_date >= $enddate)))
+            {
+                // echo $startdate." DC is greator </br>";  
+                $availability = 'Booked';                  
+            }else{        
+                // echo $to_date." DB is greator </br>";  
+                $availability = 'Available';
+            }
         }
         return response()->json(['status' => 'Success', 'data' => ['asset_type' => $asset_type,'quantity' => $quantity,'availability' => $availability,'inst_time' => $inst_time]]);
     }

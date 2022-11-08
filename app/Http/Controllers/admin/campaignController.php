@@ -135,7 +135,7 @@ class campaignController extends Controller
         //        if(!Auth::user()->can('')){
         //
         //        }
-        echo "<pre>";print_r($request->all()); exit();
+        // echo "<pre>";print_r($request->all()); exit();
         $add = 'Add';
         $user = new Campaigns;
         if ($id) {
@@ -254,7 +254,17 @@ class campaignController extends Controller
                     } else if ($asset[0] == 'asset') {
                         if (!in_array($asset[1], $done)) {
                             $a = Assets::with('assetStatus')->find($asset[1]);
-                            if ($a->type != 'digital' && $a->assetStatus && in_array($a->assetStatus->status, ['Booked', 'Maintenance']) && $a->assetStatus->campaign_id != $user->id) {
+                            $startdate = $request->bucket_start_date[$key];
+                            $enddate = $request->bucket_end_date[$key];
+
+                            $startdate = Carbon::createFromFormat('d/m/Y', $startdate)->format('Y-m-d');
+                            $enddate = Carbon::createFromFormat('d/m/Y', $enddate)->format('Y-m-d');
+
+                            $from_date =   $a->assetStatus ? $a->assetStatus->from_date : 'N/A';
+                            $to_date =   $a->assetStatus ?  $a->assetStatus->to_date : 'N/A';
+
+                            // if ($a->type != 'digital' && $a->assetStatus && in_array($a->assetStatus->status, ['Booked', 'Maintenance']) && $a->assetStatus->campaign_id != $user->id) {
+                            if ($a->type != 'digital' && $a->assetStatus && in_array($a->assetStatus->status, ['Booked', 'Maintenance']) && $a->assetStatus->campaign_id != $user->id && (($from_date >= $startdate && $from_date <= $enddate)|| ($to_date >= $startdate && $to_date <= $enddate) || ($from_date <= $startdate && $to_date >= $enddate))) {
                                 $ids[] = $a->id;
                                 $done[] = $a->id;
                                 $not[$a->id] = $a->name;

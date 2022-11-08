@@ -58,12 +58,34 @@ class select2DataController extends Controller
         return response()->json($data);
     }
 
-    public function getLocations(Request $request)
+    public function getLocationsOld(Request $request)
     {
         if ($request->has('search')) {
             $data = Locations::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->get();
         } else {
             $data = Locations::select('id', 'name')->get();
+        }
+        return response()->json($data);
+    }
+
+    public function getLocations(Request $request)
+    {
+        if($request->department != 0)
+        {
+            $asset = Assets::select('location_id')->where('department_id',$request->department)->distinct()->get()->toArray();
+            if ($request->has('search')) {
+                $data = Locations::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->whereIn('id',$asset)->get();
+            } else {
+                $data = Locations::select('id', 'name')->whereIn('id',$asset)->get();
+            }
+        }
+        else
+        {
+            if ($request->has('search')) {
+                $data = Locations::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->get();
+            } else {
+                $data = Locations::select('id', 'name')->get();
+            }
         }
         return response()->json($data);
     }
