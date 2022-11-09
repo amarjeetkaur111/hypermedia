@@ -72,7 +72,7 @@
                     </ul>
                 </li>
                 @endcanany
-                @canany(['Level1', 'Level2','Level3','Level4'])
+                @canany(['Level1', 'Level2','Level3','Level4','Level7'])
                 <li class="sidebar-item">
                     <a
                         class="sidebar-link has-arrow waves-effect waves-dark"
@@ -99,7 +99,7 @@
                     >
                     <ul aria-expanded="false" class="collapse first-level">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="{{ route('admin-campaign-monitoring-index') }}" ><i class="mdi mdi-laptop"></i><span class="hide-menu">Campaign Proof Pictures</span></a>
+                            <a class="sidebar-link" href="{{ route('admin-campaign-monitoring-index') }}" ><i class="mdi mdi-laptop"></i><span class="hide-menu">Campaign Monitoring</span></a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-defect-tracking-index') }}" ><i class="mdi mdi-camera-off"></i><span class="hide-menu">Defect Tracking</span></a>

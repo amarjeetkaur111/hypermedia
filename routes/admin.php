@@ -87,7 +87,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
             Route::post('/fixed/{id?}', [\App\Http\Controllers\admin\DefectTrackingController::class, 'fixedPost'])->name('fixed');
         });
     });
-    Route::group(['middleware' => ['permission:Level2|Level1|Level3|Level4|Level5|Level6']], function () {  
+    Route::group(['middleware' => ['permission:Level2|Level1|Level3|Level4|Level5|Level6|Level7']], function () {  
         //assets network
         Route::group(['as' => 'assets-network-', 'prefix' => 'assets-network'], function () {
             Route::get('/', [\App\Http\Controllers\admin\assetsNetworkController::class, 'index'])->name('index');
@@ -126,6 +126,15 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
                     Route::post('/add/{campaign_id}/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'addPost'])->name('add');
                     Route::get('/assign/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'assignInstallation'])->name('assign');
                     Route::post('/assign-post/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'assignInstallationPost'])->name('assign-post');
+
+                });
+                Route::group(['as' => 'proofpictures-', 'prefix' => 'proofpictures'], function () {
+                    Route::get('/index/{id}', [\App\Http\Controllers\admin\InstallationController::class, 'proofIndex'])->name('index');
+                    Route::get('/add/{campaign_id}', [\App\Http\Controllers\admin\InstallationController::class, 'proofAdd'])->name('add');
+                    Route::post('/add/{campaign_id}', [\App\Http\Controllers\admin\InstallationController::class, 'proofAddPost'])->name('add');
+                    Route::get('/proof-pictures/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'getProofPictures'])->name('proof-pictures');
+                    Route::get('/approval/{id?}', [\App\Http\Controllers\admin\InstallationController::class, 'getApproval'])->name('approval');
+                    Route::post('/approval', [\App\Http\Controllers\admin\InstallationController::class, 'ApprovalPost'])->name('approval-post');
 
                 });
                 Route::group(['as' => 'designs-', 'prefix' => 'designs'], function () {

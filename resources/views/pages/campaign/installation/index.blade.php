@@ -26,41 +26,13 @@
                     <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                         <div class="row">
                             <div class="col-sm-12">
-                                {{-- <div class="row">--}}
-                                {{-- <div class="col-md-4">--}}
-                                {{-- <label class="mt-3">Start Date</label>--}}
-                                {{-- <div class="input-group">--}}
-                                {{-- <input type="text" class="form-control datepicker-autoclose"--}}
-                                {{-- id="start_date"--}}
-                                {{-- placeholder="dd/mm/yyyy" autocomplete="off"/>--}}
-                                {{-- <div class="input-group-append">--}}
-                                {{-- <span class="input-group-text h-100"><i--}}
-                                {{-- class="mdi mdi-calendar"></i></span>--}}
-                                {{-- </div>--}}
-                                {{-- </div>--}}
-                                {{-- </div>--}}
-                                {{-- <div class="col-md-4">--}}
-                                {{-- <label class="mt-3">End Date</label>--}}
-                                {{-- <div class="input-group">--}}
-                                {{-- <input type="text" class="form-control  datepicker-autoclose"--}}
-                                {{-- id="end_date"--}}
-                                {{-- placeholder="dd/mm/yyyy" autocomplete="off"/>--}}
-                                {{-- <div class="input-group-append">--}}
-                                {{-- <span class="input-group-text h-100"><i--}}
-                                {{-- class="mdi mdi-calendar"></i></span>--}}
-                                {{-- </div>--}}
-                                {{-- </div>--}}
-                                {{-- </div>--}}
-                                {{-- <div class="col-md-4">--}}
-                                {{-- <div class="btn-group"></div>--}}
-                                {{-- <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i--}}
-                                {{-- class="fas fa-redo-alt"> Reset</i></button>--}}
-                                {{-- </div>--}}
-                                {{-- <div style="display: flex; justify-content: flex-end; padding-bottom: 10px">--}}
-                                {{-- <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i--}} {{--                                                    class="fa fa-plus"> Add Campaign</i></a>--}} {{--                                        </div>--}} {{--                                    </div>--}} @if(\Illuminate\Support\Facades\Session::has('msg')) <div class="alert alert-{{ \Illuminate\Support\Facades\Session::has('class') ? \Illuminate\Support\Facades\Session::get('class') : 'default' }}">
+                               
+                                
+                                @if(\Illuminate\Support\Facades\Session::has('msg')) <div class="alert alert-{{ \Illuminate\Support\Facades\Session::has('class') ? \Illuminate\Support\Facades\Session::get('class') : 'default' }}">
                                     <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
+                                @endif
+
                             </div>
-                            @endif
                             <table id="zero_config" class="table table-striped table-bordered dataTable" role="grid" aria-describedby="zero_config_info">
                                 <thead>
                                     <tr role="row">
@@ -88,8 +60,11 @@
                                         <th class="sorting" tabindex="0">
                                             Permits
                                         </th>
-                                        <th class="sorting" tabindex="0">
+                                        <!-- <th class="sorting" tabindex="0">
                                             Action
+                                        </th>  -->
+                                        <th class="sorting" tabindex="0">
+                                            Proof Pictures
                                         </th>
                                         {{-- <th class="sorting" tabindex="0" width="5%">--}}
                                         {{-- Client--}}
@@ -338,11 +313,17 @@
                     searchable: false
                 },
                 {
-                    data: 'action',
-                    name: 'action',
+                    data: 'proof_pictures',
+                    name: 'proof_pictures',
                     orderable: false,
                     searchable: false
                 },
+                // {
+                //     data: 'action',
+                //     name: 'action',
+                //     orderable: false,
+                //     searchable: false
+                // },
                 // {data: 'campaign_type', name: 'campaign_type'},
                 // {data: 'client.name', name: 'client_name'},
                 // {data: 'market', name: 'market'},

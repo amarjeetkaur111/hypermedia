@@ -8,6 +8,8 @@ use App\Models\Campaigns;
 use App\Models\InstallationTypes;
 use App\Models\CampaignInstallationAssign;
 use App\Models\InstallationDesigns;
+use App\Models\CampaignProof;
+use App\Models\ProofPictures;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DataTables;
@@ -69,7 +71,11 @@ class InstallationController extends Controller
                     $btn = '<a href="' . route('admin-campaign-installation-types-index', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Installations"><i class="fas fa-plus-square"></i></a>';
                     return $btn;
                 })
-                ->rawColumns(['action', 'locations', 'photos', 'permits', 'timer', 'assets'])
+                ->addColumn('proof_pictures', function ($row) {
+                    $btn = '<a href="' . route('admin-campaign-installation-proofpictures-index', ['id' => $row->id]) . '" class="btn_margin edit btn btn-primary btn-sm" title="Production Proof Pictures"><i class="fas fa-plus-square"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['proof_pictures','action', 'locations', 'photos', 'permits', 'timer', 'assets'])
                 ->make(true);
         }
         return view('pages.campaign.installation.index');
@@ -96,7 +102,7 @@ class InstallationController extends Controller
                 ->addColumn('start_date', function ($row) {
                     $start = Carbon::parse($row->start_date)->format('d/m/Y');
                     $end = Carbon::parse($row->end_date)->format('d/m/Y');
-                    return $start . ' to ' . $end;
+                    return $start . ' to ' . $end;  
                 })
                
                 
@@ -294,5 +300,119 @@ class InstallationController extends Controller
         }
         return redirect()->back()->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
     }
+
+    // -----------------------------------------------------Proof Pictures---------------------------------------------------
+
+    public function proofIndex(Request $request, $id){
+        $campaign_id = $id;
+        $campaign_name = Campaigns::findorfail($id);
+        $campaign_name=$campaign_name->name;
+        
+        if ($request->ajax()) {
+            $data = CampaignProof::where('campaign_id',$id)->select('*')->orderBy('created_at','DESC');
+            return DataTables::eloquent($data)
+                
+                ->addColumn('photos', function ($row) {
+                    return '<button class="btn btn-sm btn-primary photos_btn" dt-data-id="' . route('admin-campaign-installation-proofpictures-proof-pictures', ['id' => $row->id]) . '">Photos</button>';
+                })
+
+                ->editColumn('status', function ($row) {
+                    if($row->status == '')
+                        return '<span class="badge" style="background:grey;padding:7px;font-weight:bold;border-radius:3px;">Not Checked</span>';
+                    elseif($row->status == 1)
+                        return '<span class="badge" style="background:green;padding:7px;font-weight:bold;border-radius:3px;">Approved</span>';
+                    else
+                        return '<span class="badge" style="background:orange;padding:7px;font-weight:bold;border-radius:3px;">Re DO</span>';
+                })
+
+                ->editColumn('comment', function ($row) {
+                    return ($row->comment ?? '-');
+                })
+                
+                ->addColumn('added_on', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d M Y');
+                })              
+                ->addColumn('action', function ($row) use ($id) {
+                    $btn = '<a href="' . route('admin-campaign-installation-proofpictures-approval', ['id' => $row->id]) . '" class="btn_margin approval btn btn-primary btn-sm" title="Installations">Approve / Reject</a>';
+                    return $btn;
+                })
+                ->rawColumns(['photos', 'status', 'comments', 'added_on', 'action'])
+                ->make(true);
+        }
+        return view('pages.campaign.installation.proof.index',compact('campaign_id','campaign_name'));
+    }
+
+    public function proofAdd($campaign_id = null)
+    {
+        // dd($campaign_id);
+        $c_id = $campaign_id;
+        $campaign_name='';
+        if($c_id){
+            $campaign_name = Campaigns::findorfail($c_id);
+            $campaign_name=$campaign_name->name;
+        }
+        $data = null;
+        $action = route('admin-campaign-installation-proofpictures-add',['campaign_id'=>$campaign_id]);
+        $add = 'Add';
+        
+        return view('pages.campaign.installation.proof.add', compact('data', 'action', 'add', 'c_id','campaign_name'));
+    }
+
+    public function proofAddPost(Request $request, $campaign_id)
+    {
+        // echo"<pre>"; print_r($request->all());exit();
+        $this->validate($request, [
+            'file' => 'required',
+        ]);
+
+        if($request->hasFile('file'))
+        {
+            $campaign_proof = new CampaignProof;
+            $campaign_proof->campaign_id = $request->campaign_id;
+            $campaign_proof->save();
+            $campaign_proof_id = $campaign_proof->id;
+
+            $files = $request->file('file');
+
+            foreach($files as $file){
+                $pp  = new ProofPictures;
+                $pp->campaign_proof_id = $campaign_proof_id;
+
+                $filename = $file->getClientOriginalName();
+                $extension = $file->getClientOriginalExtension();
+                $path = Storage::disk('s3')->putFileAs('proof_pictures',$file,$filename.'.'.$extension,'public');
+                $pp->image = config('filesystems.disks.s3.url').'/'.$path;
+                $pp->save();
+            }
+        }
+        return redirect()->route('admin-campaign-installation-proofpictures-index',['id'=>$request->campaign_id])->with(['status' => 'Success', 'class' => 'success', 'msg' => "Pictures Added Successfully!"]);
+    }
+
+    public function getProofPictures($id)
+    {
+        $data = CampaignProof::with('pictures')->find($id);
+        // print_r($data);exit();
+        return view('pages.campaign.installation.proof.pictures', compact('data'))->render();
+    }
+
+    public function getApproval($id)
+    {
+        $id = $id;
+        $url = route('admin-campaign-installation-proofpictures-approval-post');
+        // print_r($data);exit();
+        return view('pages.campaign.installation.proof.approval', compact('id','url'))->render();
+    }
+
+    public function ApprovalPost(Request $request)
+    {
+        $compaign_proof = CampaignProof::find($request->id);
+        $campaign = $compaign_proof->campaign_id;
+        $compaign_proof->status =  $request->status;
+        $compaign_proof->comment =  $request->comment;
+        if($compaign_proof->save())
+        return redirect()->route('admin-campaign-installation-proofpictures-index',['id'=>$campaign])->with(['status' => 'Success', 'class' => 'success', 'msg' => "Status Updated Successfully!"]);
+    }
+
+
     // ---------------------------------------------------------End-----------------------------------------------------------------
 }

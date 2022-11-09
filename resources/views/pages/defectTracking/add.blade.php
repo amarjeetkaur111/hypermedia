@@ -187,8 +187,8 @@
         $(document).ready(function() {       
             $('#photo').bind('change', function() {
                 var a=(this.files[0].size);
-                if(a > 1000000) {
-                    alert('Image cannot be large than 1MB');
+                if(a > 4000000) {
+                    alert('Image cannot be large than 4MB');
                     $('#photo').val(null);
                 }else{
                     const [file] = photo.files
@@ -200,8 +200,8 @@
             });
             $('#video').bind('change', function() {
                 var a=(this.files[0].size);
-                if(a > 2000000) {
-                    alert('Video cannot be large than 2MB');
+                if(a > 50000000) {
+                    alert('Video cannot be large than 50MB');
                     $('#video').val(null);
                 }
             });
