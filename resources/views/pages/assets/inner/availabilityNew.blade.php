@@ -194,6 +194,7 @@
                 data: function (params) {
                     var query = {
                         search: params.term,
+                        department:$('#department_id').val(),
                         type: 'public'
                     }
                     return query;

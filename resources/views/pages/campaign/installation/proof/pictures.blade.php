@@ -9,7 +9,7 @@
     @forelse($data->pictures as $d)
         <tr>
             <td><img src="{{ $d->image  }}" width="300" ></td>
-            <td><a href="{{ route('download-file',['table' => \Illuminate\Support\Facades\Crypt::encrypt(' proof_pictures'),'field' => 'image','id' => $d->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-download"></i></a></td>
+            <td><a href="{{ route('download-file',['table' => \Illuminate\Support\Facades\Crypt::encrypt('proof_pictures'),'field' => 'image','id' => $d->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-download"></i></a></td>
         </tr>
     @empty
         <tr>
