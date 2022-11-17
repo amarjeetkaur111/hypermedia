@@ -11,12 +11,13 @@
             $name = old('name');
             $agency = old('agency');
             $brand = old('brand');
-           
+            $client_name = null;
+            $department_name =null;
             $contract_name = old('contract_name');
             $contract_number = old('contract_number');
             $description = old('description');
             $start_date = old('start_date');
-            $start_time = old('start_time');
+            $start_time = old('start_time');  
             $end_date = old('end_date');
             $end_time = old('end_time');
             $campaign_type = old('campaign_type');

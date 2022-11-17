@@ -42,6 +42,9 @@
                                                 Added On
                                             </th>
                                             <th class="sorting" tabindex="0">
+                                                Location
+                                            </th>
+                                            <th class="sorting" tabindex="0">
                                                 Photos
                                             </th>    
                                             <th class="sorting" tabindex="0">
@@ -91,6 +94,10 @@
                 {
                     data: 'added_on',
                     name: 'added_on'
+                },
+                {
+                    data: 'location',
+                    name: 'location'
                 },
                 {
                     data: 'photos',

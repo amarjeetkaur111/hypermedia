@@ -15,6 +15,10 @@ class CampaignProof extends Model
         return $this->hasOne(Campaigns::class,'id','campaign_id');
     }
 
+    public function locations(){
+        return $this->hasOne(Locations::class,'id','location_id');
+    }
+
     public function pictures(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ProofPictures::class,'campaign_proof_id','id');

@@ -126,6 +126,8 @@ class campaignController extends Controller
             $data = Campaigns::with('client', 'buckets', 'department')->find($id);
             $action = route('admin-campaign-add', ['id' => $id]);
             $add = 'Edit';
+        // echo "<pre>";print_r($data); exit();
+
         }
         return view('pages.campaign.add', compact('data', 'action', 'add'));
     }
@@ -151,7 +153,7 @@ class campaignController extends Controller
             'client_name' => 'required',
             'contract_name' => 'required',
             'contract_number' => 'required',
-            'type' => 'required',
+            // 'type' => 'required',
         ]);
         if ($id) {
             $this->validate($request, [

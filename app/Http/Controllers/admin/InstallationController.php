@@ -309,7 +309,7 @@ class InstallationController extends Controller
         $campaign_name=$campaign_name->name;
         
         if ($request->ajax()) {
-            $data = CampaignProof::where('campaign_id',$id)->select('*')->orderBy('created_at','DESC');
+            $data = CampaignProof::with('locations')->where('campaign_id',$id)->select('*')->orderBy('created_at','DESC');
             return DataTables::eloquent($data)
                 
                 ->addColumn('photos', function ($row) {
@@ -331,12 +331,19 @@ class InstallationController extends Controller
                 
                 ->addColumn('added_on', function ($row) {
                     return Carbon::parse($row->created_at)->format('d M Y');
-                })              
+                })  
+                
+                ->addColumn('location', function ($row) {
+                    if($row->locations)
+                        return $row->locations->name;
+                    else
+                        return 'NA';
+                })  
                 ->addColumn('action', function ($row) use ($id) {
                     $btn = '<a href="' . route('admin-campaign-installation-proofpictures-approval', ['id' => $row->id]) . '" class="btn_margin approval btn btn-primary btn-sm" title="Installations">Approve / Reject</a>';
                     return $btn;
                 })
-                ->rawColumns(['photos', 'status', 'comments', 'added_on', 'action'])
+                ->rawColumns(['location','photos', 'status', 'comments', 'added_on', 'action'])
                 ->make(true);
         }
         return view('pages.campaign.installation.proof.index',compact('campaign_id','campaign_name'));
@@ -347,15 +354,18 @@ class InstallationController extends Controller
         // dd($campaign_id);
         $c_id = $campaign_id;
         $campaign_name='';
+        $locations = array();
         if($c_id){
-            $campaign_name = Campaigns::findorfail($c_id);
-            $campaign_name=$campaign_name->name;
+            $campaign_name = Campaigns::with('buckets.locations')->findorfail($c_id);
+            $locations =  CampaignBucket::select('location')->with('locations')->where('campaign_id',22)->get();
+            // $campaign_name=$campaign_name->name;
+            // echo"<pre>"; print_r($locations->toArray());exit();
         }
         $data = null;
         $action = route('admin-campaign-installation-proofpictures-add',['campaign_id'=>$campaign_id]);
         $add = 'Add';
         
-        return view('pages.campaign.installation.proof.add', compact('data', 'action', 'add', 'c_id','campaign_name'));
+        return view('pages.campaign.installation.proof.add', compact('locations','data', 'action', 'add', 'c_id','campaign_name'));
     }
 
     public function proofAddPost(Request $request, $campaign_id)
@@ -363,12 +373,14 @@ class InstallationController extends Controller
         // echo"<pre>"; print_r($request->all());exit();
         $this->validate($request, [
             'file' => 'required',
+            'location' => 'required',
         ]);
 
         if($request->hasFile('file'))
         {
             $campaign_proof = new CampaignProof;
             $campaign_proof->campaign_id = $request->campaign_id;
+            $campaign_proof->location_id = $request->location;
             $campaign_proof->save();
             $campaign_proof_id = $campaign_proof->id;
 

@@ -7,6 +7,8 @@ use App\Models\Campaigns;
 use App\Models\Clients;
 use App\Models\Departments;
 use App\Models\Locations;
+use App\Models\TeamsModel;
+use App\Models\TeamMembersModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -115,6 +117,38 @@ class select2DataController extends Controller
         }
         return response()->json($data);
     }
+
+    public function getTeam(Request $request)
+    {
+        if ($request->has('search')) {
+            $data = TeamsModel::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->get();
+        } else {
+            $data = TeamsModel::select('id', 'name')->get();
+        }
+        return response()->json($data);
+    }  
+
+    public function getTeamUser(Request $request)
+    {
+        if($request->has('team'))
+        {
+            $members = User::select('id')->whereHas('team',function($q) use($request){
+                $q->whereIn('team_id',$request->team);
+            })->get()->toArray();
+
+            $data = User::select('id', 'name')->whereNotIn('id',$members)->get();
+        }
+        else
+        {
+            $data = User::select('id', 'name')->where('status', 'Active')->get();
+        }
+        // if ($request->has('search')) {
+        //     $data = User::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->where('status', 'Active')->get();
+        // } else {
+        //     $data = User::select('id', 'name')->where('status', 'Active')->get();
+        // }
+        return response()->json($data);
+    } 
 
     public function getUser(Request $request)
     {

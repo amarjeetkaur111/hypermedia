@@ -9,6 +9,11 @@ use Wildside\Userstamps\Userstamps;
 
 class TeamMembersModel extends Model
 {
-    use HasFactory,Userstamps,SoftDeletes;
+    use HasFactory,Userstamps;
     protected $table = 'team_members';
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id', 'member_id');
+    }
 }

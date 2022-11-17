@@ -39,7 +39,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-12 d-flex no-block align-items-center">
-                <h4 class="page-title">{{$campaign_name}} Proof Pictures</h4>
+                <h4 class="page-title">{{$campaign_name->name}} Proof Pictures</h4>
                 <div class="ms-auto text-end">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -61,11 +61,24 @@
                     <h4 class="card-title">{{ $add }}</h4>
                     <div class="row">
                         <div class="form-group row col-md-6">
+                            <label for="fname" class="col-sm-3 control-label col-form-label">Location</label>
+                            <div class="col-sm-9">
+                                <select type="file" class="form-control"  id="location" name="location">
+                                  @foreach($locations as $location)
+                                    <option value="{{$location->locations->id}}">{{$location->locations->name}}</option>
+                                  @endforeach
+                                </select>
+                                @if ($errors->has('location'))
+                                <span class="text-danger">{{ $errors->first('location') }}</span>
+                                @endif
+                            </div>
+                        </div>  
+                        <div class="form-group row col-md-6">
                             <label for="fname" class="col-sm-3 control-label col-form-label">Pictures</label>
                             <div class="col-sm-9">
                                 <input type="file"  id="files" name="file[]" multiple accept="image/*">
-                                @if ($errors->has('images'))
-                                <span class="text-danger">{{ $errors->first('images') }}</span>
+                                @if ($errors->has('file'))
+                                <span class="text-danger">{{ $errors->first('file') }}</span>
                                 @endif
                             </div>
                         </div>                             

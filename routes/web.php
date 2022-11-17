@@ -36,6 +36,8 @@ Route::group(['as' => 'select-2-','prefix' => 'select-2'],function(){
    Route::get('assets',[\App\Http\Controllers\select2DataController::class,'getAssets'])->name('get-assets');
    Route::get('campaigns',[\App\Http\Controllers\select2DataController::class,'getCampaign'])->name('get-campaigns');
    Route::get('users',[\App\Http\Controllers\select2DataController::class,'getUser'])->name('get-users');
+   Route::get('teams',[\App\Http\Controllers\select2DataController::class,'getTeam'])->name('get-teams');
+   Route::get('teamUsers',[\App\Http\Controllers\select2DataController::class,'getTeamUser'])->name('get-teamUsers');
    Route::get('campaign_assets',[\App\Http\Controllers\select2DataController::class,'getCampaignAssets'])->name('get-campaign-asset');
    Route::get('assets_name',[\App\Http\Controllers\select2DataController::class,'getAssetsName'])->name('get-asset-name');
    Route::post('assets_namennetwork',[\App\Http\Controllers\select2DataController::class,'getAssetsNameNNetork'])->name('get-asset-namennetwork');
