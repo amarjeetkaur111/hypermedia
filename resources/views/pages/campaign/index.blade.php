@@ -570,8 +570,9 @@
                         btnClass: 'btn-blue',
                         action: function() {
                             var name = this.$content.find('#users').val();
-                            if (name=='') {
-                                $.alert('Select a User first');
+                            var team = this.$content.find('#teams').val();
+                            if (name=='' && team == '') {
+                                $.alert('Select Either Team or User');
                                 return false;
                             } else {
                                 $('#from-assign #from').val('campaign');

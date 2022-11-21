@@ -13,6 +13,8 @@ use App\Models\Campaigns;
 use App\Models\CampaignStatus;
 use App\Models\InstallationTypes;
 use App\Models\User;
+use App\Models\CampaignTeam;
+use App\Models\TeamsModel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
@@ -374,16 +376,18 @@ class campaignController extends Controller
         // $campaign = Campaigns::with('assignee')
         //                        ->find($id)->toArray();
         $campaign = CampaignAssign::where('campaign_id',$id)->whereNull('deleted_at')->get();         
+        $assignedteams = CampaignTeam::where('campaign_id',$id)->whereNull('deleted_at')->get();         
         $users = User::all();
+        $teams = TeamsModel::all();
         $action = route('admin-campaign-assign-post', ['id' => $id]);
-        return view('pages.campaign.inner.users', compact('users', 'action', 'campaign'))->render();
+        return view('pages.campaign.inner.users', compact('assignedteams','teams','users', 'action', 'campaign'))->render();
     }
 
     public function assignCampaignPost(Request $request, $id)
     {
         $existUsers =  CampaignAssign::where('campaign_id', $id)->get()->toArray();
         $existUsers = array_column($existUsers,'user_id');
-        $newUsers = $request->users;
+        $newUsers = $request->users ?? array();
         if(!empty($existUsers))
         {
             $uniqueUsers = array_diff($existUsers,$newUsers);
@@ -415,6 +419,19 @@ class campaignController extends Controller
                 $state->save();
             }
         }
+
+
+        $existTeams = CampaignTeam::where('campaign_id',$id)->delete();
+        $newTeam = $request->teams ?? array();
+
+        foreach($newTeam as $nt)
+        {
+            $team  = new CampaignTeam;
+            $team->campaign_id = $id;   
+            $team->team_id = $nt; 
+            $team->save();  
+        }
+
         return redirect()->route('admin-campaign-index')->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
     }
 
@@ -564,17 +581,29 @@ class campaignController extends Controller
         // print_r($request->all());
         $date = $request->input('date');
         $date = Carbon::createFromFormat('d/m/Y', $request->date)->format('Y-m-d');
-        $campaign = Campaigns::with('assignee')
+        $campaign = Campaigns::with('assignee','teamassignee.members.users')
                     ->whereDate('start_date','<=',$date)
                     ->whereDate('end_date','>=',$date)
                     ->whereIn('status', ['Active', 'Live'])
                     ->get()->toArray();
+
+        // print_r($campaign);exit();
         $campaign_ppl = array();
         foreach($campaign as $campaign)
         {
             foreach($campaign['assignee'] as $assignee)
             {
                 array_push($campaign_ppl,$assignee['name']);
+            }
+            foreach($campaign['teamassignee'] as $team)
+            {
+                if(count($team['members']) > 0)  
+                {
+                    foreach($team['members'] as $user)
+                    {
+                        array_push($campaign_ppl,$user['users']['name']);
+                    }
+                }
             }
         }
 

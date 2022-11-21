@@ -14,6 +14,6 @@ class TeamMembersModel extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'id', 'member_id');
+        return $this->hasOne(User::class, 'id', 'member_id');
     }
 }

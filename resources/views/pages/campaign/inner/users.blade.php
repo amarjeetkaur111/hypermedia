@@ -3,15 +3,26 @@
         color: #898080;
     }
     .select2-dropdown {z-index: 100000000 !important;}
+    .select2-selection--multiple {
+    overflow: hidden !important;
+    height: auto !important;
+}
 </style>
 <form id="from-assign" method="post" action="{{ $action }}">
     @csrf
     <input type="hidden" name="from" id="from" value="">
-    <div class="row">
+    <div class="row" style="width:100%">
         <div class="form-group col-md-6">  
             <label for="users" class="text-end control-label col-form-label">Teams</label>  
             <select name="teams[]" class="form-control" id="teams" required multiple>
-                   
+                @foreach($teams as $team)
+                <?php 
+                    $selected = '';
+                    foreach($assignedteams as $assigned){
+                    if($team->id == $assigned->team_id) $selected = 'selected';
+                }?>
+                    <option value="{{$team->id}}" {{ $selected }}>{{ $team->name }}</option>
+                @endforeach
             </select>  
         </div>
         <div class="form-group col-md-6">  

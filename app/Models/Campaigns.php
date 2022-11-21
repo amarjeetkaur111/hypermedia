@@ -25,7 +25,12 @@ class Campaigns extends Model
 
     public function assignee(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(User::class,(new CampaignAssign)->getTable(),'campaign_id','user_id','id','id');
+        return $this->belongsToMany(User::class,(new CampaignAssign)->getTable(),'campaign_id','user_id','id','id')->whereNull('campaign_assign.deleted_at');
+    }
+
+    public function teamassignee()
+    {
+        return $this->hasMany(CampaignTeam::class,'campaign_id','id');
     }
 
     public function photos(): \Illuminate\Database\Eloquent\Relations\HasMany
