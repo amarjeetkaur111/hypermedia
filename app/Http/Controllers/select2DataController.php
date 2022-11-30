@@ -9,6 +9,7 @@ use App\Models\Departments;
 use App\Models\Locations;
 use App\Models\TeamsModel;
 use App\Models\TeamMembersModel;
+use App\Models\CampaignBucket;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -279,4 +280,20 @@ class select2DataController extends Controller
         // print_r($request->all());exit();
         return getAssetAndNetworkNew($request->name,$request->department,$request->location,$request->assettype);
     }  
+
+
+    public function getCampaignLocations(Request $request)
+    {
+        if($request->campaign != 0)
+        {
+            $location = CampaignBucket::select('location')->where('campaign_id',$request->campaign)->distinct()->get()->toArray();
+            if ($request->has('search')) {
+                $data = Locations::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->whereIn('id',$location)->get();
+            } else {
+                $data = Locations::select('id', 'name')->whereIn('id',$location)->get();
+            }
+        }
+        return response()->json($data);
+    }
+
 }

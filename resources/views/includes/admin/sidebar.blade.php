@@ -118,7 +118,7 @@
                     >
                     <ul aria-expanded="false" class="collapse first-level">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="#" ><i class="mdi mdi-relative-scale"></i><span class="hide-menu">Clients</span></a>
+                            <a class="sidebar-link" href="{{ route('admin-reports-campaign') }}" ><i class="mdi mdi-relative-scale"></i><span class="hide-menu">Campaign</span></a>
                         </li>
                     </ul>
                 </li>

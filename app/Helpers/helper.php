@@ -72,17 +72,6 @@ function getAssetAndNetworkNew($name=null,$deparment=null,$location=null,$assett
     // $assets = \App\Models\Assets::select('id', 'name', 'ref_no')->get();
     $networks = \App\Models\AssetNetwork::select('id', 'name')->get();
     $options = '<option selected disabled>Select Asset</option>';
-    // if ($networks->count()) {
-    //     $options .= '<optgroup label="Networks">';
-    //     foreach ($networks as $n) {
-    //         if (count($select) && $select[0] == 'network') {
-    //             $options .= '<option value="network:' . $n->id . '" '.($n->id == $select[1] ? 'selected="selected"' : '') . ' >' . $n->name . '</option>';
-    //         } else {
-    //             $options .= '<option value="network:' . $n->id . '">' . $n->name . '</option>';
-    //         }
-    //     }
-    //     $options .= '</optgroup>';
-    // }
     if ($assets->count()) {
         $options .= '<optgroup label="Assets">';
         foreach ($assets as $a) {
@@ -94,6 +83,18 @@ function getAssetAndNetworkNew($name=null,$deparment=null,$location=null,$assett
         }
         $options .= '</optgroup>';
     }
+    if ($networks->count()) {
+        $options .= '<optgroup label="Networks">';
+        foreach ($networks as $n) {
+            if (count($select) && $select[0] == 'network') {
+                $options .= '<option value="network:' . $n->id . '" '.($n->id == $select[1] ? 'selected="selected"' : '') . ' >' . $n->name . '</option>';
+            } else {
+                $options .= '<option value="network:' . $n->id . '">' . $n->name . '</option>';
+            }
+        }
+        $options .= '</optgroup>';
+    }
+    
     return $options;
 }
 

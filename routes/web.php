@@ -42,6 +42,7 @@ Route::group(['as' => 'select-2-','prefix' => 'select-2'],function(){
    Route::get('assets_name',[\App\Http\Controllers\select2DataController::class,'getAssetsName'])->name('get-asset-name');
    Route::post('assets_namennetwork',[\App\Http\Controllers\select2DataController::class,'getAssetsNameNNetork'])->name('get-asset-namennetwork');
    Route::get('assets_nameref',[\App\Http\Controllers\select2DataController::class,'getAssetsNameRef'])->name('get-asset-nameref');
+   Route::get('campaign_locations',[\App\Http\Controllers\select2DataController::class,'getCampaignLocations'])->name('get-campaign_locations');
 });
 
 Route::get('download-file/{table}/{field}/{id}',[\App\Http\Controllers\select2DataController::class,'downloadFile'])->name('download-file');

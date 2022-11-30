@@ -69,6 +69,11 @@ Route::group(['middleware' => 'auth', 'namespace' => 'admin', 'as' => 'admin-', 
             Route::get('/add/{id?}', [\App\Http\Controllers\admin\departmentController::class, 'add'])->name('add');
             Route::post('/add/{id?}', [\App\Http\Controllers\admin\departmentController::class, 'addPost'])->name('add');
         });
+
+        Route::group(['as' => 'reports-', 'prefix' => 'reports'], function () {
+            Route::get('/campaign', [\App\Http\Controllers\admin\reportController::class, 'campaign'])->name('campaign');
+            Route::post('/getCampaign', [\App\Http\Controllers\admin\reportController::class, 'getCampaign'])->name('getCampaign');
+        });
     });
     
     Route::group(['middleware' => ['permission:Level2|Level1|Level7|Level3|Level4']], function () {  
