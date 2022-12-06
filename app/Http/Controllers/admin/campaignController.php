@@ -154,7 +154,7 @@ class campaignController extends Controller
             // 'bucket_location.*' => 'required',
             'client_name' => 'required',
             'contract_name' => 'required',
-            'contract_number' => 'required',
+            // 'contract_number' => 'required',
             // 'type' => 'required',
         ]);
         if ($id) {

@@ -163,7 +163,10 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group row col-md-6">
+                                <input type="hidden" class="form-control" name="contract_name"
+                                           value="{{$contract_name}}"
+                                           placeholder="Contract Name Here" value="XXX">
+                            <!-- <div class="form-group row col-md-6">
                                 <label for="fname" class="col-sm-3 text-end control-label col-form-label">Contract
                                     Name</label>
                                 <div class="col-sm-9">
@@ -174,7 +177,7 @@
                                         <span class="text-danger">{{ $errors->first('contract_name') }}</span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="form-group row col-md-6">
                                 <label for="fname" class="col-sm-3 text-end control-label col-form-label">Contract
                                     Number</label>
@@ -189,6 +192,9 @@
                             </div>
                         </div>
                         <div class="row">
+                            <input type="hidden" class="form-control time_mask" name="start_time"
+                                           value="{{ $start_time }}" placeholder="Start time here"
+                                           required>
                             <div class="form-group row col-md-6">
                                 <label for="fname" class="col-sm-3 text-end control-label col-form-label">Starting
                                     at</label>
@@ -201,7 +207,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="form-group row col-md-6">
+                            <!-- <div class="form-group row col-md-6">
                                 <label for="fname" class="col-sm-3 text-end control-label col-form-label">Starting at
                                     Time</label>
                                 <div class="col-sm-9">
@@ -212,9 +218,12 @@
                                         <span class="text-danger">{{ $errors->first('start_time') }}</span>
                                     @endif
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
+                            </div> -->
+                        <!-- </div>
+                        <div class="row"> -->
+                            <input type="hidden" class="form-control time_mask" name="end_time"
+                                           value="{{ $end_time }}" placeholder="End time here"
+                                           required>
                             <div class="form-group row col-md-6">
                                 <label for="fname" class="col-sm-3 text-end control-label col-form-label">Ending
                                     At</label>
@@ -227,7 +236,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="form-group row col-md-6">
+                            <!-- <div class="form-group row col-md-6">
                                 <label for="fname" class="col-sm-3 text-end control-label col-form-label">Ending At
                                     Time</label>
                                 <div class="col-sm-9">
@@ -238,7 +247,7 @@
                                         <span class="text-danger">{{ $errors->first('end_time') }}</span>
                                     @endif
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="row">
@@ -386,14 +395,14 @@
                                         <div class="form-group col-md-3">
                                             <label class="mt-3">Start Date</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control date_mask" name="bucket_start_date[{{ $count }}]" id="start_date_{{ $count }}" value="{{ \Carbon\Carbon::parse($bucket->start_date)->format('d/m/Y') }}"
+                                                <input type="text" class="form-control date_mask startdate" name="bucket_start_date[{{ $count }}]" id="start_date_{{ $count }}" value="{{ \Carbon\Carbon::parse($bucket->start_date)->format('d/m/Y') }}"
                                                     placeholder="Start Date" required>
                                             </div>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label class="mt-3">End Date</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control date_mask" id="end_date_{{ $count }}" name="bucket_end_date[{{ $count }}]"
+                                                <input type="text" class="form-control date_mask enddate" id="end_date_{{ $count }}" name="bucket_end_date[{{ $count }}]"
                                                    placeholder="End Date"
                                                    value="{{ \Carbon\Carbon::parse($bucket->end_date)->format('d/m/Y') }}"
                                                     placeholder="End Date" required>
@@ -495,113 +504,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="row  row-data" style="margin-right: 0;">
-                                <div class="form-group row col-md-6">
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">Start Date</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control date_mask" name="bucket_start_date[0]" id="start_date_0"  placeholder="Start Date" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">End Date</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control date_mask" name="bucket_end_date[0]" id="end_date_0"  placeholder="End Date" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">Department</label>
-                                            <div class="input-group">
-                                                <select type="text" name="bucket_department[0]" id="department_0" class="form-control department">
-                                                    <option value="0" selected="selected">Select Department</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">Location</label>
-                                        <div class="input-group">
-                                            <div class="input-group">
-                                                <select type="text" name="bucket_location[0]" id="location_0" class="form-control locations">
-                                                    <option value="0" selected="selected">Select Location</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>                                    
-                                </div>
-                                <div class="form-group row col-md-6">
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">Type</label>
-                                        <div class="input-group">
-                                            <select type="text" name="bucket_assettype[0]" id="assettype_0" class="form-control assettype">
-                                                <option value="0">Select Type</option>
-                                                <option value="digital">Digital</option>
-                                                <option value="static">Static</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label class="mt-3">Assets</label>
-                                        <div class="input-group">
-                                            <select type="text" name="bucket_assetname[0]" id="assetname_0" class="form-control filter assetname" required>
-                                                <option value="0" selected="selected">Select Assets</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-5">
-                                        <label class="mt-3">Specific Asset</label>
-                                        <div class="input-group">
-                                            <!-- <select class="form-control assets" id="ref_no"  name="bucket_asset[0]"
-                                                    required>{!! getAssetAndNetwork() !!} </select> -->
-                                                <select class="form-control assets" id="refno_0"  name="bucket_asset[0]"
-                                                    required> </select>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group col-md-1">
-                                            <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="details_div" style="display: flex; flex-flow: row;">
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                class="col-sm-4 text-end control-label col-form-label">Asset Type</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary asset_type" role="alert">
-                                                    ---
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                class="col-sm-4 text-end control-label col-form-label">Quantity</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary quantity" role="alert">
-                                                    ---
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                class="col-sm-4 text-end control-label col-form-label">Availability</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary availability" role="alert">
-                                                    ---
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                class="col-sm-4 text-end control-label col-form-label">Installation
-                                                Time</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary inst_time" role="alert">
-                                                    ---
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         @endif
 
                     </div>
@@ -630,11 +533,25 @@
         src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
         <script src="{{ asset('jquery-typeahead/dist/jquery.typeahead.min.js') }}"></script>
     <script>
-        $count = {{ $count ?? 1 }};
+        $count = {{ $count ?? 0 }};
         if ($count < 1) {
-            $count = 1;
+            $count = 0;
         }
         $(function () {
+            $("[name='start_date']").on('change', function (e) {
+                $('.startdate').each(function(i, obj) {
+                    var startdate = $("[name='start_date']").val();
+                        $(this).val(startdate)
+                });
+            });
+
+            $("[name='end_date']").on('change', function (e) {
+                $('.enddate').each(function(i, obj) {
+                    var enddate = $("[name='end_date']").val();
+                        $(this).val(enddate)
+                });
+            });
+
             $('#department_id').select2({
                 width: '100%',
                 ajax: {
@@ -703,27 +620,32 @@
             });
 
             function addRow() {
+                var startdate = $("[name='start_date']").val();
+                var enddate = $("[name='end_date']").val();
+                var department = $('#department_id').val() != '' ?  $('#department_id').val() : 0;
+                var deparmenttext = $("#department_id option:selected").text() != '' ? $("#department_id option:selected").text() : 'Select Department';
+
                 $html = '<div class="row row-data" style="margin-right: 0;">' +
                 '           <div class="form-group row col-md-6"> ' +
                 '                   <div class="form-group col-md-3"> '+
                 '                       <label class="mt-3">Start Date</label> '+
                 '                       <div class="input-group"> '+
-                '                           <input type="text" class="form-control date_mask" id="start_date_' + $count + '" name="bucket_start_date[' + $count + ']" '+
-                '                               placeholder="Start Date" required> '+
+                '                           <input type="text" class="form-control date_mask startdate" id="start_date_' + $count + '" name="bucket_start_date[' + $count + ']" '+
+                '                               placeholder="Start Date" value="'+startdate+'"required> '+
                 '                       </div> '+
-                '                   </div> '+
+                '                   </div> '+ 
                 '                   <div class="form-group col-md-3"> '+
                 '                       <label class="mt-3">End Date</label> '+
                 '                       <div class="input-group"> '+
-                '                           <input type="text" class="form-control date_mask" id="end_date_' + $count + '" name="bucket_end_date[' + $count + ']" '+
-                '                               placeholder="End Date" required> '+
+                '                           <input type="text" class="form-control date_mask enddate" id="end_date_' + $count + '" name="bucket_end_date[' + $count + ']" '+
+                '                               placeholder="End Date" value="'+enddate+'" required> '+
                 '                       </div> '+
                 '                   </div> '+
                 '                   <div class="form-group col-md-3"> '+
                 '                      <label class="mt-3">Department</label> '+
                 '                            <div class="input-group"> '+
                 '                                <select type="text" name="bucket_department[' + $count + ']" id="department_' + $count + '" class="form-control department" required> '+
-                '                                   <option value="0" selected="selected">Select Department</option> '+
+                '                                   <option value="'+department+'" selected="selected">'+deparmenttext+'</option> '+
                 '                               </select> '+
                 '                           </div>'+
                 '                      </div> '+

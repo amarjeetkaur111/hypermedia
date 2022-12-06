@@ -32,7 +32,7 @@ class InstallationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Campaigns::with('buckets.locations')->select('*')->where('status','Active');
+            $data = Campaigns::with('buckets.locations')->select('*')->where('status', '<>','Cancelled');
             return DataTables::eloquent($data)
                 ->editColumn('timer', function ($row) {
                     $start_date = Carbon::parse($row->start_date);
@@ -396,6 +396,14 @@ class InstallationController extends Controller
                 $pp->image = config('filesystems.disks.s3.url').'/'.$path;
                 $pp->save();
             }
+            
+            $campStatus = Campaigns::findorfail($request->campaign_id);
+            if($campStatus->status == 'Not Started')
+            {
+                $campStatus->status = 'Active';
+                $campStatus->save();
+            }
+
         }
         return redirect()->route('admin-campaign-installation-proofpictures-index',['id'=>$request->campaign_id])->with(['status' => 'Success', 'class' => 'success', 'msg' => "Pictures Added Successfully!"]);
     }

@@ -161,6 +161,9 @@
                                         <thead>
                                             <tr role="row">
                                                 <th class="sorting" tabindex="0">
+                                                    Booking Order
+                                                </th>
+                                                <th class="sorting" tabindex="0">
                                                     Name
                                                 </th>
                                                 <th class="sorting" tabindex="0">
@@ -180,10 +183,7 @@
                                                 </th>
                                                 <th class="sorting" tabindex="0">
                                                     Dates
-                                                </th>
-                                                <th class="sorting" tabindex="0">
-                                                    Booking Order
-                                                </th>
+                                                </th>                                                
                                                 <th class="sorting" tabindex="0">
                                                     Payment Status
                                                 </th>
@@ -454,6 +454,7 @@
         var table = $('#zero_config').DataTable({
             processing: true,
             serverSide: true,
+            responsive: true,
             ajax: {
                 url: "{{ url()->current() }}",
                 data: function(d) {
@@ -471,17 +472,26 @@
             //     // $('[data-toggle="tooltip"]').tooltip()
             // },
             
-            columns: [{
+            columns: [
+                {
+                    data: 'booking_order',
+                    name: 'booking_order',
+                    searchable: true
+                },
+                {
                     data: 'name',
-                    name: 'name',"bSort": true
+                    name: 'name',"bSort": true,
+                    searchable: true
                 },
                 {
                     data: 'campaign_type',
-                    name: 'campaign_type'
+                    name: 'campaign_type',
+                    searchable: true
                 },
                 {
                     data: 'client.name',
-                    name: 'client_name'
+                    name: 'client_name',
+                    searchable: true
                 },
                 {
                     data: 'market',
@@ -498,11 +508,7 @@
                 {
                     data: 'start_date',
                     name: 'start_date'
-                },
-                {
-                    data: 'booking_order',
-                    name: 'booking_order'
-                },
+                },                
                 {
                     data: 'payment_status',
                     name: 'payment_status'
