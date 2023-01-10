@@ -63,13 +63,13 @@
                         <div class="form-group row col-md-6">
                             <label for="fname" class="col-sm-3 control-label col-form-label">Location</label>
                             <div class="col-sm-9">
-                                <select type="file" class="form-control"  id="location" name="location">
-                                  @foreach($locations as $location)
-                                    <option value="{{$location->locations->id}}">{{$location->locations->name}}</option>
+                                <select type="file" class="form-control"  id="assets" name="assets">
+                                  @foreach($assets as $assets)
+                                    <option value="{{$assets->assets->id}}">{{$assets->assets->name}}-{{$assets->assets->ref_no}}</option>
                                   @endforeach
                                 </select>
-                                @if ($errors->has('location'))
-                                <span class="text-danger">{{ $errors->first('location') }}</span>
+                                @if ($errors->has('assets'))
+                                <span class="text-danger">{{ $errors->first('assets') }}</span>
                                 @endif
                             </div>
                         </div>  

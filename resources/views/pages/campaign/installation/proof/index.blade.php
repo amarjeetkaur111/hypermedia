@@ -42,7 +42,7 @@
                                                 Added On
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Location
+                                                Asset
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Photos
@@ -96,8 +96,8 @@
                     name: 'added_on'
                 },
                 {
-                    data: 'location',
-                    name: 'location'
+                    data: 'asset',
+                    name: 'asset'
                 },
                 {
                     data: 'photos',

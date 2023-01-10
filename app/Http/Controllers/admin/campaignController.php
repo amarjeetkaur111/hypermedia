@@ -207,9 +207,10 @@ class campaignController extends Controller
             $state->status = $user->status;
             $state->save();
 
-            AssetStatus::where('campaign_id', $user->id)->delete();
-            if($request->input('status') == 'Completed' || $request->input('status') == 'Cancelled')
+            // if($request->input('status') == 'Completed' || $request->input('status') == 'Cancelled')
+            if($request->input('status') == 'Cancelled')
             {}else{
+            AssetStatus::where('campaign_id', $user->id)->delete();
             foreach ($request->bucket_asset ?? [] as $key => $looper) {
                 $asset = explode(':', $request->bucket_asset[$key]);
                 if ($asset[0] == 'network') {
@@ -277,6 +278,7 @@ class campaignController extends Controller
                             $type = $a->type;
                             if (isset($request->bucket_id[$key]) && $request->bucket_id[$key]) {
                                 $obj = CampaignBucket::find($request->bucket_id[$key]);
+                                // $obj->proof_status = 0;
                             } else {
                                 $obj = new CampaignBucket;
                             }

@@ -5,7 +5,7 @@
     <div class="form-group">
         <label>Status</label>
         <select class="form-control" name='status' id='status'>
-            <option value="1">Approve</option>
+            <!-- <option value="1">Approve</option> -->
             <option value="0">Reject</option>
         </select>
     </div>
