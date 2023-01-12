@@ -65,7 +65,7 @@
                             <div class="col-sm-9">
                                 <select type="file" class="form-control"  id="assets" name="assets">
                                   @foreach($assets as $assets)
-                                    <option value="{{$assets->assets->id}}">{{$assets->assets->name}}-{{$assets->assets->ref_no}}</option>
+                                    <option value="{{$assets->assets->id}}:{{$assets->id}}">{{$assets->assets->name}}-{{$assets->assets->ref_no}}</option>
                                   @endforeach
                                 </select>
                                 @if ($errors->has('assets'))
@@ -151,21 +151,19 @@
   
 }
 $('body').on('click','.remove',function(){
-                var name = $(this).attr('name');
-                $(this).parent(".pip").remove();  
+      var name = $(this).attr('name');
+      $(this).parent(".pip").remove();  
 
-                for(let j = 0; j < dt.items.length; j++){
-                    console.log(name+' -  '+dt.items[j].getAsFile().name);
+      for(let j = 0; j < dt.items.length; j++){
+          console.log(name+' -  '+dt.items[j].getAsFile().name);
 
-                    if(name === dt.items[j].getAsFile().name){
-                    dt.items.remove(j);
-                    console.log(dt.files);
-
-                    }
-                }
-
-		        document.getElementById('files').files = dt.files;       
-            });
+          if(name === dt.items[j].getAsFile().name){
+          dt.items.remove(j);
+          console.log(dt.files);
+          }
+      }
+  document.getElementById('files').files = dt.files;       
+  });
 
 
 </script>

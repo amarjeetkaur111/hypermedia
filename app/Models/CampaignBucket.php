@@ -25,6 +25,16 @@ class CampaignBucket extends Model
         return $this->hasOne(Assets::class,'id','asset');
     }
 
+    public function proofpictures()
+    {
+        return $this->hasOne(CampaignProof::class,'bucket_id','id')->where('status',1);
+    }
+
+    // public function proofpictures()
+    // {
+    //     return $this->belongsTo(CampaignProof::class,'id','bucket_id');
+    // }
+
     public function assetNetwork(){
         return $this->hasOne(AssetNetwork::class,'id','asset_network');
     }

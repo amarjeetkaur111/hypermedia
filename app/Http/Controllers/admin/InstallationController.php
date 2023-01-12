@@ -369,7 +369,7 @@ class InstallationController extends Controller
         if($c_id){
             $campaign_name = Campaigns::with('buckets.locations')->findorfail($c_id);
             // $locations =  CampaignBucket::select('location')->with('locations')->where('campaign_id',$c_id)->get();
-            $assets =  CampaignBucket::select('asset')->with('assets')->where('campaign_id',$c_id)->where('proof_status',0)->get();
+            $assets =  CampaignBucket::select('asset','id')->with('assets')->where('campaign_id',$c_id)->where('proof_status',0)->get();
             // echo"<pre>"; print_r($assets->toArray());exit();
         }
         $data = null;
@@ -390,9 +390,13 @@ class InstallationController extends Controller
 
         if($request->hasFile('file'))
         {
+            $assets = explode(':',$request->assets);
+            $asset = $assets[0];
+            $bucket = $assets[1];
             $campaign_proof = new CampaignProof;
             $campaign_proof->campaign_id = $request->campaign_id;
-            $campaign_proof->asset_id = $request->assets;
+            $campaign_proof->asset_id = $asset;
+            $campaign_proof->bucket_id = $bucket;
             $campaign_proof->status =  1;
             $campaign_proof->save();
             $campaign_proof_id = $campaign_proof->id;
@@ -410,7 +414,7 @@ class InstallationController extends Controller
                 $pp->save();
             }
             
-            $bucketStatus = CampaignBucket::where('campaign_id',$request->campaign_id)->where('asset',$request->assets)->first();
+            $bucketStatus = CampaignBucket::where('campaign_id',$request->campaign_id)->where('asset',$asset)->first();
             $bucketStatus->proof_status=1;
             $bucketStatus->save();
             $campStatus = Campaigns::findorfail($request->campaign_id);

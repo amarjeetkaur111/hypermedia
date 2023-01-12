@@ -27,6 +27,13 @@
         font-weight:900;
         font-size:13px;
     }
+    .select2-selection--multiple {
+        overflow: hidden !important;
+        height: auto !important;
+    }
+    .select2-selection__choice__display{
+        color:black !important;
+    }
 </style>
 <div class="page-wrapper">
     <div class="page-breadcrumb">
@@ -69,7 +76,7 @@
                                 <form method="post" action="{{route('admin-reports-getCampaign')}}">
                                     @csrf
                                     <div style="padding:0px 15px;border:0.5px solid lightgray;border-radius:20px;margin-bottom: 10px;">
-                                        <div class="row filters mb-4">
+                                        <div class="row filters">
                                             <div class="col-md-6">
                                             <fieldset>
                                                 <legend>Search Campaign Details:</legend>
@@ -82,19 +89,19 @@
                                                             </select>
                                                         </div>
                                                     </div>   
-                                                    <div class="col-md-4 col-sm-12">
+                                                    <div class="col-md-8 col-sm-12">
                                                         <label class="mt-3">Location</label>
                                                         <div class="input-group">
-                                                            <select type="text" name="location" id="location" class="form-control">
-                                                                <option value="" selected="selected">Select Location</option>
+                                                            <select type="text" name="location[]" id="location" class="form-control select2-multiple" multiple>
+                                                                <!-- <option value="" selected="selected">Select Location</option> -->
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4 col-sm-12 mt-5">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" value="1" id="pp" name="pp">
-                                                            <label class="custom-control-label" for="pp">With Proof Pictures</label>
-                                                        </div>
+                                                </div>
+                                                <div class="row text-right">                                                   
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" value="1" id="pp" name="pp">
+                                                        <label class="custom-control-label" for="pp">With Proof Pictures</label>
                                                     </div>
                                                 </div>
                                                 <div class="row text-right mt-3">                                                   
@@ -119,18 +126,20 @@
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control  datepicker-autoclose" name="enddate" id="end_date" placeholder="dd/mm/yyyy" autocomplete="off" />
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-12">
-                                                            <button class="btn btn-primary" style="margin-top: 40px" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
-                                                        </div>     
+                                                        </div> 
                                                     </div>
                                                     <div class="row text-right mt-3">                                                   
                                                         <div class="col-md-12 col-sm-12">
                                                             <button type="submit" value="1" name="all" class="btn btn-primary" id="search"><i class="fas fa-download"> Download Report</i></button>
                                                         </div>
                                                     </div>
-                                                </fieldset>
-                                            </div>                                            
+                                                </fieldset>  
+                                            </div>                                             
+                                        </div>
+                                        <div class="row" style="float:right">
+                                            <div class="col-md-12 col-sm-12">
+                                                <button class="btn btn-primary" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
+                                            </div> 
                                         </div>
                                     </div>
                                 </form>
@@ -173,8 +182,9 @@
             e.preventDefault();
             $('#start_date').val('').change()
             $('#end_date').val('').change()
-            $('#campaign').val('0').change()
-            $('#location').val('0').change()
+            $('#campaign').val('').change()
+            $('#location').val('').change()
+            $( 'input[type="checkbox"]' ).prop('checked', false);
             // $('#ref_no').val('0').change()
             // $('#name').val('0').change()
             // $('.table-class').html('')
