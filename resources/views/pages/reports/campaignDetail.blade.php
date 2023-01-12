@@ -68,7 +68,7 @@
        transform: translate(-50%, -60%);
     }
     .data_col{
-        font-size:18px;
+        font-size:14px;
     }
 </style>
 @foreach($camp[0]['buckets'] as $k => $bucket)

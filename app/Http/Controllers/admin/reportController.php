@@ -103,7 +103,7 @@ class reportController extends Controller
             ->get()->toArray();
 
             // echo"<pre>";print_r($ppp); exit();
-            return view('pages.reports.campaignDetail',compact('camp','ppp'));
+            // return view('pages.reports.campaignDetail',compact('camp','ppp'));
 
             $pdf = PDF::loadView('pages.reports.campaignDetail',compact('camp','ppp'));
             return $pdf->download('Campaign Detail.pdf');
