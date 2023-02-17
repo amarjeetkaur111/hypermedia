@@ -45,6 +45,9 @@
                                                 No
                                             </th>
                                             <th class="sorting" tabindex="0">
+                                                Package Type
+                                            </th>
+                                            <th class="sorting" tabindex="0">
                                                 OwnedBy
                                             </th>
                                             <th class="sorting" tabindex="0">
@@ -63,7 +66,7 @@
                                                 Installation Time
                                             </th>
                                             <th class="sorting" tabindex="0">
-                                                Preview
+                                                Slots
                                             </th>
                                             <th class="sorting" tabindex="0">
                                                 Status
@@ -112,13 +115,15 @@
                     // {data: 'id', name: 'id'},
                     // {"render": function() { return i++; }, orderable: true},
                     {data: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'package_type', name: 'package_type', orderable: true, searchable: true},
                     {data: 'owned_by', name: 'owned_by', orderable: true, searchable: true},
                     {data: 'type', name: 'type', orderable: true, searchable: true},
                     {data: 'name', name: 'name', orderable: true, searchable: true},
                     {data: 'location', name: 'location', orderable: true, searchable: true},
                     {data: 'ref_no', name: 'ref_no', orderable: true, searchable: true},
                     {data: 'installation_time', name: 'installation_time'},
-                    {data: 'asset_photo', name: 'asset_photo'},
+                    // {data: 'asset_photo', name: 'asset_photo'},
+                    {data: 'slots', name: 'slots'},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]

@@ -81,8 +81,8 @@
                 serverSide: true,
                 ajax: "{{ url()->current() }}",
                 columns: [
-                    // {data: 'id', name: 'id'},
-                    {data: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'id', name: 'id'},
+                    // {data: 'DT_RowIndex', orderable: false, searchable: false},
                     {data: 'name', name: 'name'},
                     {data: 'area', name: 'area'},
                     {data: 'city', name: 'city'},
