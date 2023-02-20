@@ -22,7 +22,7 @@
             <div class="card">
                 <div class="card-body">
                     {{--                    <h5 class="card-title">Basic Datatable</h5>--}}
-                    <div class="table-responsive">
+                    <div class="">
                         <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                             <div class="row">
                                 <div class="col-sm-12">
@@ -34,8 +34,8 @@
                                             <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
                                         </div>
                                     @endif
-                                    <table id="zero_config" class="table table-striped table-bordered dataTable"
-                                           role="grid" aria-describedby="zero_config_info">
+                                    <table id="zero_config" class="table table-striped table-bordered dataTable table-sm"
+                                           role="grid" aria-describedby="zero_config_info" style="font-size: 12px;width: 100%; border-spacing: 0px; border-collapse: separate;">
                                         <thead>
                                         <tr role="row">
                                             <th class="sorting_asc" tabindex="0">
@@ -75,9 +75,11 @@
     <script>
 
         $(function () {
-
+            $.fn.dataTableExt.oStdClasses.sWrapper = "";
             var table = $('#zero_config').DataTable({
                 processing: true,
+                dom: "<'row'<'col-sm-12 col-md-6 font-12'l><'col-sm-12 col-md-6 font-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5 font-12'i><'col-sm-12 col-md-7 font-12'p>>",
+                scrollX: true,
                 serverSide: true,
                 ajax: "{{ url()->current() }}",
                 columns: [
