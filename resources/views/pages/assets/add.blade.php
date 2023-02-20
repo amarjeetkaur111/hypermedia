@@ -82,7 +82,8 @@
                         <div class="form-group row">
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Type</label>
                             <div class="col-sm-9">
-                                <select name="type" class="form-control">
+                                <select name="type" class="form-control" id="type" required>
+                                     <option selected disabled  value="">Select Type</option>
                                     <option value="static" {{ $type == 'static' ? 'selected="selected"' : '' }}>Static</option>
                                     <option value="digital" {{ $type == 'digital' ? 'selected="selected"' : '' }}>Digital</option>
                                     <option value="promospace" {{ $type == 'promospace' ? 'selected="selected"' : '' }}>PromoSpace</option>
@@ -95,7 +96,8 @@
                         <div class="form-group row">
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Package Type</label>
                             <div class="col-sm-9">
-                                <select name="type" class="form-control">
+                                <select name="packageType" class="form-control" id="packageType" required>
+                                <option selected disabled  value="">Select Package</option>
                                     <option value="package" {{ $type == 'package' ? 'selected="selected"' : '' }}>Package</option>
                                     <option value="individual" {{ $type == 'individual' ? 'selected="selected"' : '' }}>Individual</option>
                                 </select>
@@ -104,24 +106,26 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="slots" class="col-sm-3 text-end control-label col-form-label">Slots</label>
-                            <div class="col-sm-9">
-                                <input type="number" class="form-control" name="slot" value="15"
-                                       placeholder="Enter Slot">
-                                @if ($errors->has('name'))
-                                    <span class="text-danger">{{ $errors->first('name') }}</span>
-                                @endif
+                        <div class="showIfPackage">
+                            <div class="form-group row">
+                                <label for="slots" class="col-sm-3 text-end control-label col-form-label">Slots</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="slot" value="15"  min="0"
+                                        placeholder="Enter Slot" required>
+                                    @if ($errors->has('name'))
+                                        <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="assets" class="col-sm-3 text-end control-label col-form-label">No of Assets</label>
-                            <div class="col-sm-9">
-                                <input type="number" class="form-control" name="asset" value="1"
-                                       placeholder="Enter Assets">
-                                @if ($errors->has('name'))
-                                    <span class="text-danger">{{ $errors->first('name') }}</span>
-                                @endif
+                            <div class="form-group row">
+                                <label for="assets" class="col-sm-3 text-end control-label col-form-label">No of Assets</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" name="asset" value="1"  min="0"
+                                        placeholder="Enter Assets" required>
+                                    @if ($errors->has('name'))
+                                        <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -157,7 +161,7 @@
                                     class="col-sm-3 text-end control-label col-form-label">Owner</label>
                             <div class="col-md-9">
                                 <select type="text" name="owner_id" id="owner" class="form-control" required>
-                                    <option value="">Select Owner</option>
+                                    <option selected disabled  value="">Select Owner</option>
                                     <option value="Hypermedia">Hypermedia</option>
                                     <option value="Mall Owned">Mall Owned</option>
                                     <option value="MAF Owned">MAF Owned</option>
@@ -173,7 +177,7 @@
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Department</label>
                             <div class="col-sm-9">
                                 <select name="department_id" class="form-control" id="department_id" required>
-                                    <option  value="">Select Department</option>
+                                    <option selected disabled  value="">Select Department</option>
                                     @if($department)
                                         <option value="{{ $department->id }}" selected>{{ $department->name }}</option>
                                     @endif
@@ -208,8 +212,8 @@
                             <label for="email1" class="col-sm-3 text-end control-label col-form-label">Assigned to
                                 network</label>
                             <div class="col-sm-9">
-                                <select name="network" class="form-control">
-                                    <option disabled selected>Select a network</option>
+                                <select name="network" class="form-control" id="network">
+                                    <option selected disabled  value="">Select Network</option>
                                     @foreach($networks as $key => $value)
                                         <option
                                             value="{{$key}}" {{ $key == $current_network ? 'selected="selected"' : '' }}>{{ $value }}</option>
@@ -224,6 +228,7 @@
                             <label for="email1" class="col-sm-3 text-end control-label col-form-label">Status</label>
                             <div class="col-sm-9">
                                 <select type="text" name="status" id="status" class="form-control">
+                                    <option selected disabled  value="">Select Status</option>
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
                                 </select>
@@ -254,11 +259,12 @@
     <script>
 
         $(function () {
-            $('#status').select2({
-                width: '100%'
-            });
+            $('#owner').select2({ width: '100%', minimumResultsForSearch: Infinity,  placeholder: "Select Owner" });
+            $('#status').select2({ width: '100%', minimumResultsForSearch: Infinity,  placeholder: "Select Status" });
+            $('#network').select2({ width: '100%', placeholder: "Select Network" });
             $('#department_id').select2({
                 width: '100%',
+                placeholder: "Select Department" ,
                 ajax: {
                     url: '{{ route('select-2-get-departments') }}',
                     data: function (params) {
@@ -281,8 +287,18 @@
                     }
                 }
             });
+            $('#type').select2({width: '100%', minimumResultsForSearch: Infinity, placeholder: "Select Type",});
+            $('.showIfPackage').hide();
+            $('#packageType').select2({width: '100%', minimumResultsForSearch: Infinity, placeholder: "Select Package",}).on('select2:select', function (e) {
+                if($(this).val() === 'package'){
+                    $('.showIfPackage').show();
+                }else if($(this).val() === 'individual'){
+                    $('.showIfPackage').hide();
+                }
+            });
             $('#location').select2({
                 width: '100%',
+                placeholder: "Select Location" ,
                 ajax: {
                     url: '{{ route('select-2-get-locations') }}',
                     data: function (params) {
@@ -322,6 +338,7 @@
         @if($owner)
         $('#owner').val('{!!$owner!!}');
         @endif
+
 
     </script>
 @endpush
