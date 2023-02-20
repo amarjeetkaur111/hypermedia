@@ -93,6 +93,38 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="fname" class="col-sm-3 text-end control-label col-form-label">Package Type</label>
+                            <div class="col-sm-9">
+                                <select name="type" class="form-control">
+                                    <option value="package" {{ $type == 'package' ? 'selected="selected"' : '' }}>Package</option>
+                                    <option value="individual" {{ $type == 'individual' ? 'selected="selected"' : '' }}>Individual</option>
+                                </select>
+                                @if ($errors->has('type'))
+                                    <span class="text-danger">{{ $errors->first('type') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="slots" class="col-sm-3 text-end control-label col-form-label">Slots</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" name="slot" value="15"
+                                       placeholder="Enter Slot">
+                                @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="assets" class="col-sm-3 text-end control-label col-form-label">No of Assets</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" name="asset" value="1"
+                                       placeholder="Enter Assets">
+                                @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="email1"
                                    class="col-sm-3 text-end control-label col-form-label">Photo</label>
                             <div class="col-md-9">
