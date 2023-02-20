@@ -37,6 +37,83 @@
                                             <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
                                         </div>
                                     @endif
+                                    <div style="padding:0px 15px;border:0.5px solid lightgray;border-radius:20px;margin-bottom: 10px;">
+                                        <div class="row filters mb-4">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="mt-3">Package Type</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="market" id="market" class="form-control">
+                                                                <option value="0" selected="selected">Select Package Type</option>
+                                                                <option value="package">Package</option>
+                                                                <option value="individual">Individual</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="mt-3">Type</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="type" id="type" class="form-control">
+                                                                <option value="0">Select Type</option>
+                                                                <option value="digital">Digital</option>
+                                                                <option value="Static">Static</option>
+                                                                <option value="Promospace">Promospace</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="mt-3">Location</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="location" id="location" class="form-control">
+                                                                <option value="0" selected="selected">Select Location</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="mt-3">Owned by</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="owned_by" id="owned_by" class="form-control"> 
+                                                                <option value="0">Select Owned by</option>                
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="mt-3">Installation Time</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="installation_time" id="installation_time" class="form-control">
+                                                                <option value="0">Select Installation Time</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="mt-3">Status</label>
+                                                        <div class="input-group">
+                                                            <select type="text" name="installation_time" id="installation_time" class="form-control">
+                                                                <option value="0">Select Status</option>
+                                                                <option value="Active">Active</option>
+                                                                <option value="Inactive">Inactive</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <label class="mt-3">Slots</label>
+                                                        <div class="input-group">
+                                                            <input type="number" class="form-control" id="end_date" placeholder="" autocomplete="off" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12">
+                                                        <div class="btn-group"></div>
+                                                        <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
+                                                    </div>     
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                    </div>
                                     <table id="zero_config" class="table table-striped table-bordered dataTable table-sm"
                                            role="grid" aria-describedby="zero_config_info" style="font-size: 12px;width: 100%; border-spacing: 0px; border-collapse: separate;">
                                         <thead>
