@@ -9469,8 +9469,12 @@ label {
 }
 .table-sm td .btn-sm,
 .table-sm th .btn-sm{
-    padding: 0.15rem 0.15rem;
+    padding: 0 0.3rem;
     font-size: 0.65rem;
+    min-width: 24px;
+    min-height: 24px;
+    line-height: 24px;
+    text-align: center;
 }
 .font-12{
     font-size: 12px;
