@@ -157,7 +157,7 @@
                                             </div>                                            
                                         </div>
                                     </div>
-                                    <table id="zero_config" class="table table-striped table-bordered dataTable text-center" role="grid" aria-describedby="zero_config_info" style="width: 100%;">
+                                    <table id="zero_config" class="table table-striped table-bordered dataTable text-center table-sm" role="grid" aria-describedby="zero_config_info" style="font-size: 12px;width: 100%; border-spacing: 0px; border-collapse: separate;">
                                         <thead>
                                             <tr role="row">
                                                 <th class="sorting" tabindex="0">
@@ -450,9 +450,10 @@
                 },
             });
         })
-
+        $.fn.dataTableExt.oStdClasses.sWrapper = "";
         var table = $('#zero_config').DataTable({
             processing: true,
+            dom: "<'row'<'col-sm-12 col-md-6 font-12'l><'col-sm-12 col-md-6 font-12'f>><'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-5 font-12'i><'col-sm-12 col-md-7 font-12'p>>",
             serverSide: true,
             responsive: true,
             ajax: {

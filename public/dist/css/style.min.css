@@ -9463,6 +9463,18 @@ label {
 .table th {
     padding: 1rem;
 }
+.table-sm td,
+.table-sm th {
+    padding: 0.25rem 0.25rem;
+}
+.table-sm td .btn-sm,
+.table-sm th .btn-sm{
+    padding: 0.15rem 0.15rem;
+    font-size: 0.65rem;
+}
+.font-12{
+    font-size: 12px;
+}
 .card-subtitle {
     margin-top: -0.375rem;
 }
