@@ -118,3 +118,6 @@ $(function () {
     }
   });
 });
+$(".btn-icon-chevron").on("click", function () {
+  $(this).find('.mdi').toggleClass("mdi-chevron-up  mdi-chevron-down");
+});

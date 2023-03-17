@@ -33,19 +33,31 @@
             </div>
         </div>
     </div>
-    <div class="tab">
+    <!-- <div class="tab">
         <button class="tablinks campaign_listing" data-id="campaign_listing">Campaign Listing</button>
         <button class="tablinks" data-id="campaign_calander">Calendar</button>
-    </div>
+    </div> -->
     <div class="container-fluid">
-        <div id="campaign_listing" class="tabcontent">
+
+<ul class="nav nav-pills  nav-justified " id="pills-tab" role="tablist">
+  <li class="nav-item tab">
+    <button class="nav-link active campaign_listing" style="width: 100%; margin:0px;font-size:14px;" id="campaign_listing-tab" data-bs-toggle="pill" data-bs-target="#campaign_listing" type="button" role="tab">Campaign Listing</button>
+  </li>
+  <li class="nav-item tab">
+    <button class="nav-link" style="width: 100%; margin:0px;font-size:14px;"  id="campaign_calander-tab" data-bs-toggle="pill" data-bs-target="#campaign_calander" type="button" role="tab">Calendar</button>
+  </li>
+</ul>
+
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="campaign_listing" role="tabpanel"> 
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="padding-top: 5px">
                     <div>
-                        <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                        <div id="zero_config_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 p-0">
                             <div class="row">
                                 <div class="col-sm-12">    
-                                    <div style="padding-bottom: 10px">
+                                    <div style="padding-bottom: 5px">
                                         <div class="row">
                                             <!-- <div class="col-md-2" style="margin-right:-30px;">
                                                 <label class="mt-2">Check Assignment</label>
@@ -59,7 +71,7 @@
                                             <div class="col-md-4">
                                                 
                                             </div> -->
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 text-end">
                                                 <a class="btn btn-primary" href="{{ route('admin-campaign-add') }}"><i class="fa fa-plus"> Add Campaign</i></a>
                                             </div> 
                                         </div>                                       
@@ -69,54 +81,60 @@
                                         <strong>{{ \Illuminate\Support\Facades\Session::get('msg') }}</strong>
                                     </div>
                                     @endif
-                                    <div style="padding:0px 15px;border:0.5px solid lightgray;border-radius:20px;margin-bottom: 10px;">
-                                        <div class="row filters mb-4">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <label class="mt-3">Market</label>
-                                                        <div class="input-group">
+
+
+
+<div class="card border rounded mb-2">
+  <div class="card-header p-2">
+    Filer Campaign
+  </div>
+  <div class="card-body p-2">
+  <div class="row font-12">
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <label class="form-label">Market</label>                                                     
                                                             <select type="text" name="market" id="market" class="form-control">
                                                                 <option value="0" selected="selected">Select Market</option>
                                                                 @include('includes.admin.select.country')
-                                                            </select>
-                                                        </div>
+                                                            </select>                                                      
                                                     </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <label class="mt-3">Type</label>
-                                                        <div class="input-group">
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <label class="form-label">Type</label>
                                                             <select type="text" name="type" id="type" class="form-control">
                                                                 <option value="0">Select Type</option>
                                                                 <option value="digital">Digital</option>
                                                                 <option value="Static">Static</option>
                                                             </select>
-                                                        </div>
                                                     </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <label class="mt-3">Department</label>
-                                                        <div class="input-group">
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <label class="form-label">Start Date</label>
+                                                            <input type="text" class="form-control form-control-sm datepicker-autoclose" style="height: calc(1.5em + 0.5rem + 2px);" id="start_date" placeholder="dd/mm/yyyy" autocomplete="off" />
+                                                            <!-- <div class="input-group-append">
+                                                                <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
+                                                            </div> -->
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <label class="form-label">End Date</label>
+                                                            <input type="text" class="form-control form-control-sm datepicker-autoclose" style="height: calc(1.5em + 0.5rem + 2px);" id="end_date" placeholder="dd/mm/yyyy" autocomplete="off" />
+                                                            <!-- <div class="input-group-append">
+                                                                <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
+                                                            </div> -->
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <label class="form-label">Department</label>
                                                             <select type="text" name="department_id" id="department_id" class="form-control">
                                                                 <option value="0" selected="selected">Select Department</option>
                                                             </select>
-                                                        </div>
                                                     </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <label class="mt-3">Payment</label>
-                                                        <div class="input-group">
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <label class="form-label">Payment</label>
                                                             <select type="text" name="payment" id="payment" class="form-control"> 
                                                                 <option value="0">Payment Status</option>                
                                                                 <option value="Pending">Pending</option>
                                                                 <option value="Completed">Completed</option>
                                                             </select>
-                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <label class="mt-3">Status</label>
-                                                        <div class="input-group">
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <label class="form-label">Status</label>
                                                             <select type="text" name="status" id="status" class="form-control">
                                                                 <option value="0">Select Status</option>
                                                                 <option value="Not Started">Not Started</option>
@@ -125,38 +143,24 @@
                                                                 <option value="Cancelled">Cancelled</option>
                                                                 <option value="Inactive">Inactive</option>
                                                             </select>
-                                                        </div>
                                                     </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <label class="mt-3">Start Date</label>
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control datepicker-autoclose" id="start_date" placeholder="dd/mm/yyyy" autocomplete="off" />
-                                                            <!-- <div class="input-group-append">
-                                                                <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
-                                                            </div> -->
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <label class="mt-3">End Date</label>
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control  datepicker-autoclose" id="end_date" placeholder="dd/mm/yyyy" autocomplete="off" />
-                                                            <!-- <div class="input-group-append">
-                                                                <span class="input-group-text h-100"><i class="mdi mdi-calendar"></i></span>
-                                                            </div> -->
-                                                        </div>
-                                                    </div>
+                                                    
                                                     <!-- <div class="col-md-3">
                                                         <div class="btn-group"></div>
                                                         <button class="btn btn-primary" style="margin-top: 39px" id="date_reset"><i class="fas fa-redo-alt"> Apply</i></button>
                                                     </div> -->
-                                                    <div class="col-md-3 col-sm-12">
-                                                        <div class="btn-group"></div>
-                                                        <button class="btn btn-primary" style="margin-top: 45px" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
+                                                    <div class="col-md-3 col-sm-12 mb-2 pt-4">
+                                                        <button class="btn btn-primary rounded w-100 font-12" id="date_reset"><i class="fas fa-redo-alt"> Reset</i></button>
                                                     </div>     
                                                 </div>
-                                            </div>                                            
-                                        </div>
-                                    </div>
+
+
+  </div>
+</div>
+
+
+
+
                                     <table id="zero_config" class="table table-striped table-bordered dataTable text-center table-sm" role="grid" aria-describedby="zero_config_info" style="font-size: 12px;width: 100%; border-spacing: 0px; border-collapse: separate;">
                                         <thead>
                                             <tr role="row">
@@ -213,30 +217,30 @@
                 </div>
             </div>
         </div>
-        <div id="campaign_calander" class="tabcontent calan">
-            <form class="check_form" method="post" action="" enctype="multipart/form-data">
-                @csrf     
-                 <div class="row mb-4">                           
-                    <div class="col-md-3">
-                    </div>
-                    <div class="col-md-2" style="margin-right:-30px; margin-left:30px;">
-                        <label class="mt-2">Check Assignment</label>
-                    </div> 
-                    <div class="col-md-2">
+        <div class="tab-pane fade" id="campaign_calander" role="tabpanel">
+            <div class="card mb-0 border-bottom">
+            <div class="card-body">
+                           
+            <div class="row justify-content-center  font-12">
+                <div class="col-md-4">
+
+                <form class="check_form" method="post" action="" enctype="multipart/form-data">
+                @csrf 
+                <div class="mb-2">
+                    <label class="form-label">Check Assignment</label>
+                    <div class="input-group">
                         <input type="text" class="form-control  datepicker-autoclose" name="date" id="check_date" placeholder="dd/mm/yyyy" autocomplete="off" required/>
-                    </div> 
-                    <div class="col-md-2 mt-n5">
                         <button class="btn btn-primary" type="submit"> Check</button>
                     </div>
-                    <div class="col-md-3">                    
-                    </div>                 
-                </div> 
-            </form>              
-            <div class="row">
-                <div class="col-md-4"></div>
+
+                </div>
+                
+                </form>   
+
+                </div>
                 <div class="col-md-4">
-                    <div class="form-group row">
-                        <label for="staticEmail" class="col-sm-12 col-form-label">Select Year</label>
+                    <div class="mb-2">
+                        <label class="form-label">Select Year</label>
                         <select class="form-select" aria-label="Default select example" id="dateyear">
                             <option selected>Select Year</option>
                             <option value="2019">2019</option>
@@ -264,14 +268,17 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4"></div>
-            </div><br />
+              
+            </div>
+            </div>
+            </div>
             <div class="card">
                 <div class="card-body" id="monthsArray">
 
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 </div>

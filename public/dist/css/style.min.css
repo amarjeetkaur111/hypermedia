@@ -3620,7 +3620,7 @@ fieldset:disabled .btn {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     color: #fff;
-    background-color: #2962ff;
+    background-color: #27a9e3;
 }
 .nav-fill .nav-item,
 .nav-fill > .nav-link {
@@ -12305,4 +12305,18 @@ label {
 }
 .btn-primary{
     background-color: #004f6d !important;
+}
+.btn-icon-chevron{
+    cursor: pointer;
+    outline: none;
+    font-size: 24px;
+    padding: 0px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin: 1px;
+}
+.cardChart-header{
+    font-size: 16px;
+    line-height: 28px;
 }
