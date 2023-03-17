@@ -61,11 +61,15 @@
                     <h4 class="card-title">{{ $add }}</h4>
                     <div class="row">
                         <div class="form-group row col-md-6">
-                            <label for="fname" class="col-sm-3 control-label col-form-label">Location</label>
+                            <label for="fname" class="col-sm-3 control-label col-form-label">Assets</label>
                             <div class="col-sm-9">
                                 <select type="file" class="form-control"  id="assets" name="assets">
                                   @foreach($assets as $assets)
-                                    <option value="{{$assets->assets->id}}:{{$assets->id}}">{{$assets->assets->name}}-{{$assets->assets->ref_no}}</option>
+                                    @foreach($assets->asset_data as $ast)
+                                      @If(empty($ast->proof) || $ast->proof->status == 0)
+                                    <option value="{{$ast->id}}:{{$assets->id}}">{{$ast->name}}-{{$ast->ref_no}}</option>
+                                      @endif
+                                    @endforeach
                                   @endforeach
                                 </select>
                                 @if ($errors->has('assets'))

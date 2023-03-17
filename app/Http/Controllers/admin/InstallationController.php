@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
-
+use Illuminate\Support\Facades\DB;
 
 class InstallationController extends Controller
 {
@@ -32,7 +32,7 @@ class InstallationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Campaigns::with('buckets.locations')->whereHas('buckets')->select('*')->where('status', '<>','Cancelled')->orderBy('status','ASC');
+            $data = Campaigns::with('buckets.locations')->whereHas('buckets')->select('*')->where('status', '<>','Cancelled')->orderBy('id','DESC');
             return DataTables::eloquent($data)
                 ->editColumn('timer', function ($row) {
                     $start_date = Carbon::parse($row->start_date);
@@ -83,8 +83,17 @@ class InstallationController extends Controller
 
     public function getCampaignAssets($id)
     {
-        $data = CampaignBucket::with('assets')->where('campaign_id', $id)->get();
-        return view('pages.campaign.installation.inner.assets', compact('data'))->render();
+        $data = CampaignBucket::with('assets','locations')->where('campaign_id', $id)->get();
+        // $proofcount = Campaigns::find($id);
+        $proofcount = CampaignProof::where('campaign_id',$id)->select('asset_id')->distinct('asset_id')->count();
+        $approved = CampaignProof::where('campaign_id',$id)->select('asset_id')->where('status',1)->distinct('asset_id')->get()->toArray();
+        $approved= array_column($approved,'asset_id');
+        $rejected = CampaignProof::where('campaign_id',$id)->select('asset_id')->where('status',0)->distinct('asset_id')->get()->toArray();
+        $rejected= array_column($rejected,'asset_id');
+
+        $rejectcount = count(array_diff($rejected, $approved));
+        // echo"<pre>";print_r($rejectcount);exit();
+        return view('pages.campaign.installation.inner.assets', compact('data','proofcount','rejectcount'))->render();
     }
 
     public function installationIndex(Request $request, $id){
@@ -301,7 +310,7 @@ class InstallationController extends Controller
         return redirect()->back()->with(['status' => 'Success', 'class' => 'success', 'msg' => "Assigned Successfully!"]);
     }
 
-    // -----------------------------------------------------Proof Pictures---------------------------------------------------
+    // --------------------Proof Pictures-------------------------
 
     public function proofIndex(Request $request, $id){
         $campaign_id = $id;
@@ -309,7 +318,14 @@ class InstallationController extends Controller
         $campaign_name=$campaign_name->name;
         
         if ($request->ajax()) {
-            $data = CampaignProof::with('assets')->where('campaign_id',$id)->select('*')->orderBy('created_at','DESC');
+            $data = CampaignProof::with('assets')->where('campaign_id',$id)
+            ->whereIn('id',function($q){
+                $q
+                ->from('campaign_proof')
+                ->select(DB::raw('MAX(id) as id'))
+                ->groupBy('asset_id');
+            })
+            ->select('*')->orderBy('created_at','DESC');
             return DataTables::eloquent($data)
                 
                 ->addColumn('photos', function ($row) {
@@ -350,7 +366,7 @@ class InstallationController extends Controller
                         return '<span class="badge" style="background:orange;padding:7px;font-weight:bold;border-radius:3px;">Rejected</span>';
                     else
                     {
-                        $btn = '<a href="' . route('admin-campaign-installation-proofpictures-approval', ['id' => $row->id]) . '" class="btn_margin approval btn btn-primary btn-sm" title="Installations">Reject</a>';
+                        $btn = '<a href="' . route('admin-campaign-installation-proofpictures-approval', ['id' => $row->bucket_id.':'.$row->id]) . '" class="btn_margin approval btn btn-primary btn-sm" title="Installations">Reject</a>';
                         return $btn;
                     }
                 })
@@ -381,7 +397,6 @@ class InstallationController extends Controller
 
     public function proofAddPost(Request $request, $campaign_id)
     {
-        // echo"<pre>"; print_r($request->all());exit();
 
         $this->validate($request, [
             'file' => 'required',
@@ -413,17 +428,31 @@ class InstallationController extends Controller
                 $pp->image = config('filesystems.disks.s3.url').'/'.$path;
                 $pp->save();
             }
-            
-            $bucketStatus = CampaignBucket::where('campaign_id',$request->campaign_id)->where('asset',$asset)->first();
-            $bucketStatus->proof_status=1;
-            $bucketStatus->save();
+
             $campStatus = Campaigns::findorfail($request->campaign_id);
             if($campStatus->status == 'Not Started')
             {
                 $campStatus->status = 'Active';
                 $campStatus->save();
             }
-            changeCampaignStatus($request->campaign_id);
+
+
+            $bucketStatus = CampaignBucket::where('campaign_id',$request->campaign_id)->where('id',$bucket)->first();
+            $asset_array = $bucketStatus->asset_data->toArray();
+            $totalCount =  count($asset_array);
+            $proofcount = 0;
+            array_walk($asset_array, function ($value, $key) use(&$proofcount){
+                if(is_array($value['proof']))
+                    $proofcount++;
+              });
+
+            if($proofcount >= $totalCount)
+            {
+                $bucketStatus->proof_status=1;
+                $bucketStatus->save();
+                changeCampaignStatus($request->campaign_id);
+            }
+            
         }
         return redirect()->route('admin-campaign-installation-proofpictures-index',['id'=>$request->campaign_id])->with(['status' => 'Success', 'class' => 'success', 'msg' => "Pictures Added Successfully!"]);
     }
@@ -437,10 +466,13 @@ class InstallationController extends Controller
 
     public function getApproval($id)
     {
-        $id = $id;
+        $id = explode(':',$id);
+        $bucket = $id[0];
+        $id = $id[1];
+
         $url = route('admin-campaign-installation-proofpictures-approval-post');
         // print_r($data);exit();
-        return view('pages.campaign.installation.proof.approval', compact('id','url'))->render();
+        return view('pages.campaign.installation.proof.approval', compact('id','url','bucket'))->render();
     }
 
     public function ApprovalPost(Request $request)
@@ -450,7 +482,7 @@ class InstallationController extends Controller
         $compaign_proof->status =  $request->status;
         $compaign_proof->comment =  $request->comment;
         
-        $bucketStatus = CampaignBucket::where('campaign_id',$campaign)->where('asset',$compaign_proof->asset_id)->first();
+        $bucketStatus = CampaignBucket::where('campaign_id',$campaign)->where('id',$request->bucket)->first();
         $bucketStatus->proof_status=0;
         $bucketStatus->save();
 

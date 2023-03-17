@@ -10,8 +10,9 @@ use Wildside\Userstamps\Userstamps;
 class CampaignBucket extends Model
 {
     use HasFactory,Userstamps,SoftDeletes;
-
+    protected $appends = ['asset_data'];
     protected $table = 'campaign_buckets';
+    
 
     public function campaign(){
         return $this->hasOne(Campaigns::class,'id','campaign_id');
@@ -37,5 +38,15 @@ class CampaignBucket extends Model
 
     public function assetNetwork(){
         return $this->hasOne(AssetNetwork::class,'id','asset_network');
+    }
+
+    public function getAssetDataAttribute()
+    {
+        $assets = explode(", ", $this->asset);
+        $asset_set =  Assets::with(['proof' => 
+                        function($q)  
+                        {return $q->where('bucket_id', $this->id); }])
+                        ->whereIn('id',$assets)->get();
+        return $asset_set;
     }
 }

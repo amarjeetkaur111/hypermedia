@@ -2,7 +2,16 @@
 @section('content')
     <link rel="stylesheet" href="{{ asset('jquery-typeahead/dist/jquery.typeahead.min.css') }}">
     <style>
-        .select2-dropdown{width:180px !important;}
+        .select2-dropdown{width:18rem !important;}
+        .zero-margin {margin-bottom:-0.3rem;}
+        .minus-btn{margin-top:1.4rem;}
+        .card {border: 0.2px solid #d6cbcb;  border-radius: 4px;}
+        .card-body {background: #f4f7fa;}
+        .backcolor{padding: 0rem 1rem;}
+        .select2-selection--multiple {overflow: hidden !important; height: auto !important;}
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {color: black;}
+        label{margin-bottom:0;} 
+        .loc-css .select2-selection__rendered { font-size: 1.5em;font-weight: 700;}
     </style>
     @php
         $count = 0;
@@ -26,6 +35,10 @@
             $status = old('status');
             $market = old('market');
             $type = old('type');
+            $bucket_start_date = old('bucket_start_date');
+            $bucket_end_date = old('bucket_end_date');
+            $bucket_department = old('bucket_department');
+            $bucket_assettype = old('bucket_assettype');
         }
         else if(isset($data) && $data){
             $name = $data->name;
@@ -46,7 +59,19 @@
             $status = $data->status;
             $market = $data->market;
             $type = $data->type;
-            $buckets = $data->buckets ? $data->buckets->load('locations','assets','assetNetwork') : collect();
+            $buckets = $data->buckets ? $data->buckets: collect();
+            $bucket_start_date = ($buckets->count()) ? \Carbon\Carbon::parse($buckets[0]->start_date)->format('d/m/Y') : null;
+            $bucket_end_date = ($buckets->count()) ? \Carbon\Carbon::parse($buckets[0]->end_date)->format('d/m/Y') : null;
+
+            if($buckets->count())
+            {
+                $list = explode (", ", $buckets[0]->asset); 
+                $assetData = \App\Models\Assets::with('department')->find($list[0]); 
+                $bucket_department =  $assetData->department ?? null;
+            }
+            else
+                $bucket_department = null;
+            $bucket_assettype = ($buckets->count()) ? $buckets[0]->asset_type : null;
         }
         else{
             $name = null;
@@ -67,6 +92,10 @@
             $status = null;
             $market = null;
             $type = null;
+            $bucket_start_date = null;
+            $bucket_end_date = null;
+            $bucket_department = null;
+            $bucket_assettype = null;
         }
     @endphp
     <style>
@@ -136,16 +165,6 @@
                                     @endif
                                 </div>
                             </div>
-{{--                            <div class="form-group row col-md-6">--}}
-{{--                                <label for="fname" class="col-sm-3 text-end control-label col-form-label">Brand</label>--}}
-{{--                                <div class="col-sm-9">--}}
-{{--                                    <input type="text" class="form-control" name="brand" value="{{$brand}}"--}}
-{{--                                           placeholder="Brand Here" required>--}}
-{{--                                    @if ($errors->has('brand'))--}}
-{{--                                        <span class="text-danger">{{ $errors->first('brand') }}</span>--}}
-{{--                                    @endif--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                             <div class="form-group row col-md-6">
                                 <label for="email1" class="col-sm-3 text-end control-label col-form-label">Department</label>
                                 <div class="col-sm-9">
@@ -163,21 +182,9 @@
                             </div>
                         </div>
                         <div class="row">
-                                <input type="hidden" class="form-control" name="contract_name"
+                            <input type="hidden" class="form-control" name="contract_name"
                                            value="{{$contract_name}}"
                                            placeholder="Contract Name Here" value="XXX">
-                            <!-- <div class="form-group row col-md-6">
-                                <label for="fname" class="col-sm-3 text-end control-label col-form-label">Contract
-                                    Name</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="contract_name"
-                                           value="{{$contract_name}}"
-                                           placeholder="Contract Name Here" required>
-                                    @if ($errors->has('contract_name'))
-                                        <span class="text-danger">{{ $errors->first('contract_name') }}</span>
-                                    @endif
-                                </div>
-                            </div> -->
                             <div class="form-group row col-md-6">
                                 <label for="fname" class="col-sm-3 text-end control-label col-form-label">Contract
                                     Number</label>
@@ -207,20 +214,6 @@
                                     @endif
                                 </div>
                             </div>
-                            <!-- <div class="form-group row col-md-6">
-                                <label for="fname" class="col-sm-3 text-end control-label col-form-label">Starting at
-                                    Time</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control time_mask" name="start_time"
-                                           value="{{ $start_time }}" placeholder="Start time here"
-                                           required>
-                                    @if ($errors->has('start_time'))
-                                        <span class="text-danger">{{ $errors->first('start_time') }}</span>
-                                    @endif
-                                </div>
-                            </div> -->
-                        <!-- </div>
-                        <div class="row"> -->
                             <input type="hidden" class="form-control time_mask" name="end_time"
                                            value="{{ $end_time }}" placeholder="End time here"
                                            required>
@@ -236,18 +229,6 @@
                                     @endif
                                 </div>
                             </div>
-                            <!-- <div class="form-group row col-md-6">
-                                <label for="fname" class="col-sm-3 text-end control-label col-form-label">Ending At
-                                    Time</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control time_mask" name="end_time"
-                                           value="{{ $end_time }}" placeholder="End time here"
-                                           required>
-                                    @if ($errors->has('end_time'))
-                                        <span class="text-danger">{{ $errors->first('end_time') }}</span>
-                                    @endif
-                                </div>
-                            </div> -->
                         </div>
 
                         <div class="row">
@@ -283,11 +264,6 @@
                                 <label for="email1" class="col-sm-3 text-end control-label col-form-label">Booking
                                     Order</label>
                                 <div class="col-sm-9">
-{{--                                    <select type="text" name="booking_order" id="booking_order" class="form-control">--}}
-{{--                                        <option value="Typing">Typing</option>--}}
-{{--                                        <option value="Not Applicable">Not Applicable</option>--}}
-{{--                                        <option value="InProgress">InProgress</option>--}}
-{{--                                    </select>--}}
                                     <div class="typeahead__container">
                                         <div class="typeahead__field">
                                             <div class="typeahead__query">
@@ -297,7 +273,6 @@
                                             </div>
                                         </div>
                                     </div>
-{{--                                    <input type="text" class="form-control js-typeahead" name="booking_order" value="{{ $booking_order }}" />--}}
                                     @if ($errors->has('booking_order'))
                                         <span class="text-danger">{{ $errors->first('booking_order') }}</span>
                                     @endif
@@ -352,10 +327,7 @@
                                     <select type="text" name="type" id="type" class="form-control">
                                         <option >Select</option>
                                         <option value="digital">Digital</option>
-                                        <option value="Static">Static</option>
-                                        <!-- <option value="Completed">Completed</option>
-                                        <option value="Cancelled">Cancelled</option>
-                                        <option value="Inactive">Inactive</option> -->
+                                        <option value="static">Static</option>
                                     </select>
                                     @if ($errors->has('type'))
                                         <span class="text-danger">{{ $errors->first('type') }}</span>
@@ -381,127 +353,106 @@
                     <div class="card-body">
                         <h4 class="card-title">Buckets</h4>
                     </div>
-                    <div style="display: flex; justify-content: flex-end; padding: 10px">
-                        <button class="btn btn-primary" id="add_btn"><i class="fa fa-plus"> Add Bucket</i></button>
+                    <!-- <div style="display: flex; justify-content: flex-end; padding: 10px"> -->
+                    <div class="row row-data" style="margin-left:5rem;">
+                        <div class="form-group col-md-2 zero-margin">
+                            <label class="mt-3">Start Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control date_mask startdate" name="bucket_start_date" id="start_date" value="{{ $bucket_start_date }}"
+                            placeholder="Start Date" required readonly>
+                            </div>
+                        </div> 
+                        <div class="form-group col-md-2 zero-margin">
+                            <label class="mt-3">End Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control date_mask enddate" id="end_date" name="bucket_end_date" 
+                                placeholder="End Date"
+                                value="{{ $bucket_end_date }}" required readonly>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-2 zero-margin">
+                            <label class="mt-3">Department</label>
+                            <div class="input-group">
+                                <select type="text" name="bucket_department" id="department" class="form-control department">
+                                @if($bucket_department)
+                                    <option value="{{ $bucket_department->id }}"
+                                            selected>{{ $bucket_department->name }}</option>
+                                @endif
+                                </select>
+                            </div>
+                        </div> 
+                        <div class="form-group col-md-2 zero-margin">
+                            <label class="mt-3">Type</label>
+                            <div class="input-group">
+                                <select type="text" name="bucket_assettype" id="assettype" class="form-control assettype" readonly>
+                                    <option value="0" >Select Type</option>
+                                    <option value="digital">Digital</option>
+                                    <option value="static">Static</option>
+                                </select>
+                            </div>               
+                        </div>
+                        <div class="form-group col-md-2">
+                            <button class="btn btn-primary" id="add_btn" style="margin-top:2.2rem;"><i class="fa fa-plus" > Add Bucket</i></button>
+                        </div>
                     </div>
                     <div class="buckets_div"
-                         style="padding-left: 10px; font-size: 0.7rem;display: flex; flex-flow: column; ">
+                         style="padding-left: 10px; padding-right: 10px;font-size: 0.7rem;display: flex; flex-flow: column; ">  
                         @if($buckets->count())
                             @foreach($buckets as $bucket)
-                                <div class="row  row-data" style="margin-right: 0;">
-                                    <input type="hidden" name="bucket_id[{{ $count }}]" value="{{$bucket->id}}">
-                                    <div class="form-group row col-md-6">
-
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">Start Date</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control date_mask startdate" name="bucket_start_date[{{ $count }}]" id="start_date_{{ $count }}" value="{{ \Carbon\Carbon::parse($bucket->start_date)->format('d/m/Y') }}"
-                                                    placeholder="Start Date" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">End Date</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control date_mask enddate" id="end_date_{{ $count }}" name="bucket_end_date[{{ $count }}]"
-                                                   placeholder="End Date"
-                                                   value="{{ \Carbon\Carbon::parse($bucket->end_date)->format('d/m/Y') }}"
-                                                    placeholder="End Date" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">Department{{ $count }}</label>
-                                            <div class="input-group">
-                                                <select type="text" name="bucket_department[{{ $count }}]" id="department_{{ $count }}" class="form-control department">
-                                                    <option value="{{ $bucket->assets->department->id }}" selected="selected">{{ $bucket->assets->department->name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">Location</label>
-                                            <div class="input-group">
+                            @php
+                            $list = explode (", ", $bucket->asset); 
+                            $assetData = \App\Models\Assets::with('department','location')->find($list[0]); 
+                            @endphp
+                                <div class="card"><div class="card-body backcolor">
+                                    <div class="row row-data" style="margin-right: 0;">
+                                        <input type="hidden" name="bucket_id[{{ $count }}]" value="{{$bucket->id}}">
+                                        <div class="form-group row col-md-12 zero-margin">
+                                            <div class="form-group col-md-2 zero-margin">
+                                                <label class="mt-3">Package Type</label>
                                                 <div class="input-group">
-                                                    <select type="text" name="bucket_location[{{ $count }}]" id="location_{{ $count }}" class="form-control locations">
-                                                        <option value="{{ $bucket->location }}" selected>{{ $bucket->locations->name }}</option>
+                                                    <select type="text" name="bucket_package[{{$count}}]" id="packagetype_{{$count}}" class="form-control assettype">
+                                                        <option value="0">Select Type</option>
+                                                        <option value="package" @if($assetData->package_type == 'package') selected @endif >Package</option>
+                                                        <option value="individual" @if($assetData->package_type == 'individual') selected @endif >Individual</option>
                                                     </select>
                                                 </div>
-                                            </div>
-                                        </div>                                        
-                                    </div>
-                                    <div class="form-group row col-md-6">
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">Type</label>
-                                            <div class="input-group">
-                                                <select type="text" name="bucket_assettype[{{$count}}]" id="assettype_{{$count}}" class="form-control assettype">
-                                                    <option value="0" >Select Type</option>
-                                                    <option value="digital" @if($bucket->asset_type == 'digital') selected @endif>Digital</option>
-                                                    <option value="static" @if($bucket->asset_type == 'static') selected @endif>Static</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label class="mt-3">Assets</label>
-                                            <div class="input-group">
-                                                <select type="text" name="bucket_assetname[{{$count}}]" id="assetname_{{$count}}" class="form-control filter assetname" required>
-                                                    <option value="{{ $bucket->assets->name}}" selected="selected">{{ $bucket->assets->name}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-5">
-                                            <label class="mt-3">Specific Asset</label>
-                                            <div class="input-group">
-                                                <!-- <select class="form-control assets" id="ref_no"  name="bucket_asset[0]"
-                                                        required>{!! getAssetAndNetwork() !!} </select> -->
-                                                    <select class="form-control assets" id="refno_{{ $count }}"  name="bucket_asset[{{ $count++ }}]"
-                                                        required>{!! getAssetAndNetwork($bucket->asset ? ['asset',$bucket->asset] : ['network',$bucket->asset_network]) !!}</select>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group col-md-1">
-                                                <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button>
-                                            </div>
-                                        </div>                                       
-
-                                    <div class="details_div" style="display: flex; flex-flow: row;">
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                   class="col-sm-4 text-end control-label col-form-label">Asset
-                                                Type</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary asset_type" role="alert">
-                                                    ---
+                                            </div> 
+                                            <div class="form-group col-md-3 loc-css">
+                                                <label class="mt-3">Assets</label>
+                                                <div class="input-group">
+                                                    <select type="text" name="bucket_assetname[{{$count}}]" id="assetname_{{$count}}" class="form-control filter assetname" required>
+                                                        <option value="{{ $assetData->name}}" selected="selected">{{ $assetData->name}}</option>
+                                                    </select>
+                                                </div>
+                                            </div> 
+                                            <div class="form-group col-md-7 zero-margin loc-css">
+                                                <label class="mt-3">Location</label>
+                                                <div class="input-group">
+                                                    <div class="input-group">
+                                                        <select type="text" name="bucket_location[{{ $count }}]" id="location_{{ $count }}" class="form-control locations">
+                                                            <option value="{{ $bucket->location }}" selected>{{ $bucket->locations->name }}</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                   class="col-sm-4 text-end control-label col-form-label">Quantity</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary quantity" role="alert">
-                                                    ---
-                                                </div>
+                                        <div class="form-group row col-md-12 zero-margin">               
+                                            
+                                            <div class="form-group col-md-11">
+                                                <label class="">Specific Asset</label>
+                                                <div class="input-group">
+                                                    <select class="form-control assets" id="refno_{{ $count }}"  name="bucket_asset[{{ $count++ }}][]"
+                                                        required multiple>{!! getAssetAndNetworkNew($assetData->name,$bucket_department->id,$bucket->location,$bucket_assettype,$assetData->package_type,$bucket_start_date,$bucket_end_date,$list) !!}
+                                                            </select>
+                                                </div> 
                                             </div>
-                                        </div>
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                   class="col-sm-4 text-end control-label col-form-label">Availability</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary availability" role="alert">
-                                                    ---
+                                            <div class="form-group col-md-1 minus-btn">
+                                                    <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row col-md-3">
-                                            <label for="fname"
-                                                   class="col-sm-4 text-end control-label col-form-label">Installation
-                                                Time</label>
-                                            <div class="col-sm-7">
-                                                <div class="alert alert-secondary inst_time" role="alert">
-                                                    ---
-                                                </div>
-                                            </div>
+                                            </div>  
                                         </div>
                                     </div>
-                                </div>
+                                </div>  
                             @endforeach
                         @else
                             
@@ -533,11 +484,29 @@
         src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
         <script src="{{ asset('jquery-typeahead/dist/jquery.typeahead.min.js') }}"></script>
     <script>
+        
         $count = {{ $count ?? 0 }};
         if ($count < 1) {
             $count = 0;
         }
         $(function () {
+            $('#department_id').on("change", function(e) { 
+                text = $(this).find("option:selected").text();
+                id = $(this).val();
+                if ($('#department').find("option[value='" + id + "']").length) {
+                    $('#department').val(id).trigger('change');
+                } else { 
+                    // Create a DOM Option and pre-select by default
+                    var newOption = new Option(text,id, true, true);
+                    // Append it to the select
+                    $('#department').append(newOption).trigger('change');
+                } 
+            });
+
+            $('#type').on("change", function(e) { 
+                $('#assettype').val($(this).val()).trigger('change');
+            });
+
             $("[name='start_date']").on('change', function (e) {
                 $('.startdate').each(function(i, obj) {
                     var startdate = $("[name='start_date']").val();
@@ -550,6 +519,13 @@
                     var enddate = $("[name='end_date']").val();
                         $(this).val(enddate)
                 });
+            });
+
+            $(".startdate,.enddate").on('change', function (e) {
+                var id = $(this).attr('id');
+                var num = id.split("_"); 
+                $('#assetname_'+num[2]).val('0').trigger('change');
+                $('#refno_'+num[2]).val('0').trigger('change');
             });
 
             $('#department_id').select2({
@@ -624,32 +600,32 @@
                 var enddate = $("[name='end_date']").val();
                 var department = $('#department_id').val() != '' ?  $('#department_id').val() : 0;
                 var deparmenttext = $("#department_id option:selected").text() != '' ? $("#department_id option:selected").text() : 'Select Department';
+                var typetext = $("#type option:selected").text() != '' ? $("#type option:selected").text() : 'Select Type';
+                
 
-                $html = '<div class="row row-data" style="margin-right: 0;">' +
-                '           <div class="form-group row col-md-6"> ' +
-                '                   <div class="form-group col-md-3"> '+
-                '                       <label class="mt-3">Start Date</label> '+
+                $html = '<div class="card"><div class="card-body backcolor">'+
+                '       <div class="row row-data" style="margin-right: 0;">' +
+                '           <div class="form-group row col-md-12 zero-margin"> ' +  
+
+                '                 <div class="form-group col-md-2 zero-margin"> '+
+                '                       <label class="mt-3">Package Type</label> '+
                 '                       <div class="input-group"> '+
-                '                           <input type="text" class="form-control date_mask startdate" id="start_date_' + $count + '" name="bucket_start_date[' + $count + ']" '+
-                '                               placeholder="Start Date" value="'+startdate+'"required> '+
+                '                            <select type="text" name="bucket_package[' + $count + '] " id="packagetype_' + $count + '" class="form-control assettype"> '+
+                '                               <option value="0">Select Type</option> '+
+                '                               <option value="package">Package</option> '+
+                '                               <option value="individual">Individual</option> '+
+                '                           </select> '+
                 '                       </div> '+
-                '                   </div> '+ 
-                '                   <div class="form-group col-md-3"> '+
-                '                       <label class="mt-3">End Date</label> '+
+                '                   </div> '+        
+                '                   <div class="form-group col-md-3 loc-css "> '+
+                '                       <label class="mt-3">Assets</label> '+
                 '                       <div class="input-group"> '+
-                '                           <input type="text" class="form-control date_mask enddate" id="end_date_' + $count + '" name="bucket_end_date[' + $count + ']" '+
-                '                               placeholder="End Date" value="'+enddate+'" required> '+
+                '                           <select type="text" name="bucket_assetname[' + $count + ']" id="assetname_' + $count + '" class="form-control filter assetname" required> '+
+                '                               <option value="0" selected="selected">Select Assets</option> '+
+                '                           </select> '+
                 '                       </div> '+
                 '                   </div> '+
-                '                   <div class="form-group col-md-3"> '+
-                '                      <label class="mt-3">Department</label> '+
-                '                            <div class="input-group"> '+
-                '                                <select type="text" name="bucket_department[' + $count + ']" id="department_' + $count + '" class="form-control department" required> '+
-                '                                   <option value="'+department+'" selected="selected">'+deparmenttext+'</option> '+
-                '                               </select> '+
-                '                           </div>'+
-                '                      </div> '+
-                '                   <div class="form-group col-md-3"> '+
+                '                   <div class="form-group col-md-7 zero-margin loc-css"> '+
                 '                       <label class="mt-3">Location</label> '+
                 '                       <div class="input-group"> '+
                 '                           <div class="input-group"> '+
@@ -659,102 +635,20 @@
                 '                           </div> '+
                 '                       </div> '+
                 '                   </div> '+
-               
                 '               </div> '+
-                '               <div class="form-group row col-md-6"> '+
-                '                   <div class="form-group col-md-3"> '+
-                '                       <label class="mt-3">Type</label> '+
+                '               <div class="form-group row col-md-12 zero-margin"> '+      
+                '                   <div class="form-group col-md-11"> '+
+                '                       <label class="">Specific Asset</label> '+
                 '                       <div class="input-group"> '+
-                '                           <select type="text" name="bucket_assettype[' + $count + ']" id="assettype_' + $count + '" class="form-control assettype"> '+
-                '                               <option value="0">Select Type</option> '+
-                '                               <option value="digital">Digital</option> '+
-                '                               <option value="static">Static</option> '+
-                '                           </select> '+
-                '                       </div> '+
-                '                   </div> '+
-                '                   <div class="form-group col-md-3"> '+
-                '                       <label class="mt-3">Assets</label> '+
-                '                       <div class="input-group"> '+
-                '                           <select type="text" name="bucket_assetname[' + $count + ']" id="assetname_' + $count + '" class="form-control filter assetname" required> '+
-                '                               <option value="0" selected="selected">Select Assets</option> '+
-                '                           </select> '+
-                '                       </div> '+
-                '                   </div> '+
-                '                   <div class="form-group col-md-5"> '+
-                '                       <label class="mt-3">Specific Asset</label> '+
-                '                       <div class="input-group"> '+
-                '                               <select class="form-control assets" id="refno_' + $count + '"  name="bucket_asset[' + $count++ + ']" '+
-                '                                   required> </select> '+
+                '                               <select class="form-control assets" id="refno_' + $count + '"  name="bucket_asset[' + $count++ + '][]" '+
+                '                                   required multiple> </select> '+
                 '                       </div> '+ 
                 '                   </div> '+
-                
-                '                   <div class="form-group col-md-1"> '+
+                '                   <div class="form-group col-md-1 minus-btn"> '+
                 '                           <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button> '+
                 '                       </div> '+
-                '                   </div> '+
-
-
-                    // '        <div class="form-group row col-md-3">' +
-                    // '            <label for="fname" class="col-sm-3 text-end control-label col-form-label">Asset</label>' +
-                    // '            <div class="col-sm-9">' +
-                    // '                 <select class="form-control assets" name="bucket_asset[' + $count + ']" required> {!! getAssetAndNetwork() !!}</select>' +
-                    // '            </div>' +
-                    // '         </div>' +
-                    // '             <div class="form-group row col-md-3">' +
-                    // '             <label for="fname"' +
-                    // '            class="col-sm-4 text-end control-label col-form-label">Location</label>' +
-                    // '        <div class="col-sm-8">' +
-                    // '             <select class="form-control locations" name="bucket_location[' + $count + ']" required>' +
-                    // '                <option disabled selected>Select Location</option>' +
-                    // '            </select>' +
-                    // '         </div>' +
-                    // '    </div>' +
-                    // '         <div class="form-group row col-md-3">' +
-                    // '             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Start Date</label>' +
-                    // '            <div class="col-sm-7">' +
-                    // '                 <input type="text" class="form-control date_mask" name="bucket_start_date[' + $count + ']" placeholder="Start Date" required>' +
-                    // '            </div>' +
-                    // '         </div>' +
-                    // '         <div class="form-group row col-md-3">' +
-                    // '             <label for="fname" class="col-sm-3 text-end control-label col-form-label">End Date</label>' +
-                    // '            <div class="col-sm-7">' +
-                    // '                 <input type="text" class="form-control date_mask" name="bucket_end_date[' + $count++ + ']" placeholder="End Date" required>' +
-                    // '            </div>' +
-                    // '            <div class="col-sm-2">' +
-                    // '                <button class="btn-danger remove-row"><i class="fa fa-minus"></i></button>' +
-                    // '            </div>' +
-                    // '         </div>' +
-                    '         <div class="details_div" style="display: flex; flex-flow: row;">' +
-                    '             <div class="form-group row col-md-3">' +
-                    '                 <label for="fname" class="col-sm-4 text-end control-label col-form-label">Asset Type</label>' +
-                    '                <div class="col-sm-7">' +
-                    '                    <div class="alert alert-secondary asset_type" role="alert">' +
-                    '                        ---' +
-                    '                    </div>' +
-                    '                 </div>' +
-                    '            </div>' +
-                    '            <div class="form-group row col-md-3">' +
-                    '                 <label for="fname" class="col-sm-4 text-end control-label col-form-label">Quantity</label>' +
-                    '                <div class="col-sm-7">' +
-                    '                    <div class="alert alert-secondary quantity" role="alert">' +
-                    '                        ---' +
-                    '                    </div>' +
-                    '                </div>' +
-                    '             </div>' +
-                    '             <div class="form-group row col-md-3">' +
-                    '                 <label for="fname" class="col-sm-4 text-end control-label col-form-label">Availability</label>' +
-                    '                <div class="col-sm-7">' +
-                    '                    <div class="alert alert-secondary availability" role="alert"> --- </div>' +
-                    '                 </div>' +
-                    '            </div>' +
-                    '            <div class="form-group row col-md-3">' +
-                    '                 <label for="fname" class="col-sm-4 text-end control-label col-form-label">Installation Time</label>' +
-                    '                <div class="col-sm-7">' +
-                    '                    <div class="alert alert-secondary inst_time" role="alert"> --- </div>' +
-                    '                </div>' +
-                    '            </div>' +
-                    '        </div>' +
-                    '    </div>';
+                '                   </div> '+ 
+                    '    </div></div></div>';
                 $('.buckets_div').append($html);
                 initializeSelect()
             }
@@ -770,6 +664,7 @@
                         }
                         $(ele).select2({
                         width: '100%',
+                        disabled:'readonly',
                         ajax: {
                             url: '{{ route('select-2-get-departments') }}',
                             data: function (params) {
@@ -801,6 +696,8 @@
                 });
                          
                 $(".assetname:visible").each(function (ii, ele) {
+                    var id = $(this).attr('id');
+                    var number = id.split("_");  
                     if ($(ele).hasClass("select2-hidden-accessible")) {
                         $(ele).select2('destroy');
                     }
@@ -808,21 +705,23 @@
                         width: '100%',
                         ajax: {
                             url: '{{ route('select-2-get-asset-name') }}',
-                            data: function (params) {
-                                var id = $(this).attr('id');
-                                var number = id.split("_");     
+                            data: function (params) {                                   
                                 var query = {
                                     search: params.term,
-                                    department:$('#department_'+number[1]).val(),
-                                    location:$('#location_'+number[1]).val(),
-                                    assettype:$('#assettype_'+number[1]).val(),
+                                    department:$('#department').val(),
+                                    assettype:$('#assettype').val(),
+                                    package_type:$('#packagetype_'+number[1]).val(),
+                                    // location:$('#location_'+number[1]).val(),
                                     type: 'public'
                                 }
+                                console.log(query);
                                 return query;
                             },
                             processResults: function (data) {
                                 // Transforms the top-level key of the response object from 'items' to 'results'
                                 console.log(data);
+                                // alert(startdate);
+                               
                                 return {
                                     results: $.map(data, function (item) {
                                         return {
@@ -831,9 +730,14 @@
                                         }
                                     })
                                 }
+                                
                             }
                         }
                     });
+                    $('#assetname_'+ii).on("select2:selecting", function(e) { 
+                            $('#location_'+ii).val('0').trigger('change')
+                            $('#refno_'+ii).val('0').trigger('change')
+                        });
                 });
 
                 $(".locations:visible").each(function (ii, ele) {
@@ -847,33 +751,49 @@
                             data: function (params) {
                                 var query = {
                                     search: params.term,
-                                    department:$('#department_'+ii).val(),
-                                    type: 'public'
+                                    department:$('#department').val(),
+                                    assettype:$('#assettype').val(),
+                                    assetname:$('#assetname_' + ii).val(),
+                                    package_type:$('#packagetype_'+ii).val(),
+                                    type: 'public',
                                 }
                                 return query;
                             },
                             processResults: function (data) {
                                 // Transforms the top-level key of the response object from 'items' to 'results'
                                 console.log(data);
+                                var startdate = $('#start_date').val();
+                                var enddate = $('#end_date').val();
+                                var assetname = $('#assetname_' +ii).val();
+                                if(startdate == '' || enddate == '' || assetname == 0)
+                                {
+                                    $.dialog({
+                                        title: 'Warning!',
+                                        content: 'Select AssetName & Date Range!',
+                                    });
+                                }
+                                else
+                                {
                                 return {
-                                    results: $.map(data, function (item) {
-                                        return {
-                                            text: item.name,
-                                            id: item.id
-                                        }
-                                    })
+                                        results: $.map(data, function (item) {
+                                            return {
+                                                text: item.name,
+                                                id: item.id
+                                            }
+                                        })
+                                    }
                                 }
                             }
                         }
                     });
                     $('#location_'+ii).on("select2:selecting", function(e) { 
-                            $('#assetname_'+ii).val('0').trigger('change')
+                            // $('#assetname_'+ii).val('0').trigger('change')
                             $('#refno_'+ii).val('0').trigger('change')
                         });
                 });
 
                 
-                $('body').on('change', '.filter', function (e) {
+                $('body').on('change', '.filter,.assettype,.locations', function (e) {
                     var val = $(this).val();
                     var id = $(this).attr('id');
                     var number = id.split("_");            
@@ -882,10 +802,13 @@
                         url: '{{ route('select-2-get-asset-namennetwork') }}',                    
                         type: 'POST',
                         data: {_token: CSRF_TOKEN,                        
-                                name:val,
-                                department:$('#department_'+number[1]).val(),
+                                name:$('#assetname_' +number[1]).val(),
+                                department:$('#department').val(),
                                 location:$('#location_'+number[1]).val(),
-                                assettype:$('#assettype_'+number[1]).val(),
+                                assettype:$('#assettype').val(),
+                                startdate: $('#start_date').val(),
+                                enddate: $('#end_date').val(),
+                                package_type:$('#packagetype_'+number[1]).val(),
                             },
                         dataType: 'text',
                         success:function(response){
@@ -909,49 +832,62 @@
                     $(ele).select2({
                         width: '100%'
                     }).on('select2:select', function () {                       
-                        var startdate = $('#start_date_' + ii).val();
-                        var enddate = $('#end_date_' + ii).val();
+                        var startdate = $('#start_date').val();
+                        var enddate = $('#end_date').val();
+                        var department = $('#department').val();
+                        var assettype = $('#assettype').val();
                         var location = $('#location_' + ii).val();
-                        if(startdate == '' || enddate == '' || location==0)
+                        var assetname = $('#assetname_' + ii).val();
+
+                        if(startdate == '' || enddate == '' || department == '')
                         {
                             $.dialog({
                                 title: 'Warning!',
-                                content: 'Select Location & Date Range!',
+                                content: 'Select StartDate, EndDate & Department!',
                             });
                             $('#refno_'+ii).val('0').trigger('change')
                         }
-                        else
+                        else if(assetname==0 || location == null)
                         {
-                            $this = $(this).val()
-                            $main = $(this).closest('.row-data');
-                            $main.LoadingOverlay('show');
-                            $.ajax({
-                                url: '{{ route('admin-campaign-bucket-get-asset-data') }}',
-                                method: 'post',
-                                async: false,
-                                data: {
-                                    data: $this,
-                                    startdate: startdate,
-                                    enddate: enddate,
-                                },
-                                success: function (response) {
-                                    if (response.status === 'Success') {
-                                        $asset_type = response.data.asset_type;
-                                        $quantity = response.data.quantity;
-                                        $availability = response.data.availability;
-                                        $inst_time = response.data.inst_time;
-                                        $main.find('.asset_type').html($asset_type)
-                                        $main.find('.quantity').html($quantity)
-                                        $main.find('.availability').html($availability)
-                                        $main.find('.inst_time').html($inst_time)
-                                        $main.LoadingOverlay('hide');
-                                    }
-                                },
-                                error: function (xhr) {
-                                    console.log(xhr)
-                                }
-                            })
+                            $.dialog({
+                                title: 'Warning!',
+                                content: 'Select Asset & Location!',
+                            });
+                            $('#refno_'+ii).val('0').trigger('change')
                         }
+                        // else
+                        // {
+                        //     $this = $(this).val()
+                        //     $main = $(this).closest('.row-data');
+                        //     $main.LoadingOverlay('show');
+                        //     $.ajax({
+                        //         url: '{{ route('admin-campaign-bucket-get-asset-data') }}',
+                        //         method: 'post',
+                        //         async: false,
+                        //         data: {
+                        //             data: $this,
+                        //             startdate: startdate,
+                        //             enddate: enddate,
+                        //         },
+                        //         success: function (response) {
+                        //             console.log(response);
+                        //             if (response.status === 'Success') {
+                        //                 $asset_type = response.data.asset_type;
+                        //                 $quantity = response.data.quantity;
+                        //                 $availability = response.data.availability;
+                        //                 $inst_time = response.data.inst_time;
+                        //                 $main.find('.asset_type').html($asset_type)
+                        //                 $main.find('.quantity').html($quantity)
+                        //                 $main.find('.availability').html($availability)
+                        //                 $main.find('.inst_time').html($inst_time)
+                        //                 $main.LoadingOverlay('hide');
+                        //             }
+                        //         },
+                        //         error: function (xhr) {
+                        //             console.log(xhr)
+                        //         }
+                        //     })
+                        // }
                     });
                 });
             }
@@ -1111,10 +1047,13 @@
         @if($payment_status)
         $('#payment_status').val('{!!$payment_status!!}').trigger('change');
         @endif
-{{--        @if($booking_order)--}}
-{{--        $('#booking_order').val('{!!$booking_order!!}').trigger('change');--}}
-{{--        @endif--}}
+        @if($type)
+        $('#type').val('{!!$type!!}').trigger('change');
+        @endif
+        @if($bucket_assettype)
+        $('#assettype').val('{!!$bucket_assettype!!}').trigger('change');
+        @endif
 
-
+      
     </script>
 @endpush

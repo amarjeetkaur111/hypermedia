@@ -2,6 +2,7 @@
 <form action="{{$url}}" class="formName" method="post" enctype="multipart/form-data">
     {{ csrf_field() }}
     <input type="hidden" value="{{$id}}" name="id">
+    <input type="hidden" value="{{$bucket}}" name="bucket">
     <div class="form-group">
         <label>Status</label>
         <select class="form-control" name='status' id='status'>

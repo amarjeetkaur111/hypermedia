@@ -71,7 +71,7 @@ class select2DataController extends Controller
         return response()->json($data);
     }
 
-    public function getLocations(Request $request)
+    public function getLocationsOldd(Request $request)
     {
         if($request->department != 0)
         {
@@ -90,6 +90,35 @@ class select2DataController extends Controller
                 $data = Locations::select('id', 'name')->get();
             }
         }
+        return response()->json($data);
+    }
+
+    public function getLocations(Request $request)
+    {
+        // echo"<pre>";print_r($request->all());exit();
+        $locations = Locations::select('id', 'name');
+        $asset = Assets::select('location_id');
+
+        if($request->department != 0)        
+            $asset = $asset->where('department_id',$request->department);      
+
+        if($request->assettype != 0)       
+            $asset = $asset->where('type',$request->assettype);
+
+        if($request->assetname != 0)       
+            $asset = $asset->where('name',$request->assetname);
+
+        if($request->package_type != 0)
+            $asset = $asset->where('package_type',$request->package_type);
+
+        $asset = $asset->distinct()->get()->toArray();
+        $locations =  $locations->whereIn('id',$asset);
+
+        if ($request->has('search')) {
+            $locations =  $locations->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $data = $locations->get();
         return response()->json($data);
     }
 
@@ -190,8 +219,8 @@ class select2DataController extends Controller
         
         return response()->json($data);
     }   
-
-    public function getAssetsName(Request $request)
+    
+    public function getAssetsNameOld(Request $request)
     {
         // print_r($request->all());exit();
         $data = Assets::select('name')->distinct('name');
@@ -213,7 +242,36 @@ class select2DataController extends Controller
 
         $data = $data->get();
         return response()->json($data);
-    }  
+    } 
+    
+    public function getAssetsName(Request $request)
+    {
+        // print_r($request->all());exit();
+        $assets = Assets::select('name')->distinct('name');
+
+        if($request->has('department') && $request->department != 0)        {
+            $did = $request->department;
+            $assets = $assets->where('department_id', $did);
+        }
+        // if($request->has('location') && $request->location != 0)        {
+        //     $lid = $request->location;
+        //     $assets = $assets->where('location_id', $lid);
+        // }
+        if($request->has('assettype') && $request->assettype != 0)        {
+            $assettype = $request->assettype;
+            $assets = $assets->where('type', $assettype);
+        }
+        if($request->package_type != 0)
+        {
+            $assets = $assets->where('package_type', $request->package_type);
+        }
+        if ($request->has('search')) {
+            $assets = $assets->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $data = $assets->get();
+        return response()->json($data);
+    } 
 
     public function getAssetsNameRef(Request $request)
     {
@@ -277,8 +335,9 @@ class select2DataController extends Controller
 
     public function getAssetsNameNNetork(Request $request,$select=[])
     {
-        // print_r($request->all());exit();
-        return getAssetAndNetworkNew($request->name,$request->department,$request->location,$request->assettype);
+        // echo "<pre>";print_r($request->all());exit();
+
+        return getAssetAndNetworkNew($request->name,$request->department,$request->location,$request->assettype,$request->package_type,$request->startdate,$request->enddate);
     }  
 
 
@@ -297,3 +356,4 @@ class select2DataController extends Controller
     }
 
 }
+

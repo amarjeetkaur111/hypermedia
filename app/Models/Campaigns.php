@@ -12,6 +12,9 @@ class Campaigns extends Model
     use HasFactory,Userstamps,SoftDeletes;
 
     protected $table = 'campaign';
+    // protected $appends = [
+    //     'proofInstalledCount','proofRejectCount'
+    // ];
 
     public function client(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
@@ -55,4 +58,20 @@ class Campaigns extends Model
     {
         return $this->hasMany(InstallationTypes::class,'campaign_id','id');
     }
+
+    public function proofpictures(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CampaignProof::class,'campaign_id','id');
+    }
+
+    // public function getProofInstalledCountAttribute()
+    // {
+    //     return $this->proofpictures()->count();
+    // }
+
+    // public function getProofRejectCountAttribute()
+    // {
+    //     return $this->proofpictures()->where('status',0)->count();
+    // }
+
 }

@@ -117,11 +117,13 @@
                     <thead>
                         <tr>
                             <th scope="col" style="font-weight: bold;">#</th>
-                            <th scope="col" style="font-weight: bold;">Asset Name</th>
+                            <th scope="col" style="font-weight: bold;">Name</th>
+                            <th scope="col" style="font-weight: bold;">Asset</th>
                             <th scope="col" style="font-weight: bold;">Asset Type</th>
                             <th scope="col" style="font-weight: bold;">Location</th>
                             <th scope="col" style="font-weight: bold;">Start Date</th>
                             <th scope="col" style="font-weight: bold;">End Date</th>
+                            <th scope="col" style="font-weight: bold;">Updated On</th>
 
                         </tr>
                     </thead>
@@ -130,15 +132,19 @@
                         $i = 1;
                         @endphp
                         @foreach($data->buckets as $bucket)
-
+                        @php
+                            $list = explode (", ", $bucket->asset); 
+                            $assetData = \App\Models\Assets::whereIn('id',$list)->get(); 
+                        @endphp
                         <tr>
                             <th scope="row">@php echo $i @endphp</th>
-                            <td>{{$bucket->assets->name ?? ''}}</td>
+                            <td>{{$assetData[0]->name ?? ''}}</td>
+                            <td>@foreach($assetData as $as){{$as->ref_no}}<br>@endforeach</td>
                             <td>{{$bucket->asset_type}}</td>
                             <td>{{$bucket->locations->name}}</td>
-                            <td>{{Carbon\Carbon::parse($bucket->start_date)->format('d F Y')}}</td>
-                            <td>{{Carbon\Carbon::parse($bucket->end_date)->format('d F Y')}}</td>
-
+                            <td>{{Carbon\Carbon::parse($bucket->start_date)->format('d M Y')}}</td>
+                            <td>{{Carbon\Carbon::parse($bucket->end_date)->format('d M Y')}}</td>
+                            <td>{{Carbon\Carbon::parse($bucket->updated_at)->format('d M Y')}}</td>
                         </tr>
                         @php
                         $i++;

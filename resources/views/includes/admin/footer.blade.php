@@ -86,4 +86,7 @@ var jc_avail;
 
 
     })
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 </script>
