@@ -194,15 +194,21 @@ class select2DataController extends Controller
     {
         if($request->has('campaign_id') && $request->campaign_id !='')
         {
+            $data = Assets::with('assetStatus');           
+
+            if($request->has('location') && $request->location != '')
+            // print_r($request->location);exit();
+                $data = $data->where('location_id',$request->location);
+
             $cid = $request->campaign_id;
             if ($request->has('search')) {
-                $data = Assets::with('assetStatus')            
+                $data = $data            
                     ->whereHas('assetStatus',function($query) use($cid){
                         $query->where('campaign_id',$cid);
                     })      
                     ->select('id', 'name', 'ref_no')->where('name', 'like', '%' . $request->search . '%')/*->where('location',$key)*/ ->get();
             } else {
-                $data = Assets::with('assetStatus')            
+                $data = $data            
                     ->whereHas('assetStatus',function($query) use($cid){
                         $query->where('campaign_id',$cid);
                     })                    
@@ -210,10 +216,14 @@ class select2DataController extends Controller
             }
         }
         else{
+            $data = Assets::select('id', 'name', 'ref_no');
+            if($request->has('location') && $request->locaion != '')
+                $data = $data->where('location_id',$request->location);
+
             if ($request->has('search')) {
-                $data = Assets::select('id', 'name', 'ref_no')->where('name', 'like', '%' . $request->search . '%')/*->where('location',$key)*/ ->get();
+                $data = $data->where('name', 'like', '%' . $request->search . '%')/*->where('location',$key)*/ ->get();
             } else {
-                $data = Assets::select('id', 'name', 'ref_no')/*->where('location',$key)*/ ->get();
+                $data = $data/*->where('location',$key)*/ ->get();
             }
         }
         
@@ -346,6 +356,15 @@ class select2DataController extends Controller
         if($request->campaign != 0)
         {
             $location = CampaignBucket::select('location')->where('campaign_id',$request->campaign)->distinct()->get()->toArray();
+            if ($request->has('search')) {
+                $data = Locations::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->whereIn('id',$location)->get();
+            } else {
+                $data = Locations::select('id', 'name')->whereIn('id',$location)->get();
+            }
+        }
+        else
+        {
+            $location = CampaignBucket::select('location')->distinct()->get()->toArray();
             if ($request->has('search')) {
                 $data = Locations::select('id', 'name')->where('name', 'like', '%' . $request->search . '%')->whereIn('id',$location)->get();
             } else {

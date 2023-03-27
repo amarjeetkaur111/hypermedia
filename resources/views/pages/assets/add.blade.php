@@ -12,6 +12,9 @@
             $description = old('description');
             $status = old('status');
             $owner = old('owner_id');
+            $package_type = old('package_type');
+            $slots = old('slots');
+            $no_of_assets = old('no_of_assets');
         }
         else if(isset($data) && $data){
             $name = $data->name;
@@ -24,6 +27,9 @@
             $status = $data->status;
             $current_network = $data->network ? $data->network->id : null;
             $owner = $data->owned_by;
+            $package_type = $data->package_type;
+            $slots = $data->slots;
+            $no_of_assets = $data->no_of_assets;
         }
         else{
             $name = null;
@@ -33,6 +39,9 @@
             $description = null;
             $status = null;
             $owner = null;
+            $package_type = null;
+            $slots = 1;
+            $no_of_assets = 0;
         }
     @endphp
     <div class="page-wrapper">
@@ -96,34 +105,35 @@
                         <div class="form-group row">
                             <label for="fname" class="col-sm-3 text-end control-label col-form-label">Package Type</label>
                             <div class="col-sm-9">
-                                <select name="packageType" class="form-control" id="packageType" required>
+                                <select name="package_type" class="form-control" id="packageType" required>
                                 <option selected disabled  value="">Select Package</option>
-                                    <option value="package" {{ $type == 'package' ? 'selected="selected"' : '' }}>Package</option>
-                                    <option value="individual" {{ $type == 'individual' ? 'selected="selected"' : '' }}>Individual</option>
+                                    <option value="package" {{ $package_type == 'package' ? 'selected="selected"' : '' }}>Package</option>
+                                    <option value="individual" {{ $package_type == 'individual' ? 'selected="selected"' : '' }}>Individual</option>
                                 </select>
-                                @if ($errors->has('type'))
-                                    <span class="text-danger">{{ $errors->first('type') }}</span>
+                                @if ($errors->has('package_type'))
+                                    <span class="text-danger">{{ $errors->first('package_type') }}</span>
                                 @endif
                             </div>
                         </div>
+                        
                         <div class="showIfPackage">
                             <div class="form-group row">
                                 <label for="slots" class="col-sm-3 text-end control-label col-form-label">Slots</label>
                                 <div class="col-sm-9">
-                                    <input type="number" class="form-control" name="slot" value="15"  min="0"
-                                        placeholder="Enter Slot" required>
-                                    @if ($errors->has('name'))
-                                        <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    <input type="number" class="form-control" name="slots" value="{{$slots}}"  min="0"
+                                        placeholder="Enter Slots" required>
+                                    @if ($errors->has('slots'))
+                                        <span class="text-danger">{{ $errors->first('slots') }}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="assets" class="col-sm-3 text-end control-label col-form-label">No of Assets</label>
                                 <div class="col-sm-9">
-                                    <input type="number" class="form-control" name="asset" value="1"  min="0"
+                                    <input type="number" class="form-control" name="no_of_assets" value="{{$no_of_assets}}"  min="0"
                                         placeholder="Enter Assets" required>
-                                    @if ($errors->has('name'))
-                                        <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    @if ($errors->has('no_of_assets'))
+                                        <span class="text-danger">{{ $errors->first('no_of_assets') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -208,7 +218,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="email1" class="col-sm-3 text-end control-label col-form-label">Assigned to
                                 network</label>
                             <div class="col-sm-9">
@@ -223,7 +233,7 @@
                                     <span class="text-danger">{{ $errors->first('status') }}</span>
                                 @endif
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
                             <label for="email1" class="col-sm-3 text-end control-label col-form-label">Status</label>
                             <div class="col-sm-9">
@@ -288,7 +298,11 @@
                 }
             });
             $('#type').select2({width: '100%', minimumResultsForSearch: Infinity, placeholder: "Select Type",});
-            $('.showIfPackage').hide();
+            @if($package_type == 'package')
+                $('.showIfPackage').show();
+            @else   
+                $('.showIfPackage').hide();
+            @endif
             $('#packageType').select2({width: '100%', minimumResultsForSearch: Infinity, placeholder: "Select Package",}).on('select2:select', function (e) {
                 if($(this).val() === 'package'){
                     $('.showIfPackage').show();

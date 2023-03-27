@@ -125,17 +125,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="asset"
-                                            class="col-sm-3 text-end control-label col-form-label">Asset</label>
-                                        <div class="col-sm-9">
-                                            <select type="text" name="asset_id" id="asset" class="form-control">
-                                            </select>
-                                            @if ($errors->has('asset_id'))
-                                                <span class="text-danger">{{ $errors->first('asset_id') }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
                                         <label for="location"
                                             class="col-sm-3 text-end control-label col-form-label">Location</label>
                                         <div class="col-sm-9">
@@ -146,6 +135,17 @@
                                             @endif
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label for="asset"
+                                            class="col-sm-3 text-end control-label col-form-label">Asset</label>
+                                        <div class="col-sm-9">
+                                            <select type="text" name="asset_id" id="asset" class="form-control">
+                                            </select>
+                                            @if ($errors->has('asset_id'))
+                                                <span class="text-danger">{{ $errors->first('asset_id') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>                                    
                                 </div>                                
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12" style="display: flex; justify-content: center; align-items: center">
@@ -233,9 +233,15 @@
                                 }
                             })
                         }
-                    }
+                    }                    
                 }
             });
+
+            $('#campaign_id').on('change',function(){
+                $('#asset').val('').trigger('change');
+                $('#location').val('').trigger('change');
+            });
+            
             $('#asset').select2({
                 width: '100%',
                 ajax: {
@@ -245,6 +251,7 @@
                             search: params.term,
                             type: 'public',
                             campaign_id:$('#campaign_id').val(),
+                            location:$('#location').val(),
                         }
                         return query;
                     },
@@ -264,11 +271,12 @@
             $('#location').select2({
                 width: '100%',
                 ajax: {
-                    url: '{{ route('select-2-get-locations') }}',
+                    url: '{{ route('select-2-get-campaign_locations') }}',
                     data: function (params) {
                         var query = {
                             search: params.term,
-                            type: 'public'
+                            type: 'public',
+                            campaign:$('#campaign_id').val(),
                         }
                         return query;
                     },

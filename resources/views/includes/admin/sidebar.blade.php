@@ -66,9 +66,9 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-assets-index') }}" ><i class="fas fa-microchip"></i><span class="hide-menu">Assets</span></a>
                         </li>
-                        <li class="sidebar-item">
+                        <!-- <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-assets-network-index') }}" ><i class="fas fa-parachute-box"></i><span class="hide-menu">Assets Network</span></a>
-                        </li>
+                        </li> -->
                     </ul>
                 </li>
                 @endcanany
@@ -137,9 +137,9 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="{{ route('admin-locations-index') }}"><i class="fas fa-map-marker-alt"></i><span class="hide-menu">Locations</span></a>
                         </li>
-                        <li class="sidebar-item">
+                        <!-- <li class="sidebar-item">
                             <a href="{{ route('admin-contractor-index') }}" class="sidebar-link" ><i class="fas fa-dolly-flatbed"></i><span class="hide-menu"> Contractor </span></a>
-                        </li>
+                        </li> -->
                         <li class="sidebar-item">
                             <a href="{{ route('admin-departments-index') }}" class="sidebar-link" ><i class="fas fa-bars"></i><span class="hide-menu"> Departments </span></a>
                         </li>

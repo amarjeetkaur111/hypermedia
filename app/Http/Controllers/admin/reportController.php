@@ -85,6 +85,8 @@ class reportController extends Controller
 
        }elseif($request->has('one'))
        {
+            return view('pages.reports.sampleCampaignPdf');
+            
             $this->validate($request, [
                 'location' => 'required',
                 'campaign' => 'required',

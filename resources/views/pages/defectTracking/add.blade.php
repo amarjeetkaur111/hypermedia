@@ -113,20 +113,6 @@
                                 </div>
                                 <div class="form-group row">
                                     <label for="email1"
-                                           class="col-sm-3 text-end control-label col-form-label">Asset</label>
-                                    <div class="col-sm-9">
-                                        <select type="text" name="asset_id" id="asset" class="form-control" required>
-                                            @if(isset($asset))
-                                                <option value="{{ $asset->id }}">{{ $asset->ref_no.' - '.$asset->name }}</option>   
-                                            @endif
-                                        </select>
-                                        @if ($errors->has('asset_id'))
-                                            <span class="text-danger">{{ $errors->first('asset_id') }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="email1"
                                            class="col-sm-3 text-end control-label col-form-label">Location</label>
                                     <div class="col-sm-9">
                                         <select type="text" name="location_id" id="location" class="form-control" required>
@@ -139,6 +125,20 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label for="email1"
+                                           class="col-sm-3 text-end control-label col-form-label">Asset</label>
+                                    <div class="col-sm-9">
+                                        <select type="text" name="asset_id" id="asset" class="form-control" required>
+                                            @if(isset($asset))
+                                                <option value="{{ $asset->id }}">{{ $asset->ref_no.' - '.$asset->name }}</option>   
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('asset_id'))
+                                            <span class="text-danger">{{ $errors->first('asset_id') }}</span>
+                                        @endif
+                                    </div>
+                                </div>                                
                                 <div class="form-group row">
                                     <label for="email1"
                                            class="col-sm-3 text-end control-label col-form-label">Status</label>
@@ -226,6 +226,7 @@
                             search: params.term,
                             type: 'public',
                             campaign_id:$('#campaign').val(),
+                            location:$('#location').val(),
                         }
                         return query;
                     },
@@ -245,11 +246,12 @@
             $('#location').select2({
                 width: '100%',
                 ajax: {
-                    url: '{{ route('select-2-get-locations') }}',
+                    url: '{{ route('select-2-get-campaign_locations') }}',
                     data: function (params) {
                         var query = {
                             search: params.term,
-                            type: 'public'
+                            type: 'public',
+                            campaign:$('#campaign').val(),
                         }
                         return query;
                     },
@@ -266,7 +268,12 @@
                     }
                 }
             });
-            
+
+            $('#campaign').on('change',function(){
+                $('#asset').val('').trigger('change');
+                $('#location').val('').trigger('change');
+            });
+
             $('#campaign').select2({
                 width: '100%',
                 ajax: {
@@ -291,7 +298,6 @@
                     }
                 }
             });
-
         });
         @if($status)
         $('#status').val('{!!$status!!}').trigger('change');

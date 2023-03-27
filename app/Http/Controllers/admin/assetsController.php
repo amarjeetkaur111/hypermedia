@@ -18,6 +18,25 @@ class assetsController extends Controller
     {
         if($request->ajax()){
             $data = Assets::with('location')->select('*');
+            if ($request->has('packagetype') && $request->packagetype) {
+                $data = $data->where('package_type', '>=', $request->packagetype);
+            }
+            if ($request->has('assettype') && $request->assettype) {
+                $data = $data->where('type', $request->assettype);
+            }
+            if ($request->has('locations_id') && $request->locations_id) {
+                $data = $data->where('location_id', $request->locations_id);
+            }
+            if ($request->has('owned_by') && $request->owned_by) {
+                $data = $data->where('owned_by', $request->owned_by);
+            }
+            if ($request->has('status') && $request->status) {
+                $data = $data->where('status', $request->status);
+            }
+            if ($request->has('slot') && $request->slot) {
+                $data = $data->where('slots', $request->slot);
+            }
+
             return DataTables::eloquent($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -58,6 +77,7 @@ class assetsController extends Controller
 
     public function addPost(Request $request, $id = null)
     {
+
         $add = 'Add';
         $user = new Assets;
         if ($id) {
@@ -70,6 +90,9 @@ class assetsController extends Controller
                 'name' => 'required',
                 'department_id' => 'required',
                 'location' => 'required',
+                'package_type' => 'required',
+                'slots' => ['required_if:package_type,==,package'],
+                'no_of_assets' => ['required_if:package_type,==,package'],
             ]);
         } else {
             $this->validate($request, [
@@ -77,8 +100,13 @@ class assetsController extends Controller
                 'name' => 'required',
                 'department_id' => 'required',
                 'location' => 'required',
+                'package_type' => 'required',
+                'slots' => ['required_if:package_type,==,package'],
+                'no_of_assets' => ['required_if:package_type,==,package'],
             ]);
         }
+        // echo "<pre>";print_r($request->all());exit();
+
         $user->ref_no = $request->input('ref_no');
         $user->name = $request->input('name');
         $user->department_id = $request->input('department_id');
@@ -86,6 +114,11 @@ class assetsController extends Controller
         $user->owned_by = $request->input('owner_id');
         $user->description = $request->input('description');
         $user->type = $request->input('type');
+
+        $user->package_type = $request->input('package_type');
+        $user->slots = $request->input('slots');
+        $user->no_of_assets = $request->input('no_of_assets');
+
         $user->status = $request->input('status');
         if ($request->hasFile('asset_photo')) {
             $filename = $request->file('asset_photo')->getClientOriginalName();
