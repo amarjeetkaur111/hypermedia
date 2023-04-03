@@ -9,10 +9,10 @@
                     <div class="ms-auto text-end">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">
+                                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                                <!-- <li class="breadcrumb-item active" aria-current="page">
                                     Library
-                                </li>
+                                </li> -->
                             </ol>
                         </nav>
                     </div>
@@ -28,9 +28,10 @@
                     <div class="card card-hover">
                         <div class="box bg-cyan text-center">
                             <h1 class="font-light text-white">
-                                <i class="mdi mdi-view-dashboard"></i>
+                                <!-- <i class="mdi mdi-view-dashboard"></i> -->
+                                {{$data['totalCampaigns']}}
                             </h1>
-                            <h6 class="text-white">Dashboard</h6>
+                            <h6 class="text-white">Total Campaigns</h6>
                         </div>
                     </div>
                 </div>
@@ -39,9 +40,10 @@
                     <div class="card card-hover">
                         <div class="box bg-success text-center">
                             <h1 class="font-light text-white">
-                                <i class="mdi mdi-chart-areaspline"></i>
+                                <!-- <i class="mdi mdi-chart-areaspline"></i> -->
+                                {{$data['currentYearTotalCampaign']}}
                             </h1>
-                            <h6 class="text-white">Charts</h6>
+                            <h6 class="text-white">{{$data['currentYear']}} Campaigns</h6>
                         </div>
                     </div>
                 </div>
@@ -50,9 +52,9 @@
                     <div class="card card-hover">
                         <div class="box bg-warning text-center">
                             <h1 class="font-light text-white">
-                                <i class="mdi mdi-collage"></i>
+                                {{$data['activeCampaigns']}}
                             </h1>
-                            <h6 class="text-white">Widgets</h6>
+                            <h6 class="text-white">Active Campaigns</h6>
                         </div>
                     </div>
                 </div>
@@ -61,9 +63,9 @@
                     <div class="card card-hover">
                         <div class="box bg-danger text-center">
                             <h1 class="font-light text-white">
-                                <i class="mdi mdi-border-outside"></i>
+                                {{$data['todayAssetsCount']}}
                             </h1>
-                            <h6 class="text-white">Tables</h6>
+                            <h6 class="text-white">Assets In Use Today</h6>
                         </div>
                     </div>
                 </div>
@@ -72,9 +74,9 @@
                     <div class="card card-hover">
                         <div class="box bg-info text-center">
                             <h1 class="font-light text-white">
-                                <i class="mdi mdi-arrow-all"></i>
+                              {{$data['clients']}}
                             </h1>
-                            <h6 class="text-white">Full Width</h6>
+                            <h6 class="text-white">Total Clients</h6>
                         </div>
                     </div>
                 </div>
@@ -105,7 +107,7 @@
                 <div class="col-12">
                     <div class="card">
                         <h5 class="card-header bg-white cardChart-header d-flex py-2">
-                        Yearly Campaign Status
+                        Last 12 Months Campaign Status
                         <a class="btn btn-icon-chevron ms-auto" data-bs-toggle="collapse" data-bs-target="#c1"><i class="mdi mdi-chevron-down"></i></a>
                         </h5>
                         <div class="card-body collapse show " id="c1">
@@ -118,7 +120,7 @@
                 <div class="col-6">
                     <div class="card">
                         <h5 class="card-header bg-white cardChart-header d-flex py-2">
-                        Campaign Owners
+                        Asset Owners
                         </h5>
                         <div class="card-body">
                             <div id="CampaignOwnersChart" style="width: 100%; height:350px;"></div>
@@ -128,7 +130,7 @@
                 <div class="col-6">
                     <div class="card">
                         <h5 class="card-header bg-white cardChart-header d-flex py-2">
-                        Campaign Market 
+                        Client-Campaign Count 
                         </h5>
                         <div class="card-body">
                             <div id="CampaignMarketChart" style="width: 100%; height:350px;"></div>
@@ -247,377 +249,337 @@
         CampaignTimeLineChart.render();
 </script>
 <script>
-var dom = document.getElementById('CampaignStatusChart');
+  var departments = <?php echo json_encode($data['departments']); ?>;
+  var last12Months = <?php echo json_encode($data['last12Months']); ?>;
+  var last12MonthsCampaigns = <?php echo json_encode($data['last12MonthsCampaigns']); ?>;
 
-    var CampaignStatusChart = echarts.init(dom, null, {
-      renderer: 'svg',
-      useDirtyRect: false
-    });
+  var dom = document.getElementById('CampaignStatusChart');
+
+      var CampaignStatusChart = echarts.init(dom, null, {
+        renderer: 'svg',
+        useDirtyRect: false
+      });
+      
+  let CampaignStatusResult = 0;
+
+  var CampaigStatusOption;
+      CampaigStatusOption = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow',
+        label:{
+          formatter: function (params){
+            for ( let i = 0; i < params.seriesData.length; i++){
+              CampaignStatusResult += params.seriesData[i].value
+            } 
+            let resultFinal = params.value + " -------- total: " + CampaignStatusResult
+            CampaignStatusResult = 0;
+            return resultFinal;
+          }
+        }
+      }
+    },
+    grid: {
+      left: '0%',
+      right: '0%',
+      bottom: '0%',
+      containLabel: true
+    },
+    legend: {
+      data: departments,
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: last12Months,
+        axisLabel: { interval: 0 },
+        axisTick: {
+          alignWithLabel: true
+        }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: 'Count',
+        min: 0,
+      }
+    ],
+    series:last12MonthsCampaigns.map(a => { return { name: a['department'], type:'bar', stack:'Ad',data: a['data']  } })
     
-let CampaignStatusResult = 0;
+    // [
+    //   {
+    //     name: 'Outdoor',
+    //     type: 'bar',
+    //     stack: 'Ad',
+    //     data: [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330]
+    //   },
+    //   {
+    //     name: 'Metro',
+    //     type: 'bar',
+    //     stack: 'Ad',
+    //     data: [220, 182, 191, 234, 290, 330, 310, 220, 182, 191, 234, 290]
+    //   },
+    //   {
+    //     name: 'InMall',
+    //     type: 'bar',
+    //     stack: 'Ad',
+    //     data: [150, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
+    //   },
+    //   {
+    //     name: 'InStore',
+    //     type: 'bar',
+    //     stack: 'Ad',
+    //     data: [220, 182, 191, 234, 290, 330, 310, 220, 182, 191, 234, 290]
+    //   },
+    // ]
+  };
 
-var CampaigStatusOption;
-    CampaigStatusOption = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow',
-      label:{
-        formatter: function (params){
-          for ( let i = 0; i < params.seriesData.length; i++){
-            CampaignStatusResult += params.seriesData[i].value
-          } 
-          let resultFinal = params.value + " -------- total: " + CampaignStatusResult
-          CampaignStatusResult = 0;
-          return resultFinal;
-        }
+      if (CampaigStatusOption && typeof CampaigStatusOption === 'object') {
+        CampaignStatusChart.setOption(CampaigStatusOption);
       }
-    }
-  },
-  grid: {
-    left: '0%',
-    right: '0%',
-    bottom: '0%',
-    containLabel: true
-  },
-  legend: {
-    data: ['Outdoor', 'Metro', 'In Mail', 'In Store'],
-  },
-  xAxis: [
-    {
-      type: 'category',
-      data: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      axisLabel: { interval: 0 },
-      axisTick: {
-        alignWithLabel: true
-      }
-    }
-  ],
-  yAxis: [
-    {
-      type: 'value',
-      name: 'Count',
-      min: 0,
-    }
-  ],
-  series: [
-    {
-      name: 'Outdoor',
-      type: 'bar',
-      stack: 'Ad',
-      data: [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330]
+      $(window).on("resize", function () {
+        setTimeout(CampaignStatusChart.resize , 10);
+      });
+      $(window).on("load", CampaignStatusChart.resize);
+      $('.sidebartoggler').on("click", function () {
+        setTimeout(CampaignStatusChart.resize , 10);
+      });
+      // window.addEventListener('resize',  CampaignStatusChart.resize);
+  </script>
+  <script>
+  var dom = document.getElementById('CampaignOwnersChart');
+  var assetsCount = <?php echo json_encode($data['assetsCount']); ?>;
+
+  var CampaignOwnersChart = echarts.init(dom, null, {
+    renderer: 'svg',
+    useDirtyRect: false
+  });
+  var CampaignOwnersOption;
+  CampaignOwnersOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b} : {c} - ({d}%)'
     },
-    {
-      name: 'Metro',
-      type: 'bar',
-      stack: 'Ad',
-      data: [220, 182, 191, 234, 290, 330, 310, 220, 182, 191, 234, 290]
+    grid: {
+      left: '0%',
+      right: '0%',
+      bottom: '0%',
+      containLabel: true
     },
-    {
-      name: 'In Mail',
-      type: 'bar',
-      stack: 'Ad',
-      data: [150, 232, 201, 154, 190, 330, 410, 150, 232, 201, 154, 190]
-    },
-    {
-      name: 'In Store',
-      type: 'bar',
-      stack: 'Ad',
-      data: [220, 182, 191, 234, 290, 330, 310, 220, 182, 191, 234, 290]
-    },
-  ]
-};
-
-    if (CampaigStatusOption && typeof CampaigStatusOption === 'object') {
-      CampaignStatusChart.setOption(CampaigStatusOption);
-    }
-    $(window).on("resize", function () {
-       setTimeout(CampaignStatusChart.resize , 10);
-    });
-    $(window).on("load", CampaignStatusChart.resize);
-    $('.sidebartoggler').on("click", function () {
-      setTimeout(CampaignStatusChart.resize , 10);
-    });
-    // window.addEventListener('resize',  CampaignStatusChart.resize);
-</script>
-<script>
-var dom = document.getElementById('CampaignOwnersChart');
-
-var CampaignOwnersChart = echarts.init(dom, null, {
-  renderer: 'svg',
-  useDirtyRect: false
-});
-var CampaignOwnersOption;
-CampaignOwnersOption = {
-  tooltip: {
-    trigger: 'item',
-    formatter: '{b} : {c} - ({d}%)'
-  },
-  grid: {
-    left: '0%',
-    right: '0%',
-    bottom: '0%',
-    containLabel: true
-  },
-  series: [
-    {
-      name: 'Owner',
-      type: 'pie',
-      radius: [20, 150],
-      center: ['50%', '50%'],
-      roseType: 'area',
-      itemStyle: {
-        borderRadius: 5
-      },
-      data: [
-        { value: 40, name: 'Hypermedia' },
-        { value: 38, name: 'Mall' },
-        { value: 32, name: 'MAF' },
-        { value: 30, name: 'Metro' },
-        { value: 28, name: 'Lulu' },
-        { value: 26, name: 'Carrefour' },
-        { value: 22, name: 'Abu Dhabi Union Co-op' },
-        { value: 18, name: 'Sharjah Union Co-op' }
-      ]
-    }
-  ]
-};
-
-if (CampaignOwnersOption && typeof CampaignOwnersOption === 'object') {
-    CampaignOwnersChart.setOption(CampaignOwnersOption);
-}
-$(window).on("resize", function () {
-  setTimeout(CampaignOwnersChart.resize , 10);
-});
-$(window).on("load", CampaignOwnersChart.resize);
-$('.sidebartoggler').on("click", function () {
-  setTimeout(CampaignOwnersChart.resize , 10);
-});
-// window.addEventListener('resize', CampaignOwnersChart.resize);
-</script>
-<script>
-var dom = document.getElementById('CampaignMarketChart');
-
-var CampaignMarketChart = echarts.init(dom, null, {
-  renderer: 'svg',
-  useDirtyRect: false
-});
-
-// var ROOT_PATH = 'https://echarts.apache.org/examples';
-// const weatherIcons = {
-//   Sunny: ROOT_PATH + '/data/asset/img/weather/sunny_128.png',
-//   Cloudy: ROOT_PATH + '/data/asset/img/weather/cloudy_128.png',
-//   Showers: ROOT_PATH + '/data/asset/img/weather/showers_128.png'
-// };
-
-
-var CampaignMarketOption;
-CampaignMarketOption = {
-  tooltip: {
-    trigger: 'item'
-  },
-  grid: {
-    left: '0%',
-    right: '0%',
-    bottom: '0%',
-    containLabel: true
-  },
-  legend: {
-    bottom: 10,
-    left: 'center',
-    data: ['UAE', 'Saudi Arabia', 'Qatar', 'Oman', 'Kuwait', 'Bahrin']
-  },
-  series: [
-    {
-      type: 'pie',
-      radius: '70%',
-      center: ['50%', '40%'],
-      selectedMode: 'single',
-      data: [
-        { 
-            value: 1048, 
-            name: 'UAE',
-          //   label: {
-          //   formatter: [
-          //     '{title|{b}}{abg|}',
-          //     '  {Sunny|}{rate|55.3%}',
-          //     '  {Cloudy|}{rate|38.9%}',
-          //     '  {Showers|}{rate|5.8%}'
-          //   ].join('\n'),
-          //   backgroundColor: '#eee',
-          //   borderColor: '#777',
-          //   borderWidth: 1,
-          //   borderRadius: 4,
-          //   rich: {
-          //     title: {
-          //       color: '#eee',
-          //       align: 'center'
-          //     },
-          //     abg: {
-          //       backgroundColor: '#333',
-          //       width: '100%',
-          //       align: 'right',
-          //       height: 20,
-          //       borderRadius: [4, 4, 0, 0]
-          //     },
-          //     Sunny: {
-          //       height: 20,
-          //       align: 'left',
-          //       backgroundColor: {
-          //         image: weatherIcons.Sunny
-          //       }
-          //     },
-          //     Cloudy: {
-          //       height: 20,
-          //       align: 'left',
-          //       backgroundColor: {
-          //         image: weatherIcons.Cloudy
-          //       }
-          //     },
-          //     Showers: {
-          //       height: 20,
-          //       align: 'left',
-          //       backgroundColor: {
-          //         image: weatherIcons.Showers
-          //       }
-          //     },
-          //     weatherHead: {
-          //       color: '#333',
-          //       height: 20,
-          //       align: 'center'
-          //     },
-          //     rate: {
-          //       width: 50,
-          //       align: 'right',
-          //       padding: [0, 20, 0, 0]
-          //     },
-          //     rateHead: {
-          //       color: '#333',
-          //       width: 50,
-          //       align: 'center',
-          //       padding: [0, 20, 0, 0]
-          //     }
-          //   }
-          // }
-        },
-        { value: 735, name: 'Saudi Arabia' },
-        { value: 580, name: 'Qatar' },
-        { value: 484, name: 'Oman' },
-        { value: 300, name: 'Kuwait' },
-        { value: 235, name: 'Bahrin' }
-      ],
-      emphasis: {
+    series: [
+      {
+        name: 'Owner',
+        type: 'pie',
+        radius: [20, 150],
+        center: ['50%', '50%'],
+        roseType: 'area',
         itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
+          borderRadius: 5
+        },
+        data: assetsCount.map(a => { return { value: a['total'], name: a['owned_by']  } })
+        
+        // [
+        //   { value: 40, name: 'Hypermedia' },
+        //   { value: 38, name: 'Mall' },
+        //   { value: 32, name: 'MAF' },
+        //   { value: 30, name: 'Metro' },
+        //   { value: 28, name: 'Lulu' },
+        //   { value: 26, name: 'Carrefour' },
+        //   { value: 22, name: 'Abu Dhabi Union Co-op' },
+        //   { value: 18, name: 'Sharjah Union Co-op' }
+        // ]
+      }
+    ]
+  };
+
+  if (CampaignOwnersOption && typeof CampaignOwnersOption === 'object') {
+      CampaignOwnersChart.setOption(CampaignOwnersOption);
+  }
+  $(window).on("resize", function () {
+    setTimeout(CampaignOwnersChart.resize , 10);
+  });
+  $(window).on("load", CampaignOwnersChart.resize);
+  $('.sidebartoggler').on("click", function () {
+    setTimeout(CampaignOwnersChart.resize , 10);
+  });
+  // window.addEventListener('resize', CampaignOwnersChart.resize);
+  </script>
+  <script>
+  var dom = document.getElementById('CampaignMarketChart');
+  var campaignClientCount = <?php echo json_encode($data['campaignClientCount']); ?>;
+
+  var CampaignMarketChart = echarts.init(dom, null, {
+    renderer: 'svg',
+    useDirtyRect: false
+  });
+
+  // var ROOT_PATH = 'https://echarts.apache.org/examples';
+  // const weatherIcons = {
+  //   Sunny: ROOT_PATH + '/data/asset/img/weather/sunny_128.png',
+  //   Cloudy: ROOT_PATH + '/data/asset/img/weather/cloudy_128.png',
+  //   Showers: ROOT_PATH + '/data/asset/img/weather/showers_128.png'
+  // };
+
+
+  var CampaignMarketOption;
+  CampaignMarketOption = {
+    tooltip: {
+      trigger: 'item'
+    },
+    grid: {
+      left: '0%',
+      right: '0%',
+      bottom: '0%',
+      containLabel: true
+    },
+    legend: {
+      bottom: 10,
+      left: 'center',
+      data: ['UAE', 'Saudi Arabia', 'Qatar', 'Oman', 'Kuwait', 'Bahrin']
+    },
+    series: [
+      {
+        type: 'pie',
+        radius: '70%',
+        center: ['50%', '40%'],
+        selectedMode: 'single',
+        data:  campaignClientCount ? campaignClientCount.map(a => { return { value: a['total'], name: a['client']['name']  } }) : null
+        
+        // [
+        //   { value: 1048, name: 'UAE' },
+        //   { value: 735, name: 'Saudi Arabia' },
+        //   { value: 580, name: 'Qatar' },
+        //   { value: 484, name: 'Oman' },
+        //   { value: 300, name: 'Kuwait' },
+        //   { value: 235, name: 'Bahrin' }
+        // ]
+        ,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
         }
       }
-    }
-  ]
-};
+    ]
+  };
 
-if (CampaignMarketOption && typeof CampaignMarketOption === 'object') {
-    CampaignMarketChart.setOption(CampaignMarketOption);
-}
-$(window).on("resize", function () {
-  setTimeout(CampaignMarketChart.resize , 10);
-});
-$(window).on("load", CampaignMarketChart.resize);
-$('.sidebartoggler').on("click", function () {
-  setTimeout(CampaignMarketChart.resize , 10);
-});
-// window.addEventListener('resize', CampaignMarketChart.resize);
-</script>
-<script>
-var dom = document.getElementById('CampaignTypeChart');
+  if (CampaignMarketOption && typeof CampaignMarketOption === 'object') {
+      CampaignMarketChart.setOption(CampaignMarketOption);
+  }
+  $(window).on("resize", function () {
+    setTimeout(CampaignMarketChart.resize , 10);
+  });
+  $(window).on("load", CampaignMarketChart.resize);
+  $('.sidebartoggler').on("click", function () {
+    setTimeout(CampaignMarketChart.resize , 10);
+  });
+  // window.addEventListener('resize', CampaignMarketChart.resize);
+  </script>
+  <script>
+  var dom = document.getElementById('CampaignTypeChart');
+  var last5Years = <?php echo json_encode($data['last5Years']); ?>;
+  var last5YearsCampaigns = <?php echo json_encode($data['last5YearsCampaigns']); ?>;
 
-    var CampaignTypeChart = echarts.init(dom, null, {
-      renderer: 'svg',
-      useDirtyRect: false
-    });
+      var CampaignTypeChart = echarts.init(dom, null, {
+        renderer: 'svg',
+        useDirtyRect: false
+      });
 
-var CampaignTypeOption;
-    CampaignTypeOption = {
-  tooltip: {
-    trigger: 'axis'
-  },
-  grid: {
-    left: '3%',
-    right: '3%',
-    bottom: '0%',
-    containLabel: true
-  },
-  legend: {
-    data: ['Static', 'Digital', 'Promo Space']
-  },
-  xAxis: [
-    {
-      type: 'category',
-      boundaryGap: false,
-      data: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
-      axisLabel: { interval: 0 },
-      axisTick: {
-        alignWithLabel: true
+  var CampaignTypeOption;
+      CampaignTypeOption = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    grid: {
+      left: '3%',
+      right: '3%',
+      bottom: '0%',
+      containLabel: true
+    },
+    legend: {
+      data: ['Static', 'Digital', 'Promo Space','Not Selected']
+    },
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: false,
+        data: last5Years,
+        axisLabel: { interval: 0 },
+        axisTick: {
+          alignWithLabel: true
+        }
       }
-    }
-  ],
-  yAxis: [
-    {
-      type: 'value',
-      name: 'Count',
-      min: 0,
-    }
-  ],
-  series: [
-    {
-      name: 'Static',
-      type: 'line',
-      markPoint: {
-        data: [
-          { type: 'max', name: 'Max' },
-          { type: 'min', name: 'Min' }
-        ]
-      },
-      data: [ 90, 210, 182, 90, 191, 34, 290, 330]
-    },
-    {
-      name: 'Digital',
-      type: 'line',
-      markPoint: {
-        data: [
-          { type: 'max', name: 'Max' },
-          { type: 'min', name: 'Min' }
-        ]
-      },
-      data: [220, 92, 191, 334, 290, 330, 390, 220]
-    },
-    {
-      name: 'Promo Space',
-      type: 'line',
-      markPoint: {
-        data: [
-          { type: 'max', name: 'Max' },
-          { type: 'min', name: 'Min' }
-        ]
-      },
-      data: [190, 330, 410, 50, 232, 201, 54, 190]
-    },
-  ]
-};
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: 'Count',
+        min: 0,
+      }
+    ],
+    series: last5YearsCampaigns ? last5YearsCampaigns.map(a => { return { name:a['type'],
+        type: 'line', markPoint: {
+          data: [
+            { type: 'max', name: 'Max' },
+            { type: 'min', name: 'Min' }
+          ]
+        }, 
+        data: a['data']
+        } }) : null
+    
+    // [
+    //   {
+    //     name: 'Static',
+    //     type: 'line',
+    //     markPoint: {
+    //       data: [
+    //         { type: 'max', name: 'Max' },
+    //         { type: 'min', name: 'Min' }
+    //       ]
+    //     },
+    //     data: [ 90, 210, 182, 90, 191, 34, 290, 330]
+    //   },
+    //   {
+    //     name: 'Digital',
+    //     type: 'line',
+    //     markPoint: {
+    //       data: [
+    //         { type: 'max', name: 'Max' },
+    //         { type: 'min', name: 'Min' }
+    //       ]
+    //     },
+    //     data: [220, 92, 191, 334, 290, 330, 390, 220]
+    //   },
+    //   {
+    //     name: 'Promo Space',
+    //     type: 'line',
+    //     markPoint: {
+    //       data: [
+    //         { type: 'max', name: 'Max' },
+    //         { type: 'min', name: 'Min' }
+    //       ]
+    //     },
+    //     data: [190, 330, 410, 50, 232, 201, 54, 190]
+    //   },
+    // ]
+  };
 
-    if (CampaignTypeOption && typeof CampaignTypeOption === 'object') {
-        CampaignTypeChart.setOption(CampaignTypeOption);
-    }
-    $(window).on("resize", function () {
-      setTimeout(CampaignTypeChart.resize , 10);
-    });
-    $(window).on("load", CampaignTypeChart.resize);
-    $('.sidebartoggler').on("click", function () {
-      setTimeout(CampaignTypeChart.resize , 10);
-    });
-    // window.addEventListener('resize', CampaignTypeChart.resize);
-</script>
+      if (CampaignTypeOption && typeof CampaignTypeOption === 'object') {
+          CampaignTypeChart.setOption(CampaignTypeOption);
+      }
+      $(window).on("resize", function () {
+        setTimeout(CampaignTypeChart.resize , 10);
+      });
+      $(window).on("load", CampaignTypeChart.resize);
+      $('.sidebartoggler').on("click", function () {
+        setTimeout(CampaignTypeChart.resize , 10);
+      });
+      // window.addEventListener('resize', CampaignTypeChart.resize);
+  </script>
 
 
-@endpush
+  @endpush

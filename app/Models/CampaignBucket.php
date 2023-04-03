@@ -45,7 +45,7 @@ class CampaignBucket extends Model
         $assets = explode(", ", $this->asset);
         $asset_set =  Assets::with(['proof' => 
                         function($q)  
-                        {return $q->where('bucket_id', $this->id); }])
+                        {return $q->where('bucket_id', $this->id); },'proof.pictures'])
                         ->whereIn('id',$assets)->get();
         return $asset_set;
     }

@@ -85,27 +85,31 @@ class reportController extends Controller
 
        }elseif($request->has('one'))
        {
-            return view('pages.reports.sampleCampaignPdf');
-            
+            // return view('pages.reports.sampleCampaignPdf');
+
             $this->validate($request, [
                 'location' => 'required',
                 'campaign' => 'required',
             ]);
 
-            $camp = Campaigns::with('client','department','buckets.assets');
+            $camp = Campaigns::with(['client'=>function($q){
+                    $q->select('id','name');
+            },'department' => function($q){
+                $q->select('id','name');
+            },
+            'buckets'=> function($q) use($request){$q->whereIn('location',$request->location);},
+            'buckets.locations'=> function($q){ $q->select('id','name');}]);
+            
             $ppp = 0;
-            // $camp = Campaigns::with('client','department','buckets.assets','buckets.locations','buckets.proofpictures.pictures')->where('id',$request->campaign)->get();           
             if($request->has('pp'))
             {
-                $camp = $camp->with('buckets.proofpictures.pictures');
+                // $camp = $camp->with('buckets.proofpictures.pictures');
                 $ppp = 1;
             }
-            $camp = $camp->with(['buckets'=> function($q) use($request){$q->whereIn('location',$request->location);},'buckets.locations']);
-            $camp = $camp->where('id',$request->campaign)
-            ->get()->toArray();
+            $camp = $camp->where('id',$request->campaign)->get()->toArray();
 
-            // echo"<pre>";print_r($ppp); exit();
-            // return view('pages.reports.campaignDetail',compact('camp','ppp'));
+            // echo"<pre>";print_r($camp); exit();
+            // return view('pages.reports.sampleCampaignPdf',compact('camp','ppp'));
 
             $pdf = PDF::loadView('pages.reports.campaignDetail',compact('camp','ppp'));
             return $pdf->download('Campaign Detail.pdf');
