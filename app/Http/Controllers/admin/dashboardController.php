@@ -103,7 +103,20 @@ class dashboardController extends Controller
             return date('Y-m-d',strtotime($v['start_date'])) >= $lastYear;
         }, ARRAY_FILTER_USE_BOTH);
 
-        echo"<pre>";print_r($data['lastYearCampaigns']);exit();
+        $lastYearCampaignsNew = array();
+        foreach($lastYearCampaigns as $i => $campaign)
+        {
+            $lastYearCampaignsNew[$i]['name'] = $campaign['name'];
+            $lastYearCampaignsNew[$i]['start_date'] = $campaign['start_date'];
+            $lastYearCampaignsNew[$i]['end_date'] = $campaign['end_date'];
+        }
+
+        $data['lastYearCampaigns'] = $lastYearCampaignsNew;
+        // $lastYearCampaignsNew = array_map(function($a)
+        // {return array('name' => $a['name'],'start_date' => $a['start_date'],'end_date' => $a['end_date']);}
+        // ,$lastYearCampaigns);
+
+        // echo"<pre>";print_r($lastYearCampaignsNew);exit();
         // $data['activeCampaigns'] = Campaigns::where('status','Active')->count();
         return view('pages.dashboard',compact('data'));
     }

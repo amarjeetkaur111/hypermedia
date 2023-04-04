@@ -27,6 +27,11 @@ class Assets extends Model
         return $this->hasOne(AssetStatus::class,'asset_id','id');
     }
 
+    public function multiAssetStatus(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AssetStatus::class,'asset_id','id');
+    }
+
     public function proof(){
         return $this->hasOne(CampaignProof::class,'asset_id','id')->orderBy('created_at','DESC');
     }

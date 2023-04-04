@@ -182,7 +182,8 @@ class assetsController extends Controller
         $ref_no = $request->ref_no;
         $assettype = $request->assettype;
 
-        $asset = Assets::with('assetStatus.campaign');
+        $asset = Assets::with('multiAssetStatus.campaign');
+
      
         if($ref_no != 0)        
             $asset  = $asset->where('id',$ref_no);
@@ -196,12 +197,14 @@ class assetsController extends Controller
             $asset  = $asset->where('location_id',$location);  
 
         $asset=array_values($asset->get()->toArray());
+        echo "<pre>";print_r($asset);exit();
+
         $startdate = Carbon::createFromFormat('d/m/Y', $startdate)->format('Y-m-d');
         $enddate = Carbon::createFromFormat('d/m/Y', $enddate)->format('Y-m-d');
         
         for($i = 0;$i < count($asset);$i++)
         {
-            if($asset[$i]['asset_status'])
+            if($asset[$i]['asset_status']) 
             {              
                 $status = $asset[$i]['asset_status'];
                 $from_date = $asset[$i]['asset_status']['from_date'];
@@ -214,6 +217,9 @@ class assetsController extends Controller
                     // echo $to_date." DB is greator </br>";  
                     $asset[$i]['asset_status']['status'] = 'Available';
                 }
+            }
+            else{
+                $asset[$i]['asset_status']['status'] = 'Available';
             }
            
         }

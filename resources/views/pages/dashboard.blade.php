@@ -89,13 +89,13 @@
                     <div class="card">
                         <h5 class="card-header bg-white cardChart-header d-flex py-2">
                         Campaign Timeline Hystory
-                        <span class="d-inline-block ms-auto font-12" style="font-weight: normal;width:150px">
+                        <!-- <span class="d-inline-block ms-auto font-12" style="font-weight: normal;width:150px">
                             <select id="timelineRange" class="form-select font-12" style="font-weight: normal;">
                                 <option value="digital">Last 3 Months</option>
                                 <option value="digital">Last 6 Months</option>
                                 <option value="Static">Last Year</option>
                             </select>
-                        </span>
+                        </span> -->
                         </h5>
                         <div class="card-body">
                             <div id="CampaignTimeLineChart" style="width: 100%; height:400px;"></div>
@@ -167,55 +167,64 @@
   $('#timelineRange').select2({ width: '100%', minimumResultsForSearch: Infinity,  placeholder: "Select Range" });
 </script>
 <script>
+  var lastYearCampaigns = <?php echo json_encode($data['lastYearCampaigns']); ?>;
+  var result = Object.entries(lastYearCampaigns);
+  // var result = result.map(a => { return { x: a[1]['name'], y:[ new Date(a[1]['start_date']).getTime(), new Date(a[1]['end_date']).getTime() ],  } });
+
+  console.log(result);
+
   var options = {
           series: [
           {
-            data: [
-              {
-                x: 'Carrefour Phase 1',
-                y: [ new Date('2019-01-27').getTime(), new Date('2019-03-04').getTime() ],
-              },
-              {
-                x: 'Disney She Hulk',
-                y: [ new Date('2019-01-04').getTime(), new Date('2019-03-08').getTime() ],
-              },
-              {
-                x: 'Amana Launch and Sustain',
-                y: [ new Date('2019-01-07').getTime(), new Date('2019-03-10').getTime() ],
-              },
-              {
-                x: 'Hampton & Double Tree',
-                y: [ new Date('2019-01-08').getTime(), new Date('2019-03-12').getTime() ],
-              },
-              {
-                x: 'Homes R Us',
-                y: [ new Date('2019-02-12').getTime(), new Date('2019-04-17').getTime() ],
-              },
-              {
-                x: 'L Oreal Paris',
-                y: [ new Date('2019-02-27').getTime(), new Date('2019-05-04').getTime() ],
-              },
-              {
-                x: 'Samsung Yearly Deal MOE',
-                y: [ new Date('2019-03-04').getTime(), new Date('2019-04-08').getTime() ],
-              },
-              {
-                x: 'Aldar Education',
-                y: [ new Date('2019-01-07').getTime(), new Date('2019-04-10').getTime() ],
-              },
-              {
-                x: 'Red Tag',
-                y: [ new Date('2019-02-08').getTime(), new Date('2019-03-12').getTime() ],
-              },
-              {
-                x: 'Danube Home	C',
-                y: [ new Date('2019-01-12').getTime(), new Date('2019-04-17').getTime() ],
-              }
-            ]
+            data: result.map(a => { return { x: a[1]['name'], y:[ new Date(a[1]['start_date']).getTime(), new Date(a[1]['end_date']).getTime() ],  } })
+
+            
+            // [
+            //   {
+            //     x: 'Carrefour Phase 1',
+            //     y: [ new Date('2019-01-27').getTime(), new Date('2019-03-04').getTime() ],
+            //   },
+            //   {
+            //     x: 'Disney She Hulk',
+            //     y: [ new Date('2019-01-04').getTime(), new Date('2019-03-08').getTime() ],
+            //   },
+            //   {
+            //     x: 'Amana Launch and Sustain',
+            //     y: [ new Date('2019-01-07').getTime(), new Date('2019-03-10').getTime() ],
+            //   },
+            //   {
+            //     x: 'Hampton & Double Tree',
+            //     y: [ new Date('2019-01-08').getTime(), new Date('2019-03-12').getTime() ],
+            //   },
+            //   {
+            //     x: 'Homes R Us',
+            //     y: [ new Date('2019-02-12').getTime(), new Date('2019-04-17').getTime() ],
+            //   },
+            //   {
+            //     x: 'L Oreal Paris',
+            //     y: [ new Date('2019-02-27').getTime(), new Date('2019-05-04').getTime() ],
+            //   },
+            //   {
+            //     x: 'Samsung Yearly Deal MOE',
+            //     y: [ new Date('2019-03-04').getTime(), new Date('2019-04-08').getTime() ],
+            //   },
+            //   {
+            //     x: 'Aldar Education',
+            //     y: [ new Date('2019-01-07').getTime(), new Date('2019-04-10').getTime() ],
+            //   },
+            //   {
+            //     x: 'Red Tag',
+            //     y: [ new Date('2019-02-08').getTime(), new Date('2019-03-12').getTime() ],
+            //   },
+            //   {
+            //     x: 'Danube Home	C',
+            //     y: [ new Date('2019-01-12').getTime(), new Date('2019-04-17').getTime() ],
+            //   }
+            // ]
           }
         ],
           chart: {
-          height: 400,
+          height: 600,
           type: 'rangeBar',
           redrawOnParentResize: true,
           toolbar: {
